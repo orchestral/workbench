@@ -1,0 +1,19 @@
+{
+    "name": "orchestra/workbench",
+    "description": "Workbench Companion for Laravel Development",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Orchestra\\Workbench\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mior Muhammad Zaki",
+            "email": "crynobone@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
