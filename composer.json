@@ -1,6 +1,6 @@
 {
     "name": "orchestra/workbench",
-    "description": "Workbench Companion for Laravel Development",
+    "description": "Workbench Companion for Laravel Packages Development",
     "type": "library",
     "license": "MIT",
     "authors": [
