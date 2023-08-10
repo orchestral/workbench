@@ -15,10 +15,10 @@
         }
     },
     "require": {
-        "php": "^7.3|^8.0",
-        "laravel/tinker": "^2.5 || ^2.7 || ^2.8",
-        "orchestra/canvas-core": "^6.4.1 || ^7.2 || ^8.1.1",
-        "orchestra/testbench-core": "^6.33 || ^7.26 || ^8.6"
+        "php": "^8.0",
+        "laravel/tinker": "^2.7 || ^2.8",
+        "orchestra/canvas-core": "^7.2 || ^8.1.1",
+        "orchestra/testbench-core": "^7.26.2 || ^8.6.3"
     },
     "minimum-stability": "dev"
 }
