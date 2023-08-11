@@ -1,0 +1,23 @@
+preset: package
+
+namespace: Orchestra\Workbench
+
+paths:
+  src: src
+  resource: resources
+
+factory:
+  path: database/factories
+
+migration:
+  path: database/migrations
+  prefix: ''
+
+console:
+  namespace: Orchestra\Workbench\Console
+
+provider:
+  namespace: Orchestra\Workbench
+
+testing:
+  namespace: Orchestra\Workbench\Tests

@@ -22,7 +22,8 @@
     },
     "require-dev": {
         "orchestra/canvas": "^8.2",
-        "orchestra/canvas-core": "^6.4.1 || ^7.2 || ^8.2"
+        "orchestra/canvas-core": "^6.4.1 || ^7.2 || ^8.2",
+        "laravel/framework": "^10.17"
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
