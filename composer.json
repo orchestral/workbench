@@ -14,6 +14,12 @@
             "Orchestra\\Workbench\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\": "workbench/database/"
+        }
+    },
     "require": {
         "php": "^7.3|^8.0",
         "laravel/tinker": "^2.5 || ^2.7 || ^2.8",
@@ -23,7 +29,8 @@
     "require-dev": {
         "orchestra/canvas": "^8.2",
         "orchestra/canvas-core": "^6.4.1 || ^7.2 || ^8.2",
-        "laravel/framework": "^10.17"
+        "laravel/framework": "^10.17",
+        "phpstan/phpstan": "^1.10.7"
     },
     "extra": {
         "laravel": {
@@ -31,6 +38,12 @@
                 "Orchestra\\Workbench\\WorkbenchServiceProvider"
             ]
         }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@composer run prepare"
+        ],
+        "prepare": "@php vendor/bin/testbench package:discover --ansi"
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

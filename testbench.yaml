@@ -1,0 +1,6 @@
+providers:
+  - Orchestra\Workbench\WorkbenchServiceProvider
+  - Workbench\App\Providers\WorkbenchServiceProvider
+
+workbench:
+  start: '/'
