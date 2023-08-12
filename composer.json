@@ -18,12 +18,19 @@
         "php": "^7.3|^8.0",
         "laravel/tinker": "^2.5 || ^2.7 || ^2.8",
         "orchestra/canvas-core": "^7.2 || ^8.1.1",
-        "orchestra/testbench-core": "^6.33.3 || ^7.26.3 || ^8.6.4"
+        "orchestra/testbench-core": "^6.34.0 || ^7.27.1 || ^8.7.1"
     },
     "require-dev": {
         "orchestra/canvas": "^8.2",
         "orchestra/canvas-core": "^6.4.1 || ^7.2 || ^8.2",
         "laravel/framework": "^10.17"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Orchestra\\Workbench\\WorkbenchServiceProvider"
+            ]
+        }
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
