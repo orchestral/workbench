@@ -21,3 +21,6 @@ provider:
 
 testing:
   namespace: Orchestra\Workbench\Tests
+
+generators:
+  - Orchestra\Canvas\Commands\Code

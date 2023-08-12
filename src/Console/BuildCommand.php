@@ -16,13 +16,6 @@ class BuildCommand extends Command
     protected $signature = 'workbench:build';
 
     /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Run builds for workbench';
-
-    /**
      * Execute the console command.
      *
      * @return int
