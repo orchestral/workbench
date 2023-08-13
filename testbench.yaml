@@ -4,3 +4,8 @@ providers:
 
 workbench:
   start: '/'
+  build:
+    - asset-publish
+    - create-sqlite-db
+  assets:
+    - workbench-assets

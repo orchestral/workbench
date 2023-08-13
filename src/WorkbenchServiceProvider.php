@@ -4,7 +4,11 @@ namespace Orchestra\Workbench;
 
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use function Orchestra\Testbench\workbench;
 
+/**
+ * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
+ */
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
@@ -12,9 +16,14 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('workbench.recipe', function (Application $app) {
-            return new RecipeManager($app);
-        });
+        if ($this->app->runningInConsole()) {
+            $this->app->singleton('workbench.recipe', function (Application $app) {
+                /** @var TWorkbenchConfig $workbench */
+                $workbench = workbench();
+
+                return new RecipeManager($app, $workbench);
+            });
+        }
     }
 
     /**
