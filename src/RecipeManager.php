@@ -49,6 +49,7 @@ class RecipeManager extends Manager
 
         return new Recipes\Command('vendor:publish', [
             '--tag' => $tags,
+            '--force' => true,
         ]);
     }
 
