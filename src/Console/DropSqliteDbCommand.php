@@ -19,10 +19,9 @@ class DropSqliteDbCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @return int
      */
-    public function handle(Filesystem $filesystem)
+    public function handle()
     {
         return $this->call('package:drop-sqlite-db');
     }
