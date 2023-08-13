@@ -15,7 +15,7 @@ class Workbench
      * @param  string|null  $key
      * @return mixed|array<string, mixed>
      *
-     * @phpstan-return TWorkbenchConfig|mixed
+     * @phpstan-return ($key is null ? TWorkbenchConfig : mixed)
      */
     public static function config($key = null)
     {
