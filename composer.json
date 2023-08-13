@@ -32,6 +32,7 @@
         "mockery/mockery": "^1.5.1",
         "orchestra/canvas": "^8.2",
         "orchestra/canvas-core": "^7.2 || ^8.2",
+        "orchestra/testbench-core": "dev-workbench as 8.8.0",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6 || ^10.1"
     },
