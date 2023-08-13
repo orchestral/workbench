@@ -16,14 +16,12 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if ($this->app->runningInConsole()) {
-            $this->app->singleton('workbench.recipe', function (Application $app) {
-                /** @var TWorkbenchConfig $workbench */
-                $workbench = workbench();
+        $this->app->singleton('workbench.recipe', function (Application $app) {
+            /** @var TWorkbenchConfig $workbench */
+            $workbench = workbench();
 
-                return new RecipeManager($app, $workbench);
-            });
-        }
+            return new RecipeManager($app, $workbench);
+        });
     }
 
     /**
