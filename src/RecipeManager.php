@@ -2,39 +2,11 @@
 
 namespace Orchestra\Workbench;
 
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Manager;
 
-/**
- * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
- */
 class RecipeManager extends Manager
 {
-    /**
-     * The workbench configuration.
-     *
-     * @var array<string, mixed>
-     *
-     * @phpstan-var TWorkbenchConfig
-     */
-    protected $workbench;
-
-    /**
-     * Create a new manager instance.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $container
-     * @param  array<string, mixed>  $workbench
-     *
-     * @phpstan-param TWorkbenchConfig  $workbench
-     */
-    public function __construct(Container $container, array $workbench)
-    {
-        parent::__construct($container);
-
-        $this->workbench = $workbench;
-    }
-
     /**
      * Create "asset-publish" driver.
      *
@@ -42,7 +14,10 @@ class RecipeManager extends Manager
      */
     public function createAssetPublishDriver(): Contracts\Recipe
     {
-        $tags = Collection::make($this->workbench['assets'])
+        /** @var array<int, string> $assets */
+        $assets = Workbench::config('assets');
+
+        $tags = Collection::make($assets)
             ->push('laravel-assets')
             ->unique()
             ->all();

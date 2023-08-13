@@ -3,12 +3,11 @@
 namespace Orchestra\Workbench;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use function Orchestra\Testbench\workbench;
 
-/**
- * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
- */
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
@@ -17,10 +16,7 @@ class WorkbenchServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton('workbench.recipe', function (Application $app) {
-            /** @var TWorkbenchConfig $workbench */
-            $workbench = workbench();
-
-            return new RecipeManager($app, $workbench);
+            return new RecipeManager($app);
         });
     }
 
@@ -29,10 +25,43 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        static::authenticationRoutes();
+
+        $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
+
         if ($this->app->runningInConsole()) {
             $this->commands([
                 Console\BuildCommand::class,
             ]);
         }
+    }
+
+    /**
+     * Provide the authentication routes for Testbench.
+     *
+     * @return void
+     */
+    public static function authenticationRoutes()
+    {
+        Route::group(array_filter([
+            'prefix' => '_workbench',
+            'middleware' => 'web',
+        ]), function (Router $router) {
+            $router->get(
+                '/', [Http\Controllers\WorkbenchController::class, 'start']
+            )->name('workbench.start');
+
+            $router->get(
+                '/login/{userId}/{guard?}', [Http\Controllers\WorkbenchController::class, 'login']
+            )->name('workbench.login');
+
+            $router->get(
+                '/logout/{guard?}', [Http\Controllers\WorkbenchController::class, 'logout']
+            )->name('workbench.logout');
+
+            $router->get(
+                '/user/{guard?}', [Http\Controllers\WorkbenchController::class, 'user']
+            )->name('workbench.user');
+        });
     }
 }
