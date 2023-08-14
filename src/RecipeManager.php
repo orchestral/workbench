@@ -52,9 +52,9 @@ class RecipeManager extends Manager
     /**
      * Create anonymous command driver.
      *
-     * @return \Orchestra\Workbench\Recipes\Command
+     * @return \Orchestra\Workbench\Contracts\Recipe
      */
-    public function commandUsing(string $command): Recipes\Command
+    public function commandUsing(string $command): Contracts\Recipe
     {
         return new Recipes\Command($command);
     }

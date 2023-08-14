@@ -5,7 +5,8 @@ namespace Orchestra\Workbench\Console;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Collection;
-use function Orchestra\Testbench\workbench;
+use Orchestra\Workbench\Contracts\RecipeManager;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
@@ -26,13 +27,8 @@ class BuildCommand extends Command
      *
      * @return int
      */
-    public function handle(ConsoleKernel $kernel)
+    public function handle(ConsoleKernel $kernel, RecipeManager $recipes)
     {
-        /** @var TWorkbenchConfig $workbench */
-        $workbench = workbench();
-
-        $recipes = $this->laravel->make('workbench.recipe');
-
         $commands = Collection::make($kernel->all())
             ->keys()
             ->reject(fn ($command) => ! \is_string($command))
@@ -40,7 +36,10 @@ class BuildCommand extends Command
                 return [str_replace(':', '-', $command) => $command];
             });
 
-        Collection::make($workbench['build'])
+        /** @var array<int, string> $build */
+        $build = Workbench::config('build');
+
+        Collection::make($build)
             ->each(function (string $build) use ($kernel, $recipes, $commands) {
                 if ($recipes->hasCommand($build)) {
                     $recipes->command($build)->handle($kernel, $this->output);

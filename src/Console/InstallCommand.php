@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
-use Orchestra\Testbench\Workbench\Composer;
+use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Symfony\Component\Console\Attribute\AsCommand;
