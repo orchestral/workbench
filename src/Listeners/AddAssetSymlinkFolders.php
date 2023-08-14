@@ -17,5 +17,4 @@ class AddAssetSymlinkFolders
         $event->components->task('Started');
         // Access the order using $event->order...
     }
-
 }
