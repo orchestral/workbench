@@ -2,11 +2,16 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
+use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
+use Orchestra\Workbench\Listeners\AddAssetSymlinkFolders;
+use Orchestra\Workbench\Listeners\RemoveAssetSymlinkFolders;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -36,6 +41,11 @@ class WorkbenchServiceProvider extends ServiceProvider
                 Console\DropSqliteDbCommand::class,
                 Console\InstallCommand::class,
             ]);
+
+            tap($this->app->make('events'), function (EventDispatcher $event) {
+                $event->listen(ServeCommandStarted::class, [AddAssetSymlinkFolders::class, 'handle']);
+                $event->listen(ServeCommandEnded::class, [RemoveAssetSymlinkFolders::class, 'handle']);
+            });
         }
     }
 
