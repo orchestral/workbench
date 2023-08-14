@@ -4,6 +4,7 @@ namespace Orchestra\Workbench;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Manager;
+use Illuminate\Support\Str;
 
 class RecipeManager extends Manager
 {
@@ -49,54 +50,41 @@ class RecipeManager extends Manager
     }
 
     /**
-     * Create "db-wipe" driver.
+     * Create anonymous command driver.
      *
-     * @return \Orchestra\Workbench\Contracts\Recipe
+     * @return \Orchestra\Workbench\Recipes\Command
      */
-    public function createDbWipeDriver(): Contracts\Recipe
+    public function commandUsing(string $command): Recipes\Command
     {
-        return new Recipes\Command('db:wipe');
+        return new Recipes\Command($command);
     }
 
     /**
-     * Create "migrate" driver.
+     * Run the recipe by name.
      *
+     * @param  string  $driver
      * @return \Orchestra\Workbench\Contracts\Recipe
      */
-    public function createMigrateDriver(): Contracts\Recipe
+    public function command(string $driver): Contracts\Recipe
     {
-        return new Recipes\Command('migrate');
+        return $this->driver($driver);
     }
 
     /**
-     * Create "migrate-fresh" driver.
+     * Determine recipe is available by name.
      *
-     * @return \Orchestra\Workbench\Contracts\Recipe
+     * @param  string  $driver
+     * @return bool
      */
-    public function createMigrateFreshDriver(): Contracts\Recipe
+    public function hasCommand(string $driver): bool
     {
-        return new Recipes\Command('migrate:fresh');
-    }
+        if (isset($this->customCreators[$driver])) {
+            return true;
+        }
 
-    /**
-     * Create "migrate-refresh" driver.
-     *
-     * @return \Orchestra\Workbench\Contracts\Recipe
-     */
-    public function createMigrateRefreshDriver(): Contracts\Recipe
-    {
-        return new Recipes\Command('migrate:refresh');
-    }
+        $method = 'create'.Str::studly($driver).'Driver';
 
-    /**
-     * Run the action by name.
-     *
-     * @param  string  $name
-     * @return \Orchestra\Workbench\Contracts\Recipe
-     */
-    public function action(string $name): Contracts\Recipe
-    {
-        return $this->driver($name);
+        return method_exists($this, $method);
     }
 
     /**

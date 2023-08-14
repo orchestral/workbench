@@ -33,9 +33,26 @@ class BuildCommand extends Command
 
         $recipes = $this->laravel->make('workbench.recipe');
 
+        $commands = Collection::make($kernel->all())
+            ->keys()
+            ->reject(fn ($command) => ! \is_string($command))
+            ->mapWithKeys(function (string $command) {
+                return [str_replace(':', '-', $command) => $command];
+            });
+
         Collection::make($workbench['build'])
-            ->each(function (string $build) use ($kernel, $recipes) {
-                $recipes->action($build)->handle($kernel, $this->output);
+            ->each(function (string $build) use ($kernel, $recipes, $commands) {
+                if ($recipes->hasCommand($build)) {
+                    $recipes->command($build)->handle($kernel, $this->output);
+
+                    return;
+                }
+
+                $command = $commands->get($build) ?? $commands->first(fn ($name) => $build === $name);
+
+                if (! \is_null($command)) {
+                    $recipes->commandUsing($command)->handle($kernel, $this->output);
+                }
             });
 
         return Command::SUCCESS;

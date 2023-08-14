@@ -3,7 +3,6 @@
 namespace Orchestra\Workbench\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Symfony\Component\Console\Attribute\AsCommand;
 

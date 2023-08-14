@@ -9,8 +9,6 @@ use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Orchestra\Testbench\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
-use Orchestra\Workbench\Events\WorkbenchInstallEnded;
-use Orchestra\Workbench\Events\WorkbenchInstallStarted;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
