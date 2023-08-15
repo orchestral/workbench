@@ -35,6 +35,9 @@
         "phpunit/phpunit": "^9.6"
     },
     "extra": {
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        },
         "laravel": {
             "providers": [
                 "Orchestra\\Workbench\\WorkbenchServiceProvider"
