@@ -24,13 +24,6 @@ class InstallCommand extends Command
     protected $signature = 'workbench:install {--force : Overwrite any existing files}';
 
     /**
-     * The environment file name.
-     *
-     * @var string
-     */
-    protected $environmentFile = '.env';
-
-    /**
      * Execute the console command.
      *
      * @param  \Illuminate\Filesystem\Filesystem  $filesystem
@@ -147,17 +140,23 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
     {
+        $workbenchWorkingPath = "{$workingPath}/workbench";
+
         $from = $this->laravel->basePath('.env.example');
 
         if (! $filesystem->exists($from)) {
             return;
         }
 
+        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
+            ? '.env.dusk'
+            : '.env';
+
         $choices = Collection::make([
-            $this->environmentFile,
-            "{$this->environmentFile}.example",
-            "{$this->environmentFile}.dist",
-        ])->filter(fn ($file) => ! $filesystem->exists("{$workingPath}/{$file}"))
+            $environmentFile,
+            "{$environmentFile}.example",
+            "{$environmentFile}.dist",
+        ])->filter(fn ($file) => ! $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
             ->values()
             ->prepend('Skip exporting .env')
             ->all();
@@ -179,7 +178,7 @@ class InstallCommand extends Command
             return;
         }
 
-        $to = "{$workingPath}/workbench/{$choice}";
+        $to = "{$workbenchWorkingPath}/{$choice}";
 
         if ($this->option('force') || ! $filesystem->exists($to)) {
             $filesystem->copy($from, $to);
