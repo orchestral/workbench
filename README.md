@@ -1,7 +1,7 @@
-Testing Helper for Laravel Development
+Workbench Companion for Laravel Packages Development 
 ==============
 
-Testbench Component is a simple package that has been designed to help you write tests for your Laravel package.
+Workbench Component is a simple package that has been designed to help you previews and tests your Laravel package.
 
 [![tests](https://github.com/orchestral/workbench/workflows/tests/badge.svg?branch=master)](https://github.com/orchestral/workbench/actions?query=workflow%3Atests+branch%3Amaster)
 [![Latest Stable Version](https://poser.pugx.org/orchestra/workbench/v/stable)](https://packagist.org/packages/orchestra/workbench)
