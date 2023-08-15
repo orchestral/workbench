@@ -5,6 +5,7 @@ namespace Orchestra\Workbench\Listeners;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 use Orchestra\Workbench\Workbench;
@@ -49,6 +50,12 @@ class AddAssetSymlinkFolders
                 return ['from' => $from, 'to' => $to];
             })->filter()
             ->each(function ($pair) {
+                $rootDirectory = Str::beforeLast($pair['to'], '/');
+
+                if (! $this->files->isDirectory($rootDirectory)) {
+                    $this->files->ensureDirectoryExists($rootDirectory);
+                }
+
                 /** @phpstan-ignore-next-line */
                 $this->files->link($pair['from'], $pair['to']);
             });
