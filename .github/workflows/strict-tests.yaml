@@ -15,12 +15,9 @@ jobs:
         os:
           - "ubuntu-latest"
         php:
+          - '8.0'
           - 8.1
           - 8.2
-        phpunit:
-          - "~10.1.0"
-          - "~10.2.0"
-          - "~10.3.0"
         dependencies:
           - "highest"
         experimental:
@@ -28,12 +25,10 @@ jobs:
         include:
           - os: "ubuntu-latest"
             php: 8.3
-            phpunit: "~10.3.0"
             dependencies: "highest"
             experimental: true
 
-
-    name: PHP${{ matrix.php }} with PHPUnit${{ matrix.phpunit }}
+    name: PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
 
     steps:
       - name: Checkout code
@@ -45,10 +40,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, mysql, mysqli, pdo_mysql, bcmath, intl, fileinfo
           coverage: none
-
-      - name: Install PHPUnit ${{ matrix.phpunit }}
-        run: |
-          composer require "phpunit/phpunit:${{ matrix.phpunit }}" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
