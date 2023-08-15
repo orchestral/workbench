@@ -49,6 +49,7 @@ class AddAssetSymlinkFolders
                 return ['from' => $from, 'to' => $to];
             })->filter()
             ->each(function ($pair) {
+                /** @var string $rootDirectory */
                 $rootDirectory = Str::beforeLast($pair['to'], '/');
 
                 if (! $this->files->isDirectory($rootDirectory)) {
