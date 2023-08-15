@@ -6,7 +6,6 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Workbench;
-use Orchestra\Workbench\WorkbenchServiceProvider;
 
 class WorkbenchTest extends TestCase
 {
@@ -24,7 +23,6 @@ class WorkbenchTest extends TestCase
         );
     }
 
-
     /** @test */
     public function it_can_resolve_package_path()
     {
@@ -34,6 +32,18 @@ class WorkbenchTest extends TestCase
 
         $this->assertSame(
             realpath(__DIR__.'/../testbench.yaml'), Workbench::packagePath('testbench.yaml')
+        );
+    }
+
+    /** @test */
+    public function it_can_resolve_workbench_path()
+    {
+        $this->assertSame(
+            realpath(__DIR__.'/../workbench'), rtrim(Workbench::path(), DIRECTORY_SEPARATOR)
+        );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist/app.js')
         );
     }
 
