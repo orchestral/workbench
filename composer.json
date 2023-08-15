@@ -53,6 +53,11 @@
             "@composer run prepare",
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
+        ],
+        "build": "@php vendor/bin/testbench workbench:build",
+        "start": [
+            "@composer run build",
+            "@php vendor/bin/testbench serve"
         ]
     },
     "prefer-stable": true,
