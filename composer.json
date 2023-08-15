@@ -45,9 +45,17 @@
     },
     "scripts": {
         "post-autoload-dump": [
+            "@composer run clear",
             "@composer run prepare"
         ],
-        "prepare": "@php vendor/bin/testbench package:discover --ansi"
+        "clear": "@php testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "ci": [
+            "@composer audit",
+            "@composer run prepare",
+            "@php vendor/bin/pint",
+            "@php vendor/bin/phpstan analyse"
+        ]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
