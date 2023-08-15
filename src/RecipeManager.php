@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Manager;
 use Illuminate\Support\Str;
 
-class RecipeManager extends Manager
+class RecipeManager extends Manager implements Contracts\RecipeManager
 {
     /**
      * Create "asset-publish" driver.
