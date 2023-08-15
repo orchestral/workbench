@@ -8,5 +8,12 @@ workbench:
     - asset-publish
     - create-sqlite-db
     - migrate:refresh
+  sync:
+    - from: workbench/dist
+      to: public/vendor/workbench
   assets:
     - workbench-assets
+
+purge:
+  directories:
+    - public/vendor/workbench
