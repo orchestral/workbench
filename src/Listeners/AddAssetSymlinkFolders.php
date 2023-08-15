@@ -2,7 +2,6 @@
 
 namespace Orchestra\Workbench\Listeners;
 
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
