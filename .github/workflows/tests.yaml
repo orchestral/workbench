@@ -19,6 +19,7 @@ jobs:
           - 8.2
         dependencies:
           - "highest"
+          - "lowest"
         experimental:
           - false
 
