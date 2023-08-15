@@ -49,15 +49,25 @@ class AddAssetSymlinkFolders
                 return ['from' => $from, 'to' => $to];
             })->filter()
             ->each(function ($pair) {
+                /** @var string $from */
+                $from = $pair['from'];
+
+                /** @var string $to */
+                $to = $pair['to'];
+
                 /** @var string $rootDirectory */
-                $rootDirectory = Str::beforeLast($pair['to'], '/');
+                $rootDirectory = Str::beforeLast($to, '/');
+
+                if ($this->files->isDirectory($to)) {
+                    $this->files->deleteDirectory($to);
+                }
 
                 if (! $this->files->isDirectory($rootDirectory)) {
                     $this->files->ensureDirectoryExists($rootDirectory);
                 }
 
                 /** @phpstan-ignore-next-line */
-                $this->files->link($pair['from'], $pair['to']);
+                $this->files->link($from, $to);
             });
     }
 }
