@@ -17,12 +17,10 @@ jobs:
           - 8.2
         dependencies:
           - "highest"
-        laravel:
-          - "10.x"
         experimental:
           - false
 
-    name: Laravel ${{ matrix.laravel }} on PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
+    name: Laravel 10 on PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
 
     steps:
       - name: Checkout code
@@ -35,9 +33,9 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
 
-      - name: Install Laravel Framework ${{ matrix.laravel }}
+      - name: Locked installation for Laravel Framework 10
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "orchestra/testbench-core:8.x" --no-interaction --no-update --dev
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
@@ -82,9 +80,9 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
 
-      - name: Install Laravel Framework ${{ matrix.laravel }}
+      - name: Locked installation for Laravel Framework 9
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update
+          composer require "orchestra/testbench-core:7.x" --no-interaction --no-update --dev
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
