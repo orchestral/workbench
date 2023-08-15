@@ -43,7 +43,7 @@ class WorkbenchTest extends TestCase
         );
 
         $this->assertSame(
-            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist/app.js')
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist'.DIRECTORY_SEPARATOR.'app.js')
         );
     }
 
