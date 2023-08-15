@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  tests-on-laravel-10:
+  tests:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
@@ -14,6 +14,7 @@ jobs:
           - "ubuntu-latest"
           - "windows-latest"
         php:
+          - '8.-'
           - 8.1
           - 8.2
         dependencies:
@@ -21,7 +22,7 @@ jobs:
         experimental:
           - false
 
-    name: Laravel 10 on PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
+    name: PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
 
     steps:
       - name: Checkout code
@@ -33,58 +34,6 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
-
-      - name: Locked installation for Laravel Framework 10
-        run: |
-          composer require "laravel/framework:10.x" "orchestra/testbench-core:8.x" --no-interaction --no-update --dev
-
-      - name: Install dependencies
-        uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "--prefer-dist --no-cache"
-
-      - name: Installed dependencies
-        run: composer show -D
-
-      - name: Execute tests
-        run: vendor/bin/phpunit --testdox
-
-  tests-on-laravel-9:
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.experimental }}
-    strategy:
-      matrix:
-        os:
-          - "ubuntu-latest"
-          - "windows-latest"
-        php:
-          - '8.0'
-          - 8.1
-          - 8.2
-        dependencies:
-          - "highest"
-        laravel:
-          - "9.x"
-        experimental:
-          - false
-
-    name: Laravel ${{ matrix.laravel }} on PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
-          coverage: none
-
-      - name: Locked installation for Laravel Framework 9
-        run: |
-          composer require "laravel/framework:9.x" "orchestra/testbench-core:7.x" --no-interaction --no-update --dev
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
