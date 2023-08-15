@@ -42,11 +42,9 @@ class AddAssetSymlinkFolders
                 /** @var string $to */
                 $to = Workbench::laravelPath($pair['to']);
 
-                if (! $this->files->isDirectory($from)) {
-                    return null;
-                }
-
-                return ['from' => $from, 'to' => $to];
+                return $this->files->isDirectory($from)
+                    ? ['from' => $from, 'to' => $to]
+                    : null;
             })->filter()
             ->each(function ($pair) {
                 /** @var array{from: string, to: string} $pair */
