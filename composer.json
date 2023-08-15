@@ -30,6 +30,7 @@
     "require-dev": {
         "fakerphp/faker": "^1.21",
         "laravel/framework": "^9.52.15 || ^10.17.0",
+        "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
         "orchestra/canvas": "^7.6 || ^8.2",
         "phpstan/phpstan": "^1.10.7",
