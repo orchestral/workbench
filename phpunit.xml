@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
+         backupStaticAttributes="false"
          beStrictAboutTestsThatDoNotTestAnything="false"
          bootstrap="vendor/autoload.php"
          colors="true"
+         convertDeprecationsToExceptions="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false"
-         cacheDirectory=".phpunit.cache"
-         backupStaticProperties="false">
-    <coverage includeUncoveredFiles="false" />
-    <testsuites>
-        <testsuite name="Testbench Test Suite">
-            <directory suffix="Test.php">./tests/</directory>
-        </testsuite>
-    </testsuites>
-    <php>
-        <server name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
-        <server name="SEND_DEPRECATED_NOTICES_TO_RAY" value="(true)"/>
-    </php>
-    <source>
+         verbose="true">
+    <coverage includeUncoveredFiles="false">
         <include>
             <directory suffix=".php">src/</directory>
         </include>
@@ -42,5 +36,14 @@
             <file>src/PHPUnit/TestCase.php</file>
             <file>src/Workbench/Console/InstallCommand.php</file>
         </exclude>
-    </source>
+    </coverage>
+    <testsuites>
+        <testsuite name="Testbench Test Suite">
+            <directory suffix="Test.php">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
+        <server name="SEND_DEPRECATED_NOTICES_TO_RAY" value="(true)"/>
+    </php>
 </phpunit>
