@@ -22,19 +22,19 @@
         }
     },
     "require": {
-        "php": "^8.0",
-        "illuminate/console": "^9.52.15 || ^10.17.0",
-        "illuminate/support": "^9.52.15 || ^10.17.0",
-        "orchestra/testbench-core": "^7.28.0 || ^8.8.0"
+        "php": "^8.2",
+        "illuminate/console": "^11.0",
+        "illuminate/support": "^11.0",
+        "orchestra/testbench-core": "9.x-dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
-        "laravel/framework": "^9.52.15 || ^10.17.0",
+        "laravel/framework": "^11.0",
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
-        "orchestra/canvas": "^7.6 || ^8.2",
+        "orchestra/canvas": "^9.0",
         "phpstan/phpstan": "^1.10.7",
-        "phpunit/phpunit": "^9.6"
+        "phpunit/phpunit": "^10.1"
     },
     "extra": {
         "branch-alias": {
