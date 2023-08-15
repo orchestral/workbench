@@ -2,10 +2,6 @@
 
 namespace Orchestra\Workbench;
 
-use Orchestra\Testbench\Contracts\Config as ConfigContract;
-use Orchestra\Testbench\Foundation\Config;
-use function Orchestra\Testbench\package_path;
-
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
  */
@@ -30,7 +26,7 @@ class Workbench
      */
     public static function packagePath(string $path = ''): string
     {
-        return package_path($path);
+        return \Orchestra\Testbench\package_path($path);
     }
 
     /**
@@ -41,9 +37,7 @@ class Workbench
      */
     public static function path(string $path = ''): string
     {
-        return static::packagePath(
-            'workbench'.($path != '' ? DIRECTORY_SEPARATOR.ltrim($path, DIRECTORY_SEPARATOR) : '')
-        );
+        return \Orchestra\Testbench\workbench_path($path);
     }
 
     /**
@@ -56,12 +50,7 @@ class Workbench
      */
     public static function config($key = null)
     {
-        /** @var \Orchestra\Testbench\Contracts\Config $config */
-        $config = app()->bound(ConfigContract::class)
-            ? app()->make(ConfigContract::class)
-            : new Config();
-
-        $workbench = $config->getWorkbenchAttributes();
+        $workbench = \Orchestra\Testbench\workbench();
 
         if (! \is_null($key)) {
             return $workbench[$key] ?? null;
