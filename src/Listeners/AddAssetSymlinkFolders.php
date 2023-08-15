@@ -49,6 +49,8 @@ class AddAssetSymlinkFolders
                 return ['from' => $from, 'to' => $to];
             })->filter()
             ->each(function ($pair) {
+                /** @var array{from: string, to: string} $pair */
+
                 /** @var string $from */
                 $from = $pair['from'];
 
@@ -66,7 +68,6 @@ class AddAssetSymlinkFolders
                     $this->files->ensureDirectoryExists($rootDirectory);
                 }
 
-                /** @phpstan-ignore-next-line */
                 $this->files->link($from, $to);
             });
     }

@@ -41,15 +41,11 @@ class RemoveAssetSymlinkFolders
                 /** @var string $to */
                 $to = Workbench::laravelPath($pair['to']);
 
-                if (! is_link($to)) {
-                    return null;
-                }
-
-                return $to;
+                return is_link($to) ? $to : null;
             })->filter()
-            ->each(function ($linkPath) {
-                /** @phpstan-ignore-next-line */
-                $this->files->delete($linkPath);
+            ->each(function ($to) {
+                /** @var string $to */
+                $this->files->delete($to);
             });
     }
 }
