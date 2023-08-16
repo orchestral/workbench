@@ -58,6 +58,7 @@
         "build": "@php vendor/bin/testbench workbench:build",
         "start": [
             "@composer run build",
+            "Composer\\Config::disableProcessTimeout",
             "@php vendor/bin/testbench serve"
         ]
     },
