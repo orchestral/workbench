@@ -50,12 +50,14 @@ class AddAssetSymlinkFolders
                 /** @var string $to */
                 $to = $pair['to'];
 
-                /** @var string $rootDirectory */
-                $rootDirectory = Str::beforeLast($to, '/');
-
-                if ($this->files->isDirectory($to)) {
+                if (is_link($to)) {
+                    $this->files->delete($to);
+                } elseif ($this->files->isDirectory($to)) {
                     $this->files->deleteDirectory($to);
                 }
+
+                /** @var string $rootDirectory */
+                $rootDirectory = Str::beforeLast($to, '/');
 
                 if (! $this->files->isDirectory($rootDirectory)) {
                     $this->files->ensureDirectoryExists($rootDirectory);
