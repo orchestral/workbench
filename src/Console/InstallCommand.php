@@ -158,6 +158,7 @@ class InstallCommand extends Command
 
         if ($this->option('force') || ! $filesystem->exists($to)) {
             $filesystem->copy($from, $to);
+            $filesystem->copy((string) realpath(__DIR__.'/stubs/workbench.gitignore'), "{$workbenchWorkingPath}/.gitignore");
 
             $this->copyTaskCompleted($from, $to, 'file');
         } else {
