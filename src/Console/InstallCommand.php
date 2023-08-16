@@ -26,7 +26,6 @@ class InstallCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @return int
      */
     public function handle(Filesystem $filesystem)
@@ -51,10 +50,6 @@ class InstallCommand extends Command
 
     /**
      * Prepare workbench directories.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
     {
@@ -68,10 +63,6 @@ class InstallCommand extends Command
 
     /**
      * Prepare workbench namespace to `composer.json`.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
@@ -109,10 +100,6 @@ class InstallCommand extends Command
 
     /**
      * Copy the "testbench.yaml" file.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
@@ -133,10 +120,6 @@ class InstallCommand extends Command
 
     /**
      * Copy the ".env" file.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
     {
@@ -187,10 +170,6 @@ class InstallCommand extends Command
 
     /**
      * Ensure a directory exists and add `.gitkeep` file.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function ensureDirectoryExists(Filesystem $filesystem, string $workingPath): void
     {

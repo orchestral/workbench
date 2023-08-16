@@ -50,7 +50,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
     /**
      * Run the recipe by name.
      *
-     * @param  string  $driver
      * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function command(string $driver): Contracts\Recipe
@@ -60,9 +59,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Determine recipe is available by name.
-     *
-     * @param  string  $driver
-     * @return bool
      */
     public function hasCommand(string $driver): bool
     {

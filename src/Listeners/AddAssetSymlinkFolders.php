@@ -13,8 +13,6 @@ class AddAssetSymlinkFolders
 {
     /**
      * Construct a new event listener.
-     *
-     * @param  \Orchestra\Testbench\Contracts\Config  $config
      */
     public function __construct(
         public ConfigContract $config,
@@ -25,9 +23,6 @@ class AddAssetSymlinkFolders
 
     /**
      * Handle the event.
-     *
-     * @param  \Orchestra\Testbench\Foundation\Events\ServeCommandStarted  $event
-     * @return void
      */
     public function handle(ServeCommandStarted $event): void
     {

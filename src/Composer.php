@@ -8,7 +8,6 @@ class Composer extends \Illuminate\Support\Composer
      * Modify composer content.
      *
      * @param  callable(array):array  $callback
-     * @return void
      */
     public function modify(callable $callback): void
     {

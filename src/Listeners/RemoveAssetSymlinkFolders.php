@@ -12,8 +12,6 @@ class RemoveAssetSymlinkFolders
 {
     /**
      * Construct a new event listener.
-     *
-     * @param  \Orchestra\Testbench\Contracts\Config  $config
      */
     public function __construct(
         public ConfigContract $config,
@@ -24,9 +22,6 @@ class RemoveAssetSymlinkFolders
 
     /**
      * Handle the event.
-     *
-     * @param  \Orchestra\Testbench\Foundation\Events\ServeCommandEnded  $event
-     * @return void
      */
     public function handle(ServeCommandEnded $event): void
     {

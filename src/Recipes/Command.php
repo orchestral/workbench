@@ -11,7 +11,6 @@ class Command implements Recipe
     /**
      * Construct a new recipe.
      *
-     * @param  string  $command
      * @param  array<string, mixed>  $options
      */
     public function __construct(
@@ -24,8 +23,6 @@ class Command implements Recipe
     /**
      * Run the recipe.
      *
-     * @param  \Illuminate\Contracts\Console\Kernel  $kernel
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return void
      */
     public function handle(ConsoleKernel $kernel, OutputInterface $output)
@@ -37,8 +34,6 @@ class Command implements Recipe
 
     /**
      * Get the command name.
-     *
-     * @return string
      */
     protected function commandName(): string
     {
