@@ -9,23 +9,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Command implements Recipe
 {
     /**
-     * The command name.
+     * Construct a new recipe.
      *
-     * @var string
+     * @param  string  $command
+     * @param  array<string, mixed>  $options
      */
-    public $command;
-
-    /**
-     * The command options.
-     *
-     * @var array<string, mixed>
-     */
-    public $options = [];
-
-    public function __construct(string $command, array $options = [])
-    {
-        $this->command = $command;
-        $this->options = $options;
+    public function __construct(
+        public string $command,
+        public array $options = []
+    ) {
+        //
     }
 
     /**
@@ -37,6 +30,28 @@ class Command implements Recipe
      */
     public function handle(ConsoleKernel $kernel, OutputInterface $output)
     {
-        $kernel->call($this->command, $this->options, $output);
+        $kernel->call(
+            $this->commandName(), $this->commandOptions(), $output
+        );
+    }
+
+    /**
+     * Get the command name.
+     *
+     * @return string
+     */
+    protected function commandName(): string
+    {
+        return $this->command;
+    }
+
+    /**
+     * Get the command options.
+     *
+     * @return array<string, mixed>
+     */
+    protected function commandOptions(): array
+    {
+        return $this->options;
     }
 }
