@@ -54,6 +54,7 @@
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
         ],
+        "test": "@php vendor/bin/phpunit -c ./ --color",
         "build": "@php vendor/bin/testbench workbench:build",
         "start": [
             "@composer run build",

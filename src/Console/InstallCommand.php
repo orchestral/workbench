@@ -148,8 +148,6 @@ class InstallCommand extends Command
             return;
         }
 
-
-
         $choices = Collection::make($this->environmentFiles())
             ->filter(fn ($file) => ! $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
             ->values()
