@@ -12,8 +12,7 @@ class CatchDefaultRoute
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
+     * @param  \Closure(\Illuminate\Http\Request): (mixed)  $next
      */
     public function handle($request, Closure $next)
     {

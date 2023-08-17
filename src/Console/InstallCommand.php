@@ -26,7 +26,6 @@ class InstallCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
      * @return int
      */
     public function handle(Filesystem $filesystem)
@@ -51,10 +50,6 @@ class InstallCommand extends Command
 
     /**
      * Prepare workbench directories.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
     {
@@ -68,10 +63,6 @@ class InstallCommand extends Command
 
     /**
      * Prepare workbench namespace to `composer.json`.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
@@ -109,10 +100,6 @@ class InstallCommand extends Command
 
     /**
      * Copy the "testbench.yaml" file.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
@@ -133,10 +120,6 @@ class InstallCommand extends Command
 
     /**
      * Copy the ".env" file.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
     {
@@ -148,15 +131,8 @@ class InstallCommand extends Command
             return;
         }
 
-        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
-            ? '.env.dusk'
-            : '.env';
-
-        $choices = Collection::make([
-            $environmentFile,
-            "{$environmentFile}.example",
-            "{$environmentFile}.dist",
-        ])->filter(fn ($file) => ! $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
+        $choices = Collection::make($this->environmentFiles())
+            ->filter(fn ($file) => ! $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
             ->values()
             ->prepend('Skip exporting .env')
             ->all();
@@ -182,6 +158,7 @@ class InstallCommand extends Command
 
         if ($this->option('force') || ! $filesystem->exists($to)) {
             $filesystem->copy($from, $to);
+            $filesystem->copy((string) realpath(__DIR__.'/stubs/workbench.gitignore'), "{$workbenchWorkingPath}/.gitignore");
 
             $this->copyTaskCompleted($from, $to, 'file');
         } else {
@@ -194,10 +171,6 @@ class InstallCommand extends Command
 
     /**
      * Ensure a directory exists and add `.gitkeep` file.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $filesystem
-     * @param  string  $workingPath
-     * @return void
      */
     protected function ensureDirectoryExists(Filesystem $filesystem, string $workingPath): void
     {
@@ -221,5 +194,23 @@ class InstallCommand extends Command
             'Prepare [%s] directory',
             str_replace($rootWorkingPath.'/', '', $workingPath),
         ));
+    }
+
+    /**
+     * Get possible environment files.
+     *
+     * @return array<int, string>
+     */
+    protected function environmentFiles(): array
+    {
+        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
+            ? '.env.dusk'
+            : '.env';
+
+        return [
+            $environmentFile,
+            "{$environmentFile}.example",
+            "{$environmentFile}.dist",
+        ];
     }
 }
