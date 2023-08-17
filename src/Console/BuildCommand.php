@@ -32,9 +32,9 @@ class BuildCommand extends Command
         $commands = Collection::make($kernel->all())
             ->keys()
             ->reject(fn ($command) => ! \is_string($command))
-            ->mapWithKeys(function (string $command) {
-                return [str_replace(':', '-', $command) => $command];
-            });
+            ->mapWithKeys(fn (string $command) => [
+                str_replace(':', '-', $command) => $command
+            ]);
 
         /** @var array<int, string> $build */
         $build = Workbench::config('build');
