@@ -33,7 +33,7 @@ class BuildCommand extends Command
             ->keys()
             ->reject(fn ($command) => ! \is_string($command))
             ->mapWithKeys(fn (string $command) => [
-                str_replace(':', '-', $command) => $command
+                str_replace(':', '-', $command) => $command,
             ]);
 
         /** @var array<int, string> $build */
