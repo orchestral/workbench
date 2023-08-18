@@ -108,7 +108,7 @@ class InstallCommand extends Command
         $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
         $content['scripts']['serve'] = [
             '@build',
-            '@php vendor/bin/testbench serve'
+            '@php vendor/bin/testbench serve',
         ];
 
         if (! \array_key_exists('lint', $content['scripts'])) {
