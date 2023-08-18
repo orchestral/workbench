@@ -2,8 +2,10 @@
 
 namespace Orchestra\Workbench\Console;
 
+use Composer\InstalledVersions;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Orchestra\Workbench\Composer;
@@ -69,33 +71,94 @@ class InstallCommand extends Command
         $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
 
         $composer->modify(function (array $content) {
-            /** @var array{autoload-dev?: array{psr-4?: array<string, string>}} $content */
-            if (! \array_key_exists('autoload-dev', $content)) {
-                $content['autoload-dev'] = [];
-            }
-
-            /** @var array{autoload-dev: array{psr-4?: array<string, string>}} $content */
-            if (! \array_key_exists('psr-4', $content['autoload-dev'])) {
-                $content['autoload-dev']['psr-4'] = [];
-            }
-
-            foreach (['Workbench\\App\\' => 'workbench/app/', 'Workbench\\Database\\' => 'workbench/database/'] as $namespace => $path) {
-                if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
-                    $content['autoload-dev']['psr-4'][$namespace] = $path;
-
-                    $this->components->task(sprintf(
-                        'Added [%s] for [%s] to Composer', $namespace, $path
-                    ));
-                } else {
-                    $this->components->twoColumnDetail(
-                        sprintf('Composer already contain [%s] namespace', $namespace),
-                        '<fg=yellow;options=bold>SKIPPED</>'
-                    );
-                }
-            }
-
-            return $content;
+            return $this->appendScriptsToComposer(
+                $this->appendAutoloadDevToComposer($content)
+            );
         });
+    }
+
+    protected function appendScriptsToComposer(array $content): array
+    {
+        $hasScriptsSection = \array_key_exists('scripts', $content);
+
+        if (! $hasScriptsSection) {
+            $content['scripts'] = [];
+        }
+
+        $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
+        $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
+        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
+        $content['scripts']['serve'] = [
+            '@composer run clear',
+            '@composer run prepare',
+            '@composer run build',
+            '@php vendor/bin/testbench serve',
+        ];
+
+        $postAutoloadDump = [
+            '@composer run clear',
+            '@composer run prepare',
+        ];
+
+        if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
+            $content['scripts']['post-autoload-dump'] = $postAutoloadDump;
+        } else {
+            $content['scripts']['post-autoload-dump'] = array_unique([
+                ...$postAutoloadDump,
+                ...Arr::wrap($content['scripts']['post-autoload-dump']),
+            ]);
+        }
+
+        if (! \array_key_exists('lint', $content['scripts'])) {
+            $content['scripts']['lint'] = array_filter([
+                '@composer run prepare',
+                InstalledVersions::isInstalled('laravel/pint') ? '@php vendor/bin/pint' : null,
+                InstalledVersions::isInstalled('phpstan/phpstan') ? '@php vendor/bin/phpstan analyse' : null,
+            ]);
+        }
+
+        if (InstalledVersions::isInstalled('phpunit/phpunit')) {
+            if (! \array_key_exists('test', $content['scripts'])) {
+                $content['scripts']['test'] = InstalledVersions::isInstalled('pestphp/pest')
+                    ? '@php vendor/bin/pest'
+                    : '@php vendor/bin/phpunit -c ./ --color';
+            }
+        }
+
+        return $content;
+    }
+
+    /**
+     * Append `autoload-dev` to `composer.json`.
+     */
+    protected function appendAutoloadDevToComposer(array $content): array
+    {
+        /** @var array{autoload-dev?: array{psr-4?: array<string, string>}} $content */
+        if (! \array_key_exists('autoload-dev', $content)) {
+            $content['autoload-dev'] = [];
+        }
+
+        /** @var array{autoload-dev: array{psr-4?: array<string, string>}} $content */
+        if (! \array_key_exists('psr-4', $content['autoload-dev'])) {
+            $content['autoload-dev']['psr-4'] = [];
+        }
+
+        foreach (['Workbench\\App\\' => 'workbench/app/', 'Workbench\\Database\\' => 'workbench/database/'] as $namespace => $path) {
+            if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
+                $content['autoload-dev']['psr-4'][$namespace] = $path;
+
+                $this->components->task(sprintf(
+                    'Added [%s] for [%s] to Composer', $namespace, $path
+                ));
+            } else {
+                $this->components->twoColumnDetail(
+                    sprintf('Composer already contain [%s] namespace', $namespace),
+                    '<fg=yellow;options=bold>SKIPPED</>'
+                );
+            }
+        }
+
+        return $content;
     }
 
     /**
