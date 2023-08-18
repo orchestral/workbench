@@ -89,19 +89,9 @@ class InstallCommand extends Command
             $content['scripts'] = [];
         }
 
-        $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
-        $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
-        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
-        $content['scripts']['serve'] = [
-            '@composer run clear',
-            '@composer run prepare',
-            '@composer run build',
-            '@php vendor/bin/testbench serve',
-        ];
-
         $postAutoloadDumpScripts = [
-            '@composer run clear',
-            '@composer run prepare',
+            '@clear',
+            '@prepare',
         ];
 
         if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
@@ -112,6 +102,11 @@ class InstallCommand extends Command
                 ...Arr::wrap($content['scripts']['post-autoload-dump']),
             ]);
         }
+
+        $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
+        $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
+        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
+        $content['scripts']['serve'] = '@php vendor/bin/testbench serve';
 
         if (! \array_key_exists('lint', $content['scripts'])) {
             $lintScripts = [];
@@ -128,7 +123,7 @@ class InstallCommand extends Command
 
             if (\count($lintScripts) > 0) {
                 $content['scripts']['lint'] = [
-                    '@composer run prepare',
+                    '@prepare',
                     ...$lintScripts,
                 ];
             }
