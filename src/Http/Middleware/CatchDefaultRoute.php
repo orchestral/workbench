@@ -24,7 +24,7 @@ class CatchDefaultRoute
 
         $response = $next($request);
 
-        if (! \is_null($response->exception) && $response->exception instanceof NotFoundHttpException) {
+        if (property_exists($response, 'exception') && ! \is_null($response->exception) && $response->exception instanceof NotFoundHttpException) {
             if ($request->decodedPath() === '/' && $workbench['start'] !== '/') {
                 return redirect($workbench['start']);
             }
