@@ -3,6 +3,7 @@
 namespace Orchestra\Workbench\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Response;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -27,6 +28,8 @@ class CatchDefaultRoute
         if (! \is_null($response->exception) && $response->exception instanceof NotFoundHttpException) {
             if ($request->decodedPath() === '/' && $workbench['start'] !== '/') {
                 return redirect($workbench['start']);
+            } elseif (($workbench['install'] === true && ! isset($workbench['welcome'])) || $workbench['welcome'] !== false) {
+                return Response::view('welcome');
             }
         }
 

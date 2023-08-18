@@ -4,6 +4,7 @@ providers:
 
 workbench:
   start: '/'
+  welcome: true
   build:
     - asset-publish
     - create-sqlite-db
