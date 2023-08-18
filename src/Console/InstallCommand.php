@@ -106,7 +106,10 @@ class InstallCommand extends Command
         $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
         $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
         $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
-        $content['scripts']['serve'] = '@php vendor/bin/testbench serve';
+        $content['scripts']['serve'] = [
+            '@build',
+            '@php vendor/bin/testbench serve'
+        ];
 
         if (! \array_key_exists('lint', $content['scripts'])) {
             $lintScripts = [];
