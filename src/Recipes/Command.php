@@ -9,15 +9,24 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Command implements Recipe
 {
     /**
+     * After completion callback.
+     *
+     * @var (callable(\Symfony\Component\Console\Output\OutputInterface):(void))|null
+     */
+    public $callback;
+
+    /**
      * Construct a new recipe.
      *
      * @param  array<string, mixed>  $options
+     * @param  (callable(\Symfony\Component\Console\Output\OutputInterface):(void))|null  $callback
      */
     public function __construct(
         public string $command,
-        public array $options = []
+        public array $options = [],
+        ?callable $callback = null
     ) {
-        //
+        $this->callback = $callback;
     }
 
     /**
@@ -30,6 +39,10 @@ class Command implements Recipe
         $kernel->call(
             $this->commandName(), $this->commandOptions(), $output
         );
+
+        if (\is_callable($this->callback)) {
+            \call_user_func($this->callback, $output);
+        }
     }
 
     /**
