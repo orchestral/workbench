@@ -161,7 +161,7 @@ class InstallCommand extends Command
         $namespaces = [
             'Workbench\\App\\' => 'workbench/app/',
             'Workbench\\Database\\Factories\\' => 'workbench/database/factories/',
-            'Workbench\\Database\\Seeders\\' => 'workbench/database/seeder/',
+            'Workbench\\Database\\Seeders\\' => 'workbench/database/seeders/',
         ];
 
         foreach ($namespaces as $namespace => $path) {
