@@ -28,7 +28,10 @@ class CatchDefaultRoute
         if (! \is_null($response->exception) && $response->exception instanceof NotFoundHttpException) {
             if ($request->decodedPath() === '/' && $workbench['start'] !== '/') {
                 return redirect($workbench['start']);
-            } elseif (($workbench['install'] === true && ! isset($workbench['welcome'])) || $workbench['welcome'] !== false) {
+            } elseif (
+                ($workbench['install'] === true && $workbench['welcome'] !== false)
+                || ($workbench['install'] === false && $workbench['welcome'] === true)
+            ) {
                 return Response::view('welcome');
             }
         }
