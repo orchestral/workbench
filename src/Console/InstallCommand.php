@@ -11,6 +11,7 @@ use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -70,9 +71,9 @@ class InstallCommand extends Command
     {
         $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
 
-        $composer->modify(function (array $content) {
+        $composer->modify(function (array $content) use ($filesystem) {
             return $this->appendScriptsToComposer(
-                $this->appendAutoloadDevToComposer($content)
+                $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
             );
         });
     }
@@ -80,7 +81,7 @@ class InstallCommand extends Command
     /**
      * Append `scripts` to `composer.json`.
      */
-    protected function appendScriptsToComposer(array $content): array
+    protected function appendScriptsToComposer(array $content, Filesystem $filesystem): array
     {
         $hasScriptsSection = \array_key_exists('scripts', $content);
 
@@ -98,29 +99,45 @@ class InstallCommand extends Command
             '@php vendor/bin/testbench serve',
         ];
 
-        $postAutoloadDump = [
+        $postAutoloadDumpScripts = [
             '@composer run clear',
             '@composer run prepare',
         ];
 
         if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
-            $content['scripts']['post-autoload-dump'] = $postAutoloadDump;
+            $content['scripts']['post-autoload-dump'] = $postAutoloadDumpScripts;
         } else {
             $content['scripts']['post-autoload-dump'] = array_unique([
-                ...$postAutoloadDump,
+                ...$postAutoloadDumpScripts,
                 ...Arr::wrap($content['scripts']['post-autoload-dump']),
             ]);
         }
 
         if (! \array_key_exists('lint', $content['scripts'])) {
-            $content['scripts']['lint'] = array_filter([
-                '@composer run prepare',
-                InstalledVersions::isInstalled('laravel/pint') ? '@php vendor/bin/pint' : null,
-                InstalledVersions::isInstalled('phpstan/phpstan') ? '@php vendor/bin/phpstan analyse' : null,
-            ]);
+            $lintScripts = [];
+
+            if (InstalledVersions::isInstalled('laravel/pint')) {
+                $lintScripts[] = '@php vendor/bin/pint';
+            } elseif ($filesystem->exists(Workbench::packagePath('pint.json'))) {
+                $lintScripts[] = 'pint';
+            }
+
+            if (InstalledVersions::isInstalled('phpstan/phpstan')) {
+                $lintScripts[] = '@php vendor/bin/phpstan analyse';
+            }
+
+            if (\count($lintScripts) > 0) {
+                $content['scripts']['lint'] = [
+                    '@composer run prepare',
+                    ...$lintScripts,
+                ];
+            }
         }
 
-        if (InstalledVersions::isInstalled('phpunit/phpunit')) {
+        if (
+            $filesystem->exists(Workbench::packagePath('phpunit.xml'))
+            || $filesystem->exists(Workbench::packagePath('phpunit.xml.dist'))
+        ) {
             if (! \array_key_exists('test', $content['scripts'])) {
                 $content['scripts']['test'] = InstalledVersions::isInstalled('pestphp/pest')
                     ? '@php vendor/bin/pest'
@@ -134,7 +151,7 @@ class InstallCommand extends Command
     /**
      * Append `autoload-dev` to `composer.json`.
      */
-    protected function appendAutoloadDevToComposer(array $content): array
+    protected function appendAutoloadDevToComposer(array $content, Filesystem $filesystem): array
     {
         /** @var array{autoload-dev?: array{psr-4?: array<string, string>}} $content */
         if (! \array_key_exists('autoload-dev', $content)) {
