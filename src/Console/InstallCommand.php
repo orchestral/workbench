@@ -77,6 +77,9 @@ class InstallCommand extends Command
         });
     }
 
+    /**
+     * Append `scripts` to `composer.json`.
+     */
     protected function appendScriptsToComposer(array $content): array
     {
         $hasScriptsSection = \array_key_exists('scripts', $content);
