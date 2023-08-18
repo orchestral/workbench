@@ -44,8 +44,8 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "@composer run clear",
-            "@composer run prepare"
+            "@clear",
+            "@prepare"
         ],
         "ci": [
             "@composer audit",
@@ -55,12 +55,7 @@
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build",
-        "serve": [
-            "@composer run clear",
-            "@composer run prepare",
-            "@composer run build",
-            "@php vendor/bin/testbench serve"
-        ],
+        "serve": "@php vendor/bin/testbench serve",
         "lint": [
             "@composer run prepare",
             "@php vendor/bin/pint",
