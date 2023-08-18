@@ -158,7 +158,13 @@ class InstallCommand extends Command
             $content['autoload-dev']['psr-4'] = [];
         }
 
-        foreach (['Workbench\\App\\' => 'workbench/app/', 'Workbench\\Database\\' => 'workbench/database/'] as $namespace => $path) {
+        $namespaces = [
+            'Workbench\\App\\' => 'workbench/app/',
+            'Workbench\\Database\\Factories\\' => 'workbench/database/factories/',
+            'Workbench\\Database\\Seeders\\' => 'workbench/database/seeder/',
+        ];
+
+        foreach ($namespaces as $namespace => $path) {
             if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
                 $content['autoload-dev']['psr-4'][$namespace] = $path;
 
