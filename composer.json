@@ -26,7 +26,7 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^9.52.15 || ^10.17.0",
         "illuminate/support": "^9.52.15 || ^10.17.0",
-        "orchestra/testbench-core": "^7.28.3 || ^8.8.3"
+        "orchestra/testbench-core": "^7.28.4 || ^8.8.4"
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
@@ -47,14 +47,13 @@
             "@composer run clear",
             "@composer run prepare"
         ],
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
-        "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "ci": [
             "@composer audit",
             "@composer run prepare",
             "@composer run lint"
         ],
-        "test": "@php vendor/bin/phpunit -c ./ --color",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build",
         "serve": [
             "@composer run clear",
@@ -66,7 +65,8 @@
             "@composer run prepare",
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
-        ]
+        ],
+        "test": "@php vendor/bin/phpunit"
     },
     "prefer-stable": true,
     "minimum-stability": "dev"
