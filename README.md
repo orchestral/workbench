@@ -13,6 +13,8 @@ Workbench Component is a simple package that has been designed to help you previ
 
 ```yaml
 workbench:
+  welcome: true
+  install: true
   start: /nova
   user: taylor@laravel.com
   guard: web
