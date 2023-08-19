@@ -78,8 +78,53 @@ class CatchDefaultRouteTest extends TestCase
     /**
      * @test
      */
+    public function it_would_show_default_page()
+    {
+        $this->instance(ConfigContract::class, new Config([
+            'workbench' => ['start' => '/', 'install' => true],
+        ]));
+
+        $this->assertGuest('web')->get('/')
+            ->assertOk();
+
+        $this->instance(ConfigContract::class, new Config([
+            'workbench' => ['start' => '/', 'install' => true, 'welcome' => true],
+        ]));
+
+        $this->assertGuest('web')->get('/')
+            ->assertOk();
+
+        $this->instance(ConfigContract::class, new Config([
+            'workbench' => ['start' => '/', 'install' => false, 'welcome' => true],
+        ]));
+
+        $this->assertGuest('web')->get('/')
+            ->assertOk();
+    }
+
+    /**
+     * @test
+     */
     public function it_would_not_redirect_to_workbench_path_if_configuration_doesnt_requires_it()
     {
+        $this->instance(ConfigContract::class, new Config([
+            'workbench' => ['start' => '/', 'install' => false],
+        ]));
+
+        $this->assertGuest('web')->get('/')
+            ->assertNotFound();
+
+        $this->instance(ConfigContract::class, new Config([
+            'workbench' => ['start' => '/', 'install' => true, 'welcome' => false],
+        ]));
+
+        $this->assertGuest('web')->get('/')
+            ->assertNotFound();
+
+        $this->instance(ConfigContract::class, new Config([
+            'workbench' => ['start' => '/', 'install' => false, 'welcome' => false],
+        ]));
+
         $this->assertGuest('web')->get('/')
             ->assertNotFound();
     }

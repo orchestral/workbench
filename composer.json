@@ -23,6 +23,7 @@
     },
     "require": {
         "php": "^8.2",
+        "composer-runtime-api": "^2.2",
         "illuminate/console": "^11.0",
         "illuminate/support": "^11.0",
         "orchestra/testbench-core": "9.x-dev"
@@ -43,24 +44,18 @@
     },
     "scripts": {
         "post-autoload-dump": [
-            "@composer run clear",
-            "@composer run prepare"
+            "@clear",
+            "@prepare"
         ],
-        "clear": "@php testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "ci": [
-            "@composer audit",
-            "@composer run prepare",
+        "build": "@php vendor/bin/testbench workbench:build",
+        "serve": "@php vendor/bin/testbench serve",
+        "lint": [
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
         ],
-        "test": "@php vendor/bin/phpunit -c ./ --color",
-        "build": "@php vendor/bin/testbench workbench:build",
-        "start": [
-            "Composer\\Config::disableProcessTimeout",
-            "@composer run build",
-            "@php vendor/bin/testbench serve"
-        ]
+        "test": "@php vendor/bin/phpunit"
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

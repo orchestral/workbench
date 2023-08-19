@@ -33,4 +33,27 @@ class CommandTest extends TestCase
 
         $command->handle($kernel, $output);
     }
+
+    /** @test */
+    public function it_can_resolve_correct_command_with_callback()
+    {
+        $kernel = m::mock(ConsoleKernel::class);
+        $output = m::mock(OutputInterface::class);
+
+        $command = new Command(
+            'vendor:publish',
+            ['--tag' => ['laravel-assets']],
+            fn ($o) => $this->assertSame($o, $output)
+        );
+
+        $kernel->shouldReceive('call')
+            ->once()
+            ->with(
+                'vendor:publish',
+                ['--tag' => ['laravel-assets']],
+                m::type(OutputInterface::class)
+            )->andReturnNull();
+
+        $command->handle($kernel, $output);
+    }
 }

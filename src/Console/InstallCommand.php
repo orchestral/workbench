@@ -2,13 +2,16 @@
 
 namespace Orchestra\Workbench\Console;
 
+use Composer\InstalledVersions;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -68,34 +71,118 @@ class InstallCommand extends Command
     {
         $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
 
-        $composer->modify(function (array $content) {
-            /** @var array{autoload-dev?: array{psr-4?: array<string, string>}} $content */
-            if (! \array_key_exists('autoload-dev', $content)) {
-                $content['autoload-dev'] = [];
-            }
-
-            /** @var array{autoload-dev: array{psr-4?: array<string, string>}} $content */
-            if (! \array_key_exists('psr-4', $content['autoload-dev'])) {
-                $content['autoload-dev']['psr-4'] = [];
-            }
-
-            foreach (['Workbench\\App\\' => 'workbench/app/', 'Workbench\\Database\\' => 'workbench/database/'] as $namespace => $path) {
-                if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
-                    $content['autoload-dev']['psr-4'][$namespace] = $path;
-
-                    $this->components->task(sprintf(
-                        'Added [%s] for [%s] to Composer', $namespace, $path
-                    ));
-                } else {
-                    $this->components->twoColumnDetail(
-                        sprintf('Composer already contain [%s] namespace', $namespace),
-                        '<fg=yellow;options=bold>SKIPPED</>'
-                    );
-                }
-            }
-
-            return $content;
+        $composer->modify(function (array $content) use ($filesystem) {
+            return $this->appendScriptsToComposer(
+                $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
+            );
         });
+    }
+
+    /**
+     * Append `scripts` to `composer.json`.
+     */
+    protected function appendScriptsToComposer(array $content, Filesystem $filesystem): array
+    {
+        $hasScriptsSection = \array_key_exists('scripts', $content);
+
+        if (! $hasScriptsSection) {
+            $content['scripts'] = [];
+        }
+
+        $postAutoloadDumpScripts = [
+            '@clear',
+            '@prepare',
+        ];
+
+        if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
+            $content['scripts']['post-autoload-dump'] = $postAutoloadDumpScripts;
+        } else {
+            $content['scripts']['post-autoload-dump'] = array_unique([
+                ...$postAutoloadDumpScripts,
+                ...Arr::wrap($content['scripts']['post-autoload-dump']),
+            ]);
+        }
+
+        $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
+        $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
+        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
+        $content['scripts']['serve'] = [
+            '@build',
+            '@php vendor/bin/testbench serve',
+        ];
+
+        if (! \array_key_exists('lint', $content['scripts'])) {
+            $lintScripts = [];
+
+            if (InstalledVersions::isInstalled('laravel/pint')) {
+                $lintScripts[] = '@php vendor/bin/pint';
+            } elseif ($filesystem->exists(Workbench::packagePath('pint.json'))) {
+                $lintScripts[] = 'pint';
+            }
+
+            if (InstalledVersions::isInstalled('phpstan/phpstan')) {
+                $lintScripts[] = '@php vendor/bin/phpstan analyse';
+            }
+
+            if (\count($lintScripts) > 0) {
+                $content['scripts']['lint'] = [
+                    '@prepare',
+                    ...$lintScripts,
+                ];
+            }
+        }
+
+        if (
+            $filesystem->exists(Workbench::packagePath('phpunit.xml'))
+            || $filesystem->exists(Workbench::packagePath('phpunit.xml.dist'))
+        ) {
+            if (! \array_key_exists('test', $content['scripts'])) {
+                $content['scripts']['test'] = InstalledVersions::isInstalled('pestphp/pest')
+                    ? '@php vendor/bin/pest'
+                    : '@php vendor/bin/phpunit';
+            }
+        }
+
+        return $content;
+    }
+
+    /**
+     * Append `autoload-dev` to `composer.json`.
+     */
+    protected function appendAutoloadDevToComposer(array $content, Filesystem $filesystem): array
+    {
+        /** @var array{autoload-dev?: array{psr-4?: array<string, string>}} $content */
+        if (! \array_key_exists('autoload-dev', $content)) {
+            $content['autoload-dev'] = [];
+        }
+
+        /** @var array{autoload-dev: array{psr-4?: array<string, string>}} $content */
+        if (! \array_key_exists('psr-4', $content['autoload-dev'])) {
+            $content['autoload-dev']['psr-4'] = [];
+        }
+
+        $namespaces = [
+            'Workbench\\App\\' => 'workbench/app/',
+            'Workbench\\Database\\Factories\\' => 'workbench/database/factories/',
+            'Workbench\\Database\\Seeders\\' => 'workbench/database/seeders/',
+        ];
+
+        foreach ($namespaces as $namespace => $path) {
+            if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
+                $content['autoload-dev']['psr-4'][$namespace] = $path;
+
+                $this->components->task(sprintf(
+                    'Added [%s] for [%s] to Composer', $namespace, $path
+                ));
+            } else {
+                $this->components->twoColumnDetail(
+                    sprintf('Composer already contain [%s] namespace', $namespace),
+                    '<fg=yellow;options=bold>SKIPPED</>'
+                );
+            }
+        }
+
+        return $content;
     }
 
     /**

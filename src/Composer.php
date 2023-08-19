@@ -2,6 +2,8 @@
 
 namespace Orchestra\Workbench;
 
+use RuntimeException;
+
 class Composer extends \Illuminate\Support\Composer
 {
     /**
@@ -12,6 +14,10 @@ class Composer extends \Illuminate\Support\Composer
     public function modify(callable $callback): void
     {
         $composerFile = "{$this->workingPath}/composer.json";
+
+        if (! file_exists($composerFile)) {
+            throw new RuntimeException("Unable to locate `composer.json` file at [{$this->workingPath}].");
+        }
 
         $composer = json_decode((string) file_get_contents($composerFile), true, 512, JSON_THROW_ON_ERROR);
 
