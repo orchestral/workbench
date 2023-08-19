@@ -26,7 +26,7 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^9.52.15 || ^10.17.0",
         "illuminate/support": "^9.52.15 || ^10.17.0",
-        "orchestra/testbench-core": "^7.28.5 || ^8.8.5"
+        "orchestra/testbench-core": "^7.29.0 || ^8.9.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
