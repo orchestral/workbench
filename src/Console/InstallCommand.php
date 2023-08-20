@@ -94,7 +94,7 @@ class InstallCommand extends Command
             '@prepare',
         ];
 
-        if (InstalledVersions::getInstalled('orchestra/testbench-dusk')) {
+        if (InstalledVersions::isInstalled('orchestra/testbench-dusk')) {
             $postAutoloadDumpScripts[] = '@dusk:install-chromedriver';
 
             $content['scripts']['dusk:install-chromedriver'] = '@php vendor/bin/dusk-updater detect --auto-update --ansi';
