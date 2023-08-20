@@ -105,7 +105,7 @@ class InstallCommand extends Command
 
         $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
         $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
-        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build';
+        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build --ansi';
         $content['scripts']['serve'] = [
             '@build',
             '@php vendor/bin/testbench serve',
