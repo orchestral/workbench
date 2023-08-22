@@ -26,6 +26,7 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^9.52.15 || ^10.17.0",
         "illuminate/support": "^9.52.15 || ^10.17.0",
+        "orchestra/canvas": "^7.6 || ^8.5",
         "orchestra/testbench-core": "^7.29.0 || ^8.9.0"
     },
     "require-dev": {
@@ -33,13 +34,12 @@
         "laravel/framework": "^9.52.15 || ^10.17.0",
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
-        "orchestra/canvas": "^7.6 || ^8.2",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.2.x-dev"
         }
     },
     "scripts": {
