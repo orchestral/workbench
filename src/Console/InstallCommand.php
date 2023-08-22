@@ -84,21 +84,17 @@ class InstallCommand extends Command
     protected function appendScriptsToComposer(array $content, Filesystem $filesystem): array
     {
         $hasScriptsSection = \array_key_exists('scripts', $content);
+        $hasTestbenchDusk = InstalledVersions::isInstalled('orchestra/testbench-dusk');
 
         if (! $hasScriptsSection) {
             $content['scripts'] = [];
         }
 
-        $postAutoloadDumpScripts = [
+        $postAutoloadDumpScripts = array_filter([
             '@clear',
             '@prepare',
-        ];
-
-        if (InstalledVersions::isInstalled('orchestra/testbench-dusk')) {
-            $postAutoloadDumpScripts[] = '@dusk:install-chromedriver';
-
-            $content['scripts']['dusk:install-chromedriver'] = '@php vendor/bin/dusk-updater detect --auto-update --ansi';
-        }
+            $hasTestbenchDusk ? '@dusk:install-chromedriver' : null
+        ]);
 
         if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
             $content['scripts']['post-autoload-dump'] = $postAutoloadDumpScripts;
@@ -111,6 +107,11 @@ class InstallCommand extends Command
 
         $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
         $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
+
+        if ($hasTestbenchDusk) {
+            $content['scripts']['dusk:install-chromedriver'] = '@php vendor/bin/dusk-updater detect --auto-update --ansi';
+        }
+
         $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build --ansi';
         $content['scripts']['serve'] = [
             '@build',
