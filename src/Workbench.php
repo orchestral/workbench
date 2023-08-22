@@ -9,9 +9,6 @@ class Workbench
 {
     /**
      * Get the path to the laravel folder.
-     *
-     * @param  string  $path
-     * @return string
      */
     public static function laravelPath(string $path = ''): string
     {
@@ -20,9 +17,6 @@ class Workbench
 
     /**
      * Get the path to the package folder.
-     *
-     * @param  string  $path
-     * @return string
      */
     public static function packagePath(string $path = ''): string
     {
@@ -31,9 +25,6 @@ class Workbench
 
     /**
      * Get the path to the workbench folder.
-     *
-     * @param  string  $path
-     * @return string
      */
     public static function path(string $path = ''): string
     {

@@ -2,7 +2,6 @@
 
 namespace Orchestra\Workbench;
 
-use Illuminate\Support\Collection;
 use Illuminate\Support\Manager;
 use Illuminate\Support\Str;
 
@@ -15,18 +14,7 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function createAssetPublishDriver(): Contracts\Recipe
     {
-        /** @var array<int, string> $assets */
-        $assets = Workbench::config('assets');
-
-        $tags = Collection::make($assets)
-            ->push('laravel-assets')
-            ->unique()
-            ->all();
-
-        return new Recipes\Command('vendor:publish', [
-            '--tag' => $tags,
-            '--force' => true,
-        ]);
+        return new Recipes\AssetPublishCommand();
     }
 
     /**
@@ -36,7 +24,11 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function createCreateSqliteDbDriver(): Contracts\Recipe
     {
-        return new Recipes\Command('workbench:create-sqlite-db');
+        return new Recipes\Command('workbench:create-sqlite-db', callback: function () {
+            if (config('database.default') === 'testing') {
+                config(['database.default' => 'sqlite']);
+            }
+        });
     }
 
     /**
@@ -46,7 +38,11 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function createDropSqliteDbDriver(): Contracts\Recipe
     {
-        return new Recipes\Command('workbench:drop-sqlite-db');
+        return new Recipes\Command('workbench:drop-sqlite-db', callback: function () {
+            if (config('database.default') === 'sqlite') {
+                config(['database.default' => 'testing']);
+            }
+        });
     }
 
     /**
@@ -62,7 +58,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
     /**
      * Run the recipe by name.
      *
-     * @param  string  $driver
      * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function command(string $driver): Contracts\Recipe
@@ -72,9 +67,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Determine recipe is available by name.
-     *
-     * @param  string  $driver
-     * @return bool
      */
     public function hasCommand(string $driver): bool
     {

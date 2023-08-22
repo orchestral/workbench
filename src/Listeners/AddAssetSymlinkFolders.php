@@ -13,8 +13,6 @@ class AddAssetSymlinkFolders
 {
     /**
      * Construct a new event listener.
-     *
-     * @param  \Orchestra\Testbench\Contracts\Config  $config
      */
     public function __construct(
         public ConfigContract $config,
@@ -25,9 +23,6 @@ class AddAssetSymlinkFolders
 
     /**
      * Handle the event.
-     *
-     * @param  \Orchestra\Testbench\Foundation\Events\ServeCommandStarted  $event
-     * @return void
      */
     public function handle(ServeCommandStarted $event): void
     {
@@ -55,12 +50,14 @@ class AddAssetSymlinkFolders
                 /** @var string $to */
                 $to = $pair['to'];
 
-                /** @var string $rootDirectory */
-                $rootDirectory = Str::beforeLast($to, '/');
-
-                if ($this->files->isDirectory($to)) {
+                if (is_link($to)) {
+                    $this->files->delete($to);
+                } elseif ($this->files->isDirectory($to)) {
                     $this->files->deleteDirectory($to);
                 }
+
+                /** @var string $rootDirectory */
+                $rootDirectory = Str::beforeLast($to, '/');
 
                 if (! $this->files->isDirectory($rootDirectory)) {
                     $this->files->ensureDirectoryExists($rootDirectory);

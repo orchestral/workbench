@@ -9,34 +9,57 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Command implements Recipe
 {
     /**
-     * The command name.
+     * After completion callback.
      *
-     * @var string
+     * @var (callable(\Symfony\Component\Console\Output\OutputInterface):(void))|null
      */
-    public $command;
+    public $callback;
 
     /**
-     * The command options.
+     * Construct a new recipe.
      *
-     * @var array<string, mixed>
+     * @param  array<string, mixed>  $options
+     * @param  (callable(\Symfony\Component\Console\Output\OutputInterface):(void))|null  $callback
      */
-    public $options = [];
-
-    public function __construct(string $command, array $options = [])
-    {
-        $this->command = $command;
-        $this->options = $options;
+    public function __construct(
+        public string $command,
+        public array $options = [],
+        ?callable $callback = null
+    ) {
+        $this->callback = $callback;
     }
 
     /**
      * Run the recipe.
      *
-     * @param  \Illuminate\Contracts\Console\Kernel  $kernel
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return void
      */
     public function handle(ConsoleKernel $kernel, OutputInterface $output)
     {
-        $kernel->call($this->command, $this->options, $output);
+        $kernel->call(
+            $this->commandName(), $this->commandOptions(), $output
+        );
+
+        if (\is_callable($this->callback)) {
+            \call_user_func($this->callback, $output);
+        }
+    }
+
+    /**
+     * Get the command name.
+     */
+    protected function commandName(): string
+    {
+        return $this->command;
+    }
+
+    /**
+     * Get the command options.
+     *
+     * @return array<string, mixed>
+     */
+    protected function commandOptions(): array
+    {
+        return $this->options;
     }
 }

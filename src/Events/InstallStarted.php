@@ -10,10 +10,6 @@ class InstallStarted
 {
     /**
      * Construct a new event.
-     *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \Illuminate\Console\View\Components\Factory  $components
      */
     public function __construct(
         public InputInterface $input,
