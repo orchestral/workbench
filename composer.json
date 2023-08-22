@@ -26,20 +26,20 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^11.0",
         "illuminate/support": "^11.0",
-        "orchestra/testbench-core": "9.x-dev"
+        "orchestra/testbench-core": "9.x-dev",
+        "orchestra/canvas": "9.x-dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
         "laravel/framework": "^11.0",
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
-        "orchestra/canvas": "^9.0",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^10.1"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.2.x-dev"
         }
     },
     "scripts": {
