@@ -93,7 +93,7 @@ class InstallCommand extends Command
         $postAutoloadDumpScripts = array_filter([
             '@clear',
             '@prepare',
-            $hasTestbenchDusk ? '@dusk:install-chromedriver' : null
+            $hasTestbenchDusk ? '@dusk:install-chromedriver' : null,
         ]);
 
         if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
