@@ -28,7 +28,7 @@
         "illuminate/support": "^9.52.15 || ^10.17.0",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^7.6.1 || ^8.5.1",
-        "orchestra/testbench-core": "dev-console-task-response"
+        "orchestra/testbench-core": "dev-console-task-response as 7.x-dev"
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
@@ -56,7 +56,13 @@
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
         ],
-        "test": "@php vendor/bin/phpunit"
+        "test": "@php vendor/bin/phpunit",
+        "ci": [
+            "@composer audit",
+            "@prepare",
+            "@lint",
+            "@test"
+        ]
     },
     "prefer-stable": true,
     "minimum-stability": "dev"

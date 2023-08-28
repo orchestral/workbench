@@ -63,13 +63,13 @@ class InstallCommand extends Command
         (new EnsureDirectoryExists(
             filesystem: $filesystem,
             components: $this->components,
-            workingPath: $workbenchWorkingPat,
+            workingPath: $workbenchWorkingPath,
         ))->handle(
             Collection::make([
                 'app',
                 'database/factories',
                 'database/migrations',
-                'database/seeders'
+                'database/seeders',
             ])->map(fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
         );
     }
@@ -210,7 +210,7 @@ class InstallCommand extends Command
         (new GeneratesFile(
             filesystem: $filesystem,
             components: $this->components,
-            force: $this->option('force'),
+            force: (bool) $this->option('force'),
         ))->handle($from, $to);
     }
 
@@ -255,7 +255,7 @@ class InstallCommand extends Command
         (new GeneratesFile(
             filesystem: $filesystem,
             components: $this->components,
-            force: $this->option('force'),
+            force: (bool) $this->option('force'),
         ))->handle($from, $to);
     }
 
