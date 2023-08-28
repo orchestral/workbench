@@ -7,6 +7,8 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
+use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
@@ -58,10 +60,18 @@ class InstallCommand extends Command
     {
         $workbenchWorkingPath = "{$workingPath}/workbench";
 
-        $this->ensureDirectoryExists($filesystem, "{$workbenchWorkingPath}/app");
-        $this->ensureDirectoryExists($filesystem, "{$workbenchWorkingPath}/database/factories");
-        $this->ensureDirectoryExists($filesystem, "{$workbenchWorkingPath}/database/migrations");
-        $this->ensureDirectoryExists($filesystem, "{$workbenchWorkingPath}/database/seeders");
+        (new EnsureDirectoryExists(
+            filesystem: $filesystem,
+            components: $this->components,
+            workingPath: $workbenchWorkingPat,
+        ))->handle(
+            Collection::make([
+                'app',
+                'database/factories',
+                'database/migrations',
+                'database/seeders'
+            ])->map(fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
+        );
     }
 
     /**
@@ -197,16 +207,11 @@ class InstallCommand extends Command
         $from = (string) realpath(__DIR__.'/stubs/testbench.yaml');
         $to = "{$workingPath}/testbench.yaml";
 
-        if ($this->option('force') || ! $filesystem->exists($to)) {
-            $filesystem->copy($from, $to);
-
-            $this->copyTaskCompleted($from, $to, 'file');
-        } else {
-            $this->components->twoColumnDetail(
-                sprintf('File [%s] already exists', str_replace($workingPath.'/', '', $to)),
-                '<fg=yellow;options=bold>SKIPPED</>'
-            );
-        }
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            components: $this->components,
+            force: $this->option('force'),
+        ))->handle($from, $to);
     }
 
     /**
@@ -247,44 +252,11 @@ class InstallCommand extends Command
 
         $to = "{$workbenchWorkingPath}/{$choice}";
 
-        if ($this->option('force') || ! $filesystem->exists($to)) {
-            $filesystem->copy($from, $to);
-            $filesystem->copy((string) realpath(__DIR__.'/stubs/workbench.gitignore'), "{$workbenchWorkingPath}/.gitignore");
-
-            $this->copyTaskCompleted($from, $to, 'file');
-        } else {
-            $this->components->twoColumnDetail(
-                sprintf('File [%s] already exists', str_replace($workingPath.'/', '', $to)),
-                '<fg=yellow;options=bold>SKIPPED</>'
-            );
-        }
-    }
-
-    /**
-     * Ensure a directory exists and add `.gitkeep` file.
-     */
-    protected function ensureDirectoryExists(Filesystem $filesystem, string $workingPath): void
-    {
-        /** @phpstan-ignore-next-line */
-        $rootWorkingPath = TESTBENCH_WORKING_PATH ?? $workingPath;
-
-        if ($filesystem->isDirectory($workingPath)) {
-            $this->components->twoColumnDetail(
-                sprintf('Directory [%s] already exists', str_replace($rootWorkingPath.'/', '', $workingPath)),
-                '<fg=yellow;options=bold>SKIPPED</>'
-            );
-
-            return;
-        }
-
-        $filesystem->ensureDirectoryExists($workingPath, 0755, true);
-
-        $filesystem->copy((string) realpath(__DIR__.'/stubs/.gitkeep'), "{$workingPath}/.gitkeep");
-
-        $this->components->task(sprintf(
-            'Prepare [%s] directory',
-            str_replace($rootWorkingPath.'/', '', $workingPath),
-        ));
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            components: $this->components,
+            force: $this->option('force'),
+        ))->handle($from, $to);
     }
 
     /**

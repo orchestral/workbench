@@ -18,9 +18,9 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Contracts\RecipeManager::class, function (Application $app) {
-            return new RecipeManager($app);
-        });
+        $this->app->singleton(
+            Contracts\RecipeManager::class, fn (Application $app) => new RecipeManager($app)
+        );
     }
 
     /**
