@@ -46,8 +46,12 @@ class InstallCommand extends Command
 
         $this->call('workbench:create-sqlite-db', ['--force' => true]);
 
-        return tap(Command::SUCCESS, function ($exitCode) {
+        return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
+
+            (new Composer($filesystem))
+                ->setWorkingPath($workingPath);
+                ->dumpAutoloads();
         });
     }
 
