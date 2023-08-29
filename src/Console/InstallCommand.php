@@ -257,6 +257,11 @@ class InstallCommand extends Command
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle($from, $to);
+
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            force: (bool) $this->option('force'),
+        ))->handle((string) realpath(__DIR__.'/stubs/workbench.gitignore'), $"{$workbenchWorkingPath}/.gitignore");
     }
 
     /**
