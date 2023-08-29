@@ -109,10 +109,10 @@ class InstallCommand extends Command
         if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
             $content['scripts']['post-autoload-dump'] = $postAutoloadDumpScripts;
         } else {
-            $content['scripts']['post-autoload-dump'] = array_unique([
+            $content['scripts']['post-autoload-dump'] = array_values(array_unique([
                 ...$postAutoloadDumpScripts,
                 ...Arr::wrap($content['scripts']['post-autoload-dump']),
-            ]);
+            ]));
         }
 
         $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
