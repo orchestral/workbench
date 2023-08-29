@@ -9,8 +9,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'workbench:create-sqlite-db', description: 'Create sqlite database file')]
 class CreateSqliteDbCommand extends Command
 {
-    use InteractsWithIO;
-
     /**
      * The name and signature of the console command.
      *

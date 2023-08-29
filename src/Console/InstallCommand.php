@@ -19,8 +19,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command
 {
-    use InteractsWithIO;
-
     /**
      * The name and signature of the console command.
      *
