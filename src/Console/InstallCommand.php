@@ -261,7 +261,7 @@ class InstallCommand extends Command
         (new GeneratesFile(
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
-        ))->handle((string) realpath(__DIR__.'/stubs/workbench.gitignore'), $"{$workbenchWorkingPath}/.gitignore");
+        ))->handle((string) realpath(__DIR__.'/stubs/workbench.gitignore'), "{$workbenchWorkingPath}/.gitignore");
     }
 
     /**
