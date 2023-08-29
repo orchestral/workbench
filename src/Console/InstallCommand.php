@@ -9,7 +9,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
-use Orchestra\Testbench\Foundation\Console\Concerns\InteractsWithIO;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
