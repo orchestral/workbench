@@ -61,7 +61,6 @@ class InstallCommand extends Command
         (new EnsureDirectoryExists(
             filesystem: $filesystem,
             components: $this->components,
-            workingPath: $workbenchWorkingPath,
         ))->handle(
             Collection::make([
                 'app',
