@@ -19,6 +19,7 @@
         </include>
         <exclude>
             <file>src/Console/BuildCommand.php</file>
+            <file>src/Console/DevToolCommand.php</file>
             <file>src/Console/InstallCommand.php</file>
         </exclude>
     </coverage>
