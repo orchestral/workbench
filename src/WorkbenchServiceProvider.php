@@ -38,6 +38,7 @@ class WorkbenchServiceProvider extends ServiceProvider
                 Console\CreateSqliteDbCommand::class,
                 Console\DropSqliteDbCommand::class,
                 Console\InstallCommand::class,
+                Console\DevToolCommand::class,
             ]);
 
             tap($this->app->make('events'), function (EventDispatcher $event) {
