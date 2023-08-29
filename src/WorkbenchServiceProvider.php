@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
-use Orchestra\Workbench\Listeners\AddAssetSymlinkFolders;
-use Orchestra\Workbench\Listeners\RemoveAssetSymlinkFolders;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
@@ -20,9 +18,9 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Contracts\RecipeManager::class, function (Application $app) {
-            return new RecipeManager($app);
-        });
+        $this->app->singleton(
+            Contracts\RecipeManager::class, fn (Application $app) => new RecipeManager($app)
+        );
     }
 
     /**
@@ -43,8 +41,8 @@ class WorkbenchServiceProvider extends ServiceProvider
             ]);
 
             tap($this->app->make('events'), function (EventDispatcher $event) {
-                $event->listen(ServeCommandStarted::class, [AddAssetSymlinkFolders::class, 'handle']);
-                $event->listen(ServeCommandEnded::class, [RemoveAssetSymlinkFolders::class, 'handle']);
+                $event->listen(ServeCommandStarted::class, [Listeners\AddAssetSymlinkFolders::class, 'handle']);
+                $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
         }
     }
