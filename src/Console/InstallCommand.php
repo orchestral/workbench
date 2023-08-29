@@ -50,7 +50,7 @@ class InstallCommand extends Command
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
 
             (new Composer($filesystem))
-                ->setWorkingPath($workingPath);
+                ->setWorkingPath($workingPath)
                 ->dumpAutoloads();
         });
     }
