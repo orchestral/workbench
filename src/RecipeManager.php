@@ -9,8 +9,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 {
     /**
      * Create "asset-publish" driver.
-     *
-     * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function createAssetPublishDriver(): Contracts\Recipe
     {
@@ -19,8 +17,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Create "create-sqlite-db" driver.
-     *
-     * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function createCreateSqliteDbDriver(): Contracts\Recipe
     {
@@ -33,8 +29,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Create "drop-sqlite-db" driver.
-     *
-     * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function createDropSqliteDbDriver(): Contracts\Recipe
     {
@@ -47,8 +41,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Create anonymous command driver.
-     *
-     * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function commandUsing(string $command): Contracts\Recipe
     {
@@ -57,8 +49,6 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Run the recipe by name.
-     *
-     * @return \Orchestra\Workbench\Contracts\Recipe
      */
     public function command(string $driver): Contracts\Recipe
     {
