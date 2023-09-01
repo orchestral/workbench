@@ -27,7 +27,7 @@
         "illuminate/console": "^9.52.15 || ^10.17.0",
         "illuminate/support": "^9.52.15 || ^10.17.0",
         "laravel/tinker": "^2.8.2",
-        "orchestra/canvas": "^7.7 || ^8.6",
+        "orchestra/canvas": "^7.8 || ^8.7",
         "orchestra/testbench-core": "^7.30.0 || ^8.10.0"
     },
     "require-dev": {
