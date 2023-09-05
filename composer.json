@@ -32,10 +32,8 @@
         "orchestra/testbench-core": "^7.30.0 || ^8.10.0"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.21",
-        "laravel/framework": "^9.52.15 || ^10.17.0",
         "laravel/pint": "^1.4",
-        "mockery/mockery": "^1.5.1",
+        "orchestra/testbench": "^7.30.0 || ^8.10.0",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6"
     },
