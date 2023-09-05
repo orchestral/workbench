@@ -11,7 +11,7 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->instance('orchestra.workbench.loaded', fn () => true);
     }
 
     /**

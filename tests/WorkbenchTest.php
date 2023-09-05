@@ -12,6 +12,12 @@ class WorkbenchTest extends TestCase
     use WithWorkbench;
 
     /** @test */
+    public function it_can_resolve_with_workbench_traits()
+    {
+        $this->assertTrue(value(app('orchestra.workbench.loaded')));
+    }
+
+    /** @test */
     public function it_can_resolve_laravel_path()
     {
         $this->assertSame(
