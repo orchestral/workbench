@@ -1,6 +1,8 @@
 providers: []
 
-migrations: true
+migrations:
+  - workbench/database/migrations
+
 seeders: []
 
 workbench:
