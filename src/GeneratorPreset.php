@@ -3,21 +3,11 @@
 namespace Orchestra\Workbench;
 
 use BadMethodCallException;
-use Illuminate\Console\Generators\Presets\Laravel;
+use Illuminate\Console\Generators\Presets\Preset;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
 
-class GeneratorPreset extends Laravel
+class GeneratorPreset extends Preset
 {
-    /**
-     * Construct a new preset.
-     *
-     * @return void
-     */
-    public function __construct(ConfigContract $config)
-    {
-        parent::__construct('Workbench\\', rtrim(Workbench::path(), DIRECTORY_SEPARATOR), $config);
-    }
-
     /**
      * Preset name.
      *
@@ -29,23 +19,82 @@ class GeneratorPreset extends Laravel
     }
 
     /**
-     * Preset has custom stub path.
-     *
-     * @return bool
-     */
-    public function hasCustomStubPath()
-    {
-        return false;
-    }
-
-    /**
      * Get the path to the base working directory.
      *
      * @return string
      */
-    public function laravelPath()
+    public function basePath()
     {
-        return app()->basePath();
+        return rtrim(Workbench::path(), DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Get the path to the source directory.
+     *
+     * @return string
+     */
+    public function sourcePath()
+    {
+        return rtrim(Workbench::path('app'), DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Get the path to the testing directory.
+     *
+     * @throws \BadMethodCallException
+     */
+    public function testingPath()
+    {
+        throw new BadMethodCallException('Generating test is not supported for [workbench] preset');
+    }
+
+    /**
+     * Get the path to the resource directory.
+     *
+     * @return string
+     */
+    public function resourcePath()
+    {
+        return rtrim(Workbench::path('resources'), DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Get the path to the view directory.
+     *
+     * @return string
+     */
+    public function viewPath()
+    {
+        return rtrim(Workbench::path('resources/views'), DIRECTORY_SEPARATOR);
+    }
+    /**
+     * Get the path to the factory directory.
+     *
+     * @return string
+     */
+    public function factoryPath()
+    {
+        return rtrim(Workbench::path('database/factories'), DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Get the path to the migration directory.
+     *
+     * @return string
+     */
+    public function migrationPath()
+    {
+        return rtrim(Workbench::path('database/migrations'), DIRECTORY_SEPARATOR);
+    }
+
+    /**
+     * Get the path to the seeder directory.
+     *
+     * @return string
+     */
+    public function seederPath(): string
+    {
+        return rtrim(Workbench::path('database/seeders'), DIRECTORY_SEPARATOR);
     }
 
     /**
@@ -55,7 +104,17 @@ class GeneratorPreset extends Laravel
      */
     public function rootNamespace()
     {
-        return "{$this->rootNamespace}App\\";
+        return "Workbench\App\\";
+    }
+
+    /**
+     * Command namespace.
+     *
+     * @return string
+     */
+    public function commandNamespace()
+    {
+        return "{$this->rootNamespace()}Console\\";
     }
 
     /**
@@ -69,13 +128,23 @@ class GeneratorPreset extends Laravel
     }
 
     /**
+     * Provider namespace.
+     *
+     * @return string
+     */
+    public function providerNamespace()
+    {
+        return "{$this->rootNamespace()}Providers\\";
+    }
+
+    /**
      * Database factory namespace.
      *
      * @return string
      */
     public function factoryNamespace()
     {
-        return "{$this->rootNamespace}Database\Factories\\";
+        return "Workbench\Database\Factories\\";
     }
 
     /**
@@ -85,7 +154,7 @@ class GeneratorPreset extends Laravel
      */
     public function seederNamespace()
     {
-        return "{$this->rootNamespace}Database\Seeders\\";
+        return "Workbench\Database\Seeders\\";
     }
 
     /**
@@ -96,5 +165,15 @@ class GeneratorPreset extends Laravel
     public function testingNamespace()
     {
         throw new BadMethodCallException('Generating test is not supported for [workbench] preset');
+    }
+
+    /**
+     * Preset has custom stub path.
+     *
+     * @return bool
+     */
+    public function hasCustomStubPath()
+    {
+        return false;
     }
 }

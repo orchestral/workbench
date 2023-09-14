@@ -26,7 +26,7 @@ class WorkbenchServiceProvider extends ServiceProvider
         if (class_exists(PresetManager::class)) {
             $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
                 $manager->extend('workbench', function ($app) {
-                    return new GeneratorPreset($app->make('config'));
+                    return new GeneratorPreset($app);
                 });
 
                 $manager->setDefaultDriver('workbench');
