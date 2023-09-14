@@ -38,6 +38,7 @@
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6",
+        "spatie/laravel-ray": "^1.32.4",
         "symfony/yaml": "^6.0.9"
     },
     "extra": {
