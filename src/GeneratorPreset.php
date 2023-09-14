@@ -58,7 +58,6 @@ class GeneratorPreset extends Laravel
         return "{$this->rootNamespace()}Models\\";
     }
 
-
     /**
      * Testing namespace.
      *
