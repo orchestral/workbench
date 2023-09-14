@@ -15,7 +15,7 @@ class GeneratorPresetTest extends TestCase
     /** @test */
     public function it_can_be_resolved_and_has_correct_signature()
     {
-        $workingPath = \dirname(__DIR__).'/workbench';
+        $workingPath = realpath(__DIR__.'/../workbench');
 
         $preset = $this->app[PresetManager::class]->driver('workbench');
 
