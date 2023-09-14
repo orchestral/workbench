@@ -36,9 +36,9 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
 
-      - name: Install Laravel 10
-        run: |
-          composer require "laravel/framework:10.x" --dev --no-interaction --no-update
+      # - name: Install Laravel 10
+      #   run: |
+      #     composer require "laravel/framework:10.x" --dev --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
