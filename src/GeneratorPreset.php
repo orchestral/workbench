@@ -4,13 +4,13 @@ namespace Orchestra\Workbench;
 
 use BadMethodCallException;
 use Illuminate\Console\Generators\Presets\Laravel;
+use Illuminate\Contracts\Config\Repository as ConfigContract;
 
 class GeneratorPreset extends Laravel
 {
     /**
      * Construct a new preset.
      *
-     * @param  \Illuminate\Contracts\Config\Repository  $config
      * @return void
      */
     public function __construct(ConfigContract $config)
