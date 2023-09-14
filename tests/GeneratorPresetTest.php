@@ -23,12 +23,12 @@ class GeneratorPresetTest extends TestCase
         $this->assertSame('workbench', $preset->name());
 
         $this->assertSame($workingPath, $preset->basePath());
-        $this->assertSame("{$workingPath}/app", $preset->sourcePath());
-        $this->assertSame("{$workingPath}/resources", $preset->resourcePath());
-        $this->assertSame("{$workingPath}/resources/views", $preset->viewPath());
-        $this->assertSame("{$workingPath}/database/factories", $preset->factoryPath());
-        $this->assertSame("{$workingPath}/database/migrations", $preset->migrationPath());
-        $this->assertSame("{$workingPath}/database/seeders", $preset->seederPath());
+        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'app', $preset->sourcePath());
+        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'resources', $preset->resourcePath());
+        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'resources/views', $preset->viewPath());
+        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'database/factories', $preset->factoryPath());
+        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'database/migrations', $preset->migrationPath());
+        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'database/seeders', $preset->seederPath());
 
         $this->assertSame('Workbench\App\\', $preset->rootNamespace());
         $this->assertSame('Workbench\App\Console\\', $preset->commandNamespace());
