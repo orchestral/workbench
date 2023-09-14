@@ -49,6 +49,16 @@ class GeneratorPreset extends Laravel
     }
 
     /**
+     * Preset namespace.
+     *
+     * @return string
+     */
+    public function rootNamespace()
+    {
+        return "{$this->rootNamespace}App\\";
+    }
+
+    /**
      * Model namespace.
      *
      * @return string
@@ -56,6 +66,26 @@ class GeneratorPreset extends Laravel
     public function modelNamespace()
     {
         return "{$this->rootNamespace()}Models\\";
+    }
+
+    /**
+     * Database factory namespace.
+     *
+     * @return string
+     */
+    public function factoryNamespace()
+    {
+        return "{$this->rootNamespace}Database\Factories\\";
+    }
+
+    /**
+     * Database seeder namespace.
+     *
+     * @return string
+     */
+    public function seederNamespace()
+    {
+        return "{$this->rootNamespace}Database\Seeders\\";
     }
 
     /**
