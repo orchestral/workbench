@@ -28,13 +28,13 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^9.52.15 || ^10.17.0",
         "illuminate/support": "^9.52.15 || ^10.17.0",
+        "laravel/framework": "dev-generator-presets as 10.x-dev",
         "laravel/tinker": "^2.8.2",
         "orchestra/testbench-core": "^7.30.0 || ^8.10.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.21",
         "laravel/pint": "^1.4",
-        "laravel/framework": "dev-generator-presets as 10.x-dev",
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6",
