@@ -23,13 +23,15 @@ class WorkbenchServiceProvider extends ServiceProvider
             Contracts\RecipeManager::class, fn (Application $app) => new RecipeManager($app)
         );
 
-        $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
-            $manager->extend('workbench', function ($app) {
-                return new GeneratorPreset($app->make('config'));
-            });
+        if (class_exists(PresetManager::class)) {
+            $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
+                $manager->extend('workbench', function ($app) {
+                    return new GeneratorPreset($app->make('config'));
+                });
 
-            $manager->setDefaultDriver('workbench');
-        });
+                $manager->setDefaultDriver('workbench');
+            });
+        }
     }
 
     /**
