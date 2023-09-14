@@ -25,11 +25,7 @@ class WorkbenchServiceProvider extends ServiceProvider
 
         $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
             $manager->extend('workbench', function ($app) {
-                return new GeneratorPreset(
-                    rootNamespace: 'Workbench\\',
-                    basePath: rtrim(Workbench::path(), DIRECTORY_SEPARATOR),
-                    config: $app->make('config'),
-                );
+                return new GeneratorPreset($app->make('config'));
             });
 
             $manager->setDefaultDriver('workbench');
