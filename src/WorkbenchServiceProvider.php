@@ -2,6 +2,7 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Console\Generators\PresetManager;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
@@ -21,6 +22,18 @@ class WorkbenchServiceProvider extends ServiceProvider
         $this->app->singleton(
             Contracts\RecipeManager::class, fn (Application $app) => new RecipeManager($app)
         );
+
+        $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
+            $manager->extend('workbench', function ($app) {
+                return new GeneratorPreset(
+                    rootNamespace: 'Workbench\\',
+                    basePath: rtrim(Workbench::path(), DIRECTORY_SEPARATOR),
+                    config: $app->make('config'),
+                );
+            });
+
+            $manager->setDefaultDriver('workbench');
+        });
     }
 
     /**

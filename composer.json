@@ -29,12 +29,12 @@
         "illuminate/console": "^9.52.15 || ^10.17.0",
         "illuminate/support": "^9.52.15 || ^10.17.0",
         "laravel/tinker": "^2.8.2",
-        "orchestra/canvas": "^7.8 || ^8.7",
         "orchestra/testbench-core": "^7.30.0 || ^8.10.0"
     },
     "require-dev": {
         "laravel/pint": "^1.4",
         "orchestra/testbench": "^7.30.0 || ^8.10.0",
+        "laravel/framework": "dev-generator-presets as 10.x-dev",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6"
     },
