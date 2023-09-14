@@ -6,9 +6,7 @@ use BadMethodCallException;
 use Illuminate\Console\Generators\PresetManager;
 use Illuminate\Console\Generators\Presets\Preset;
 use Orchestra\Testbench\Concerns\WithWorkbench;
-use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\TestCase;
-use Orchestra\Workbench\Workbench;
 
 class GeneratorPresetTest extends TestCase
 {
@@ -17,7 +15,7 @@ class GeneratorPresetTest extends TestCase
     /** @test */
     public function it_can_be_resolved_and_has_correct_signature()
     {
-        $workingPath = dirname(__DIR__).'/workbench';
+        $workingPath = \dirname(__DIR__).'/workbench';
 
         $preset = $this->app[PresetManager::class]->driver('workbench');
 
@@ -38,7 +36,6 @@ class GeneratorPresetTest extends TestCase
         $this->assertSame('Workbench\App\Providers\\', $preset->providerNamespace());
         $this->assertSame('Workbench\Database\Factories\\', $preset->factoryNamespace());
         $this->assertSame('Workbench\Database\Seeders\\', $preset->seederNamespace());
-        // $this->assertSame('Tests\\', $preset->testingNamespace());
 
         $this->assertFalse($preset->hasCustomStubPath());
         $this->assertSame('Illuminate\Foundation\Auth\User', $preset->userProviderModel());

@@ -4,7 +4,6 @@ namespace Orchestra\Workbench;
 
 use BadMethodCallException;
 use Illuminate\Console\Generators\Presets\Preset;
-use Illuminate\Contracts\Config\Repository as ConfigContract;
 
 class GeneratorPreset extends Preset
 {
@@ -67,6 +66,7 @@ class GeneratorPreset extends Preset
     {
         return rtrim(Workbench::path('resources/views'), DIRECTORY_SEPARATOR);
     }
+
     /**
      * Get the path to the factory directory.
      *
@@ -89,8 +89,6 @@ class GeneratorPreset extends Preset
 
     /**
      * Get the path to the seeder directory.
-     *
-     * @return string
      */
     public function seederPath(): string
     {
