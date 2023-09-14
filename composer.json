@@ -33,7 +33,7 @@
     },
     "require-dev": {
         "laravel/pint": "^1.4",
-        "orchestra/testbench": "^7.30.0 || ^8.10.0",
+        "orchestra/testbench": "8.x-dev",
         "laravel/framework": "dev-generator-presets as 10.x-dev",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6"
