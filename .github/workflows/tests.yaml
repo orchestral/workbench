@@ -38,7 +38,7 @@ jobs:
 
       - name: Install Laravel 10
         run: |
-          composer require "laravel/framework:10.x" --dev --no-interaction --no-update
+          composer require "laravel/framework:10.x" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
@@ -85,7 +85,7 @@ jobs:
 
       - name: Install Laravel 9
         run: |
-          composer require "laravel/framework:9.x" --dev --no-interaction --no-update
+          composer require "laravel/framework:9.x" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
