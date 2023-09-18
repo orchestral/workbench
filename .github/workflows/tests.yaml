@@ -38,7 +38,8 @@ jobs:
 
       - name: Install Laravel 10
         run: |
-          composer require "illuminate/contracts:10.x" "orchestra/testbench-core:8.x" --no-interaction --no-update
+          composer require "illuminate/contracts:10.x" --no-interaction --no-update
+          composer require "orchestra/testbench-core:8.x" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
@@ -85,7 +86,8 @@ jobs:
 
       - name: Install Laravel 9
         run: |
-          composer require "illuminate/contracts:9.x" "orchestra/testbench-core:7.x" --no-interaction --no-update
+          composer require "illuminate/contracts:9.x" --no-interaction --no-update
+          composer require "orchestra/testbench-core:7.x" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
