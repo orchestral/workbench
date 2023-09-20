@@ -8,6 +8,7 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 
@@ -21,6 +22,14 @@ class WorkbenchServiceProvider extends ServiceProvider
         $this->app->singleton(
             Contracts\RecipeManager::class, fn (Application $app) => new RecipeManager($app)
         );
+
+        $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
+            $manager->extend('workbench', function ($app) {
+                return new GeneratorPreset($app);
+            });
+
+            $manager->setDefaultDriver('workbench');
+        });
     }
 
     /**
@@ -38,6 +47,7 @@ class WorkbenchServiceProvider extends ServiceProvider
                 Console\CreateSqliteDbCommand::class,
                 Console\DropSqliteDbCommand::class,
                 Console\InstallCommand::class,
+                Console\DevToolCommand::class,
             ]);
 
             tap($this->app->make('events'), function (EventDispatcher $event) {

@@ -8,7 +8,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
-use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
@@ -40,13 +39,14 @@ class InstallCommand extends Command
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        $this->copyTestbenchConfigurationFile($filesystem, $workingPath);
-        $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
+        $this->call('workbench:devtool', ['--force' => $this->option('force')]);
 
-        $this->call('workbench:create-sqlite-db', ['--force' => true]);
-
-        return tap(Command::SUCCESS, function ($exitCode) {
+        return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
+
+            (new Composer($filesystem))
+                ->setWorkingPath($workingPath)
+                ->dumpAutoloads();
         });
     }
 
@@ -60,7 +60,6 @@ class InstallCommand extends Command
         (new EnsureDirectoryExists(
             filesystem: $filesystem,
             components: $this->components,
-            workingPath: $workbenchWorkingPath,
         ))->handle(
             Collection::make([
                 'app',
@@ -106,10 +105,10 @@ class InstallCommand extends Command
         if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
             $content['scripts']['post-autoload-dump'] = $postAutoloadDumpScripts;
         } else {
-            $content['scripts']['post-autoload-dump'] = array_unique([
+            $content['scripts']['post-autoload-dump'] = array_values(array_unique([
                 ...$postAutoloadDumpScripts,
                 ...Arr::wrap($content['scripts']['post-autoload-dump']),
-            ]);
+            ]));
         }
 
         $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
@@ -194,83 +193,5 @@ class InstallCommand extends Command
         }
 
         return $content;
-    }
-
-    /**
-     * Copy the "testbench.yaml" file.
-     */
-    protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
-    {
-        $from = (string) realpath(__DIR__.'/stubs/testbench.yaml');
-        $to = "{$workingPath}/testbench.yaml";
-
-        (new GeneratesFile(
-            filesystem: $filesystem,
-            components: $this->components,
-            force: (bool) $this->option('force'),
-        ))->handle($from, $to);
-    }
-
-    /**
-     * Copy the ".env" file.
-     */
-    protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
-    {
-        $workbenchWorkingPath = "{$workingPath}/workbench";
-
-        $from = $this->laravel->basePath('.env.example');
-
-        if (! $filesystem->exists($from)) {
-            return;
-        }
-
-        $choices = Collection::make($this->environmentFiles())
-            ->filter(fn ($file) => ! $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
-            ->values()
-            ->prepend('Skip exporting .env')
-            ->all();
-
-        if (! $this->option('force') && empty($choices)) {
-            $this->components->twoColumnDetail(
-                'File [.env] already exists', '<fg=yellow;options=bold>SKIPPED</>'
-            );
-
-            return;
-        }
-
-        $choice = $this->components->choice(
-            "Export '.env' file as?",
-            $choices,
-        );
-
-        if ($choice === 'Skip exporting .env') {
-            return;
-        }
-
-        $to = "{$workbenchWorkingPath}/{$choice}";
-
-        (new GeneratesFile(
-            filesystem: $filesystem,
-            components: $this->components,
-            force: (bool) $this->option('force'),
-        ))->handle($from, $to);
-    }
-
-    /**
-     * Get possible environment files.
-     *
-     * @return array<int, string>
-     */
-    protected function environmentFiles(): array
-    {
-        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
-            ? '.env.dusk'
-            : '.env';
-
-        return [
-            $environmentFile,
-            "{$environmentFile}.example",
-            "{$environmentFile}.dist",
-        ];
     }
 }

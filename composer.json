@@ -2,6 +2,7 @@
     "name": "orchestra/workbench",
     "description": "Workbench Companion for Laravel Packages Development",
     "type": "library",
+    "keywords": ["laravel", "laravel-packages", "testing", "dev"],
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +19,8 @@
         "psr-4": {
             "Orchestra\\Workbench\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/",
-            "Workbench\\Database\\": "workbench/database/"
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
         }
     },
     "require": {
@@ -26,6 +28,7 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^11.0",
         "illuminate/support": "^11.0",
+        "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^9.0",
         "orchestra/testbench-core": "^9.0"
     },
@@ -35,7 +38,8 @@
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
-        "phpunit/phpunit": "^10.1"
+        "phpunit/phpunit": "^10.1",
+        "symfony/yaml": "^6.0.9"
     },
     "extra": {
         "branch-alias": {
@@ -49,8 +53,11 @@
         ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
-        "build": "@php vendor/bin/testbench workbench:build",
-        "serve": "@php vendor/bin/testbench serve",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ],
         "lint": [
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"

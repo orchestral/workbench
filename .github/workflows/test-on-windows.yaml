@@ -1,4 +1,4 @@
-name: tests
+name: tests-on-windows
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - "ubuntu-latest"
+          - "windows-latest"
         php:
           - 8.2
           - 8.3
