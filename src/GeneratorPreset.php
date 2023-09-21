@@ -112,7 +112,7 @@ class GeneratorPreset extends Preset
      */
     public function commandNamespace()
     {
-        return "{$this->rootNamespace()}Console\\";
+        return "{$this->rootNamespace()}Console\\Commands\\";
     }
 
     /**
