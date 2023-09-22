@@ -28,7 +28,6 @@
         "composer-runtime-api": "^2.2",
         "illuminate/console": "^11.0",
         "illuminate/support": "^11.0",
-        "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^9.0",
         "orchestra/testbench-core": "^9.0"
     },
