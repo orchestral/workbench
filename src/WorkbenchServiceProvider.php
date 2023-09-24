@@ -55,6 +55,8 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
         }
+
+        Workbench::discover($this->app);
     }
 
     /**

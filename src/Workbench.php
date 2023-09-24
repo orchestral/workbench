@@ -2,6 +2,8 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Contracts\Foundation\Application;
+
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
  */
@@ -48,5 +50,28 @@ class Workbench
         }
 
         return $workbench;
+    }
+
+    /**
+     * Discover application features.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
+     */
+    public static function discover(Application $app): void
+    {
+        /** @var array{web: bool, api: bool, command: false} $config */
+        $config = static::config('discovers', [
+            'web' => false,
+            'api' => false,
+            'command' => false,
+        ]);
+
+        // discover web routes
+        // discover api routes
+
+        if ($app->runningInConsole()) {
+            // discover commands
+        }
     }
 }
