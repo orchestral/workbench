@@ -1,5 +1,6 @@
 providers:
   - Orchestra\Workbench\WorkbenchServiceProvider
+  - Orchestra\Workbench\DiscoverServiceProvider
   - Workbench\App\Providers\WorkbenchServiceProvider
 
 workbench:
