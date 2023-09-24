@@ -3,7 +3,6 @@
 namespace Orchestra\Workbench\Tests;
 
 use Orchestra\Testbench\Concerns\WithWorkbench;
-use Orchestra\Testbench\Contracts\Config;
 use Orchestra\Testbench\TestCase;
 
 class DiscoversTest extends TestCase
