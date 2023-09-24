@@ -3,6 +3,7 @@
 namespace Orchestra\Workbench;
 
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Routing\Router;
 
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
@@ -67,11 +68,20 @@ class Workbench
             'command' => false,
         ]);
 
-        // discover web routes
-        // discover api routes
+        tap($app->make('router'), function (Router $router) use ($config) {
+            foreach (['web', 'api'] as $group) {
+                if (($config[$group] ?? false) === true) {
+                    if (file_exists($route = static::path("routes/{$group}.php"))) {
+                        $router->middleware($group)->group($route);
+                    }
+                }
+            }
+        });
 
         if ($app->runningInConsole()) {
-            // discover commands
+            if (file_exists($console = static::path('routes/console.php'))) {
+                require $console;
+            }
         }
     }
 }
