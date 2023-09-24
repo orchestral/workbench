@@ -55,18 +55,15 @@ class Workbench
 
     /**
      * Discover application features.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
      */
     public static function discover(Application $app): void
     {
         /** @var array{web: bool, api: bool, commands: false} $config */
-        $config = static::config('discovers', [
+        $config = static::config('discovers') ?? [
             'web' => false,
             'api' => false,
             'commands' => false,
-        ]);
+        ];
 
         tap($app->make('router'), function (Router $router) use ($config) {
             foreach (['web', 'api'] as $group) {
