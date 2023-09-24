@@ -13,7 +13,6 @@ class DiscoversTest extends TestCase
     /** @test */
     public function it_can_resolve_commands_from_discovers()
     {
-        var_dump($this->app->bound(Config::class));
         $this->artisan('workbench:inspire')->assertOk();
     }
 }
