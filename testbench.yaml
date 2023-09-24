@@ -15,7 +15,7 @@ workbench:
   assets:
     - workbench-assets
   discovers:
-    command: true
+    commands: true
 
 purge:
   directories:

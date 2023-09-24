@@ -61,11 +61,11 @@ class Workbench
      */
     public static function discover(Application $app): void
     {
-        /** @var array{web: bool, api: bool, command: false} $config */
+        /** @var array{web: bool, api: bool, commands: false} $config */
         $config = static::config('discovers', [
             'web' => false,
             'api' => false,
-            'command' => false,
+            'commands' => false,
         ]);
 
         tap($app->make('router'), function (Router $router) use ($config) {
@@ -78,7 +78,7 @@ class Workbench
             }
         });
 
-        if ($app->runningInConsole()) {
+        if ($app->runningInConsole() && ($config['commands'] ?? false) === true) {
             if (file_exists($console = static::path('routes/console.php'))) {
                 require $console;
             }
