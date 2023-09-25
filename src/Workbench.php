@@ -2,8 +2,12 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Routing\Router;
+
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
+ * @phpstan-import-type TWorkbenchDiscoversConfig from \Orchestra\Testbench\Foundation\Config
  */
 class Workbench
 {
@@ -48,5 +52,34 @@ class Workbench
         }
 
         return $workbench;
+    }
+
+    /**
+     * Discover application features.
+     */
+    public static function discover(Application $app): void
+    {
+        /** @var TWorkbenchDiscoversConfig $config */
+        $config = static::config('discovers') ?? [
+            'web' => false,
+            'api' => false,
+            'commands' => false,
+        ];
+
+        tap($app->make('router'), function (Router $router) use ($config) {
+            foreach (['web', 'api'] as $group) {
+                if (($config[$group] ?? false) === true) {
+                    if (file_exists($route = static::path("routes/{$group}.php"))) {
+                        $router->middleware($group)->group($route);
+                    }
+                }
+            }
+        });
+
+        if ($app->runningInConsole() && ($config['commands'] ?? false) === true) {
+            if (file_exists($console = static::path('routes/console.php'))) {
+                require $console;
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Core\PresetManager;
+use Orchestra\Testbench\Contracts\Config;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 
@@ -55,6 +56,10 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
         }
+
+        $this->callAfterResolving(Config::class, function ($config, $app) {
+            Workbench::discover($app);
+        });
     }
 
     /**
