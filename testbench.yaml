@@ -14,6 +14,9 @@ workbench:
       to: public/vendor/workbench
   assets:
     - workbench-assets
+  discovers:
+    web: true
+    commands: true
 
 purge:
   directories:
