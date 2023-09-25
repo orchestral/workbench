@@ -16,6 +16,7 @@ workbench:
   assets:
     - workbench-assets
   discovers:
+    web: true
     commands: true
 
 purge:
