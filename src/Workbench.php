@@ -7,6 +7,7 @@ use Illuminate\Routing\Router;
 
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
+ * @phpstan-import-type TWorkbenchDiscoversConfig from \Orchestra\Testbench\Foundation\Config
  */
 class Workbench
 {
@@ -58,7 +59,7 @@ class Workbench
      */
     public static function discover(Application $app): void
     {
-        /** @var array{web: bool, api: bool, commands: false} $config */
+        /** @var TWorkbenchDiscoversConfig $config */
         $config = static::config('discovers') ?? [
             'web' => false,
             'api' => false,
