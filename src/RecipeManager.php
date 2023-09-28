@@ -20,7 +20,7 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function createCreateSqliteDbDriver(): Contracts\Recipe
     {
-        return new Recipes\Command('workbench:create-sqlite-db', callback: function () {
+        return new Recipes\Command('workbench:create-sqlite-db', callback: static function () {
             if (config('database.default') === 'testing') {
                 config(['database.default' => 'sqlite']);
             }
@@ -32,7 +32,7 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function createDropSqliteDbDriver(): Contracts\Recipe
     {
-        return new Recipes\Command('workbench:drop-sqlite-db', callback: function () {
+        return new Recipes\Command('workbench:drop-sqlite-db', callback: static function () {
             if (config('database.default') === 'sqlite') {
                 config(['database.default' => 'testing']);
             }

@@ -9,6 +9,7 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Orchestra\Testbench\Contracts\Config;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 
@@ -19,9 +20,9 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(
-            Contracts\RecipeManager::class, fn (Application $app) => new RecipeManager($app)
-        );
+        $this->app->singleton(Contracts\RecipeManager::class, static function (Application $app) {
+            return new RecipeManager($app);
+        });
 
         if (class_exists(PresetManager::class)) {
             $this->callAfterResolving(PresetManager::class, function ($manager, $app) {
@@ -52,11 +53,15 @@ class WorkbenchServiceProvider extends ServiceProvider
                 Console\DevToolCommand::class,
             ]);
 
-            tap($this->app->make('events'), function (EventDispatcher $event) {
+            tap($this->app->make('events'), static function (EventDispatcher $event) {
                 $event->listen(ServeCommandStarted::class, [Listeners\AddAssetSymlinkFolders::class, 'handle']);
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
         }
+
+        $this->callAfterResolving(Config::class, static function ($config, $app) {
+            Workbench::discover($app);
+        });
     }
 
     /**
@@ -69,7 +74,7 @@ class WorkbenchServiceProvider extends ServiceProvider
         Route::group(array_filter([
             'prefix' => '_workbench',
             'middleware' => 'web',
-        ]), function (Router $router) {
+        ]), static function (Router $router) {
             $router->get(
                 '/', [Http\Controllers\WorkbenchController::class, 'start']
             )->name('workbench.start');
