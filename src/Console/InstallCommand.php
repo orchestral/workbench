@@ -70,6 +70,11 @@ class InstallCommand extends Command
                 return "{$workbenchWorkingPath}/{$directory}";
             })
         );
+
+        $this->callSilently('make:seeder', [
+            'name' => 'DatabaseSeeder',
+            '--preset' => 'workbench',
+        ]);
     }
 
     /**

@@ -3,12 +3,17 @@ providers: []
 migrations:
   - workbench/database/migrations
 
-seeders: []
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
 
 workbench:
   start: '/'
   install: true
   welcome: true
+  discovers:
+    web: false
+    api: false
+    commands: false
   build: []
   assets: []
   sync: []
