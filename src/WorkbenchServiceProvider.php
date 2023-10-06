@@ -22,8 +22,9 @@ class WorkbenchServiceProvider extends ServiceProvider
             return new RecipeManager($app);
         });
 
-        $this->callAfterResolving(PresetManager::class, static function ($manager, $app) {
+        $this->callAfterResolving(PresetManager::class, static function ($manager) {
             $manager->extend('workbench', static function ($app) {
+                /** @var \Illuminate\Foundation\Application $app */
                 return new GeneratorPreset($app);
             });
 
@@ -36,7 +37,7 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom(realpath(__DIR__.'/../routes/workbench.php'));
+        $this->loadRoutesFrom((string) realpath(__DIR__.'/../routes/workbench.php'));
         $this->loadViewsFrom(Workbench::path('resources/views'), 'workbench');
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
