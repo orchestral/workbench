@@ -38,7 +38,7 @@
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^10.1",
-        "symfony/yaml": "^6.0.9"
+        "symfony/yaml": "^6.4 || ^7.0"
     },
     "extra": {
         "branch-alias": {
