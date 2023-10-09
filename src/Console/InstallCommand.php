@@ -66,8 +66,15 @@ class InstallCommand extends Command
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
-            ])->map(fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
+            ])->map(static function ($directory) use ($workbenchWorkingPath) {
+                return "{$workbenchWorkingPath}/{$directory}";
+            })
         );
+
+        $this->callSilently('make:seeder', [
+            'name' => 'DatabaseSeeder',
+            '--preset' => 'workbench',
+        ]);
     }
 
     /**

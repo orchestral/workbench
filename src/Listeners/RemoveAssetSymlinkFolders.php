@@ -29,7 +29,7 @@ class RemoveAssetSymlinkFolders
         $sync = Workbench::config('sync');
 
         Collection::make($sync)
-            ->map(function ($pair) {
+            ->map(static function ($pair) {
                 /** @var string $from */
                 $from = Workbench::packagePath($pair['from']);
 

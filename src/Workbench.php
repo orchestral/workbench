@@ -66,7 +66,7 @@ class Workbench
             'commands' => false,
         ];
 
-        tap($app->make('router'), function (Router $router) use ($config) {
+        tap($app->make('router'), static function (Router $router) use ($config) {
             foreach (['web', 'api'] as $group) {
                 if (($config[$group] ?? false) === true) {
                     if (file_exists($route = static::path("routes/{$group}.php"))) {
