@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  tests:
+  tests-on-laravel-11:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
@@ -33,6 +33,57 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
+
+      - name: Install Laravel 11
+        run: |
+          composer require "illuminate/contracts:11.x" --no-interaction --no-update
+          composer require "orchestra/testbench-core:^9.0.0" --dev --no-interaction --no-update
+
+      - name: Install dependencies
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "--prefer-dist --no-cache"
+
+      - name: Installed dependencies
+        run: composer show -D
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --testdox
+
+  tests-on-laravel-10:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.experimental }}
+    strategy:
+      matrix:
+        os:
+          - "ubuntu-latest"
+        php:
+          - 8.2
+          - 8.3
+        dependencies:
+          - "highest"
+          - "lowest"
+        experimental:
+          - false
+
+    name: PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
+          coverage: none
+
+      - name: Install Laravel 10
+        run: |
+          composer require "illuminate/contracts:10.x" --no-interaction --no-update
+          composer require "orchestra/testbench-core:^8.12.0" --dev --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
