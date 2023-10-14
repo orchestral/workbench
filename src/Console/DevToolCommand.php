@@ -8,6 +8,8 @@ use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use function Laravel\Prompts\select;
+
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
 class DevToolCommand extends Command
 {
@@ -86,7 +88,7 @@ class DevToolCommand extends Command
             return;
         }
 
-        $choice = $this->components->choice(
+        $choice = select(
             "Export '.env' file as?",
             $choices,
         );
