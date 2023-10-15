@@ -6,8 +6,6 @@ use Illuminate\Console\Generators\PresetManager;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
-use Illuminate\Routing\Router;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Testbench\Contracts\Config;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
@@ -40,7 +38,8 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        static::authenticationRoutes();
+        $this->loadRoutesFrom((string) realpath(__DIR__.'/../routes/workbench.php'));
+        $this->loadViewsFrom(Workbench::path('resources/views'), 'workbench');
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
@@ -61,35 +60,6 @@ class WorkbenchServiceProvider extends ServiceProvider
 
         $this->callAfterResolving(Config::class, static function ($config, $app) {
             Workbench::discover($app);
-        });
-    }
-
-    /**
-     * Provide the authentication routes for Testbench.
-     *
-     * @return void
-     */
-    public static function authenticationRoutes()
-    {
-        Route::group(array_filter([
-            'prefix' => '_workbench',
-            'middleware' => 'web',
-        ]), static function (Router $router) {
-            $router->get(
-                '/', [Http\Controllers\WorkbenchController::class, 'start']
-            )->name('workbench.start');
-
-            $router->get(
-                '/login/{userId}/{guard?}', [Http\Controllers\WorkbenchController::class, 'login']
-            )->name('workbench.login');
-
-            $router->get(
-                '/logout/{guard?}', [Http\Controllers\WorkbenchController::class, 'logout']
-            )->name('workbench.logout');
-
-            $router->get(
-                '/user/{guard?}', [Http\Controllers\WorkbenchController::class, 'user']
-            )->name('workbench.user');
         });
     }
 }

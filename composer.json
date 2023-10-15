@@ -26,8 +26,8 @@
     "require": {
         "php": "^8.0",
         "composer-runtime-api": "^2.2",
-        "illuminate/console": "^9.52.15 || ^10.23.0",
-        "illuminate/support": "^9.52.15 || ^10.23.0",
+        "illuminate/console": "^9.52.15 || ^10.26.0",
+        "illuminate/support": "^9.52.15 || ^10.26.0",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "dev-generator-presets as 8.12.0",
         "orchestra/testbench-core": "^7.32.0 || ^8.12.0"
@@ -44,7 +44,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.4.x-dev"
+            "dev-master": "0.5.x-dev"
         }
     },
     "scripts": {
