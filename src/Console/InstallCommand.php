@@ -64,7 +64,7 @@ class InstallCommand extends Command
             components: $this->components,
         ))->handle(
             Collection::make([
-                'app',
+                'app/Models',
                 'routes',
                 'database/factories',
                 'database/migrations',
@@ -73,6 +73,11 @@ class InstallCommand extends Command
                 return "{$workbenchWorkingPath}/{$directory}";
             })
         );
+
+        $this->callSilently('make:provider', [
+            'name' => 'WorkbenchServiceProvider',
+            '--preset' => 'workbench',
+        ]);
 
         $this->callSilently('make:seeder', [
             'name' => 'DatabaseSeeder',
