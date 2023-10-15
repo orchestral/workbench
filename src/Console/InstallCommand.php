@@ -8,6 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
+use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
@@ -64,6 +65,7 @@ class InstallCommand extends Command
         ))->handle(
             Collection::make([
                 'app',
+                'routes',
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
@@ -76,6 +78,17 @@ class InstallCommand extends Command
             'name' => 'DatabaseSeeder',
             '--preset' => 'workbench',
         ]);
+
+        foreach (['api', 'console', 'web'] as $route) {
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
+                "{$workbenchWorkingPath}/routes/{$route}.php"
+            );
+        }
     }
 
     /**
