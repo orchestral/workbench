@@ -39,6 +39,7 @@ class WorkbenchServiceProvider extends ServiceProvider
     public function boot(): void
     {
         static::authenticationRoutes();
+        $this->loadViewsFrom(Workbench::path('resources/views'), 'workbench');
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
