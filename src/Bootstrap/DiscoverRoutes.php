@@ -6,6 +6,8 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Routing\Router;
 use Orchestra\Workbench\Workbench;
 
+use function Orchestra\Testbench\after_resolving;
+
 /**
  * @internal
  *
@@ -23,6 +25,7 @@ final class DiscoverRoutes
             'web' => false,
             'api' => false,
             'commands' => false,
+            'views' => false,
         ];
 
         tap($app->make('router'), static function (Router $router) use ($config) {
@@ -40,5 +43,15 @@ final class DiscoverRoutes
                 require $console;
             }
         }
+
+        after_resolving($app, 'view', static function ($view, $app) use ($config) {
+            $path = Workbench::path('/resources/views');
+
+            if (($config['views'] ?? false) === true) {
+                $view->addLocation($path);
+            }
+
+            $view->addNamespace('workbench', $path);
+        });
     }
 }

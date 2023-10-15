@@ -38,7 +38,6 @@ class WorkbenchServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadRoutesFrom((string) realpath(__DIR__.'/../routes/workbench.php'));
-        $this->loadViewsFrom(Workbench::path('resources/views'), 'workbench');
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
