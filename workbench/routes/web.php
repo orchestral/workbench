@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/hello', function () {
-    return response()->json('hello world');
+Route::get('/', function () {
+    return view('welcome');
 });
