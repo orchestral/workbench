@@ -1,0 +1,30 @@
+#!/usr/bin/env php
+<?php
+
+$workingPath = getcwd();
+
+require __DIR__.'/../vendor/autoload.php';
+
+$input = new Symfony\Component\Console\Input\ArgvInput();
+$files = new Illuminate\Filesystem\Filesystem();
+
+$version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '10.x-dev' : '^10.0';
+
+$files->deleteDirectory("{$workingPath}/skeleton");
+
+Symfony\Component\Process\Process::fromShellCommandline(
+    'composer create-project "laravel/laravel:'.$version.'" skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
+)->mustRun();
+
+Illuminate\Support\Collection::make([
+    'routes/api.php',
+    'routes/console.php',
+    'routes/web.php',
+])->transform(fn ($file) => "{$workingPath}/skeleton/{$file}")
+->map(fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(function ($file) use ($files, $workingPath) {
+    $files->copy($file, "{$workingPath}/src/Console/stubs".Illuminate\Support\Str::after($file, "{$workingPath}/skeleton"));
+});
+
+$files->deleteDirectory("{$workingPath}/skeleton");

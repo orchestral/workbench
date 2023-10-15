@@ -9,9 +9,8 @@ seeders:
 workbench:
   start: '/'
   install: true
-  welcome: true
   discovers:
-    web: false
+    web: true
     api: false
     commands: false
   build: []

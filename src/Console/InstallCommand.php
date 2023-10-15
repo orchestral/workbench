@@ -14,6 +14,8 @@ use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use function Orchestra\Testbench\package_path;
+
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command
 {
@@ -31,8 +33,7 @@ class InstallCommand extends Command
      */
     public function handle(Filesystem $filesystem)
     {
-        /** @phpstan-ignore-next-line */
-        $workingPath = TESTBENCH_WORKING_PATH;
+        $workingPath = package_path();
 
         event(new InstallStarted($this->input, $this->output, $this->components));
 
