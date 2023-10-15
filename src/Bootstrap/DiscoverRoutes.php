@@ -45,9 +45,10 @@ final class DiscoverRoutes
         }
 
         after_resolving($app, 'view', static function ($view, $app) use ($config) {
+            /** @var \Illuminate\Contracts\View\Factory $view */
             $path = Workbench::path('/resources/views');
 
-            if (($config['views'] ?? false) === true) {
+            if (($config['views'] ?? false) === true && method_exists($view, 'addLocation')) {
                 $view->addLocation($path);
             }
 
