@@ -27,4 +27,20 @@ Illuminate\Support\Collection::make([
     $files->copy($file, "{$workingPath}/src/Console/stubs".Illuminate\Support\Str::after($file, "{$workingPath}/skeleton"));
 });
 
+transform([
+    'Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+    return $request->user();
+});'.PHP_EOL => '// Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+//     return $request->user();
+// });'.PHP_EOL,
+], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/api.php"));
+
+transform([
+    'Artisan::command(\'inspire\', function () {
+    $this->comment(Inspiring::quote());
+})->purpose(\'Display an inspiring quote\');'.PHP_EOL => '// Artisan::command(\'inspire\', function () {
+//     $this->comment(Inspiring::quote());
+// })->purpose(\'Display an inspiring quote\');'.PHP_EOL,
+], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/console.php"));
+
 $files->deleteDirectory("{$workingPath}/skeleton");
