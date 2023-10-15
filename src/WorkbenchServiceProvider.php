@@ -58,7 +58,7 @@ class WorkbenchServiceProvider extends ServiceProvider
         }
 
         $this->callAfterResolving(Config::class, static function ($config, $app) {
-            Workbench::discover($app);
+            (new Bootstrap\DiscoverRoutes())->bootstrap($app);
         });
     }
 }
