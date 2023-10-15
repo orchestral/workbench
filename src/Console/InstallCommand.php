@@ -66,6 +66,7 @@ class InstallCommand extends Command
             Collection::make([
                 'app/Models',
                 'routes',
+                'resources/views',
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
