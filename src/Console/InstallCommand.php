@@ -8,11 +8,14 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
+use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
+
+use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command
@@ -31,8 +34,7 @@ class InstallCommand extends Command
      */
     public function handle(Filesystem $filesystem)
     {
-        /** @phpstan-ignore-next-line */
-        $workingPath = TESTBENCH_WORKING_PATH;
+        $workingPath = package_path();
 
         event(new InstallStarted($this->input, $this->output, $this->components));
 
@@ -62,7 +64,9 @@ class InstallCommand extends Command
             components: $this->components,
         ))->handle(
             Collection::make([
-                'app',
+                'app/Models',
+                'routes',
+                'resources/views',
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
@@ -71,10 +75,26 @@ class InstallCommand extends Command
             })
         );
 
+        $this->callSilently('make:provider', [
+            'name' => 'WorkbenchServiceProvider',
+            '--preset' => 'workbench',
+        ]);
+
         $this->callSilently('make:seeder', [
             'name' => 'DatabaseSeeder',
             '--preset' => 'workbench',
         ]);
+
+        foreach (['api', 'console', 'web'] as $route) {
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
+                "{$workbenchWorkingPath}/routes/{$route}.php"
+            );
+        }
     }
 
     /**
