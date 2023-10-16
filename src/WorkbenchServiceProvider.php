@@ -7,7 +7,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Core\PresetManager;
-use Orchestra\Testbench\Contracts\Config;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 
@@ -55,9 +54,5 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
         }
-
-        $this->callAfterResolving(Config::class, static function ($config, $app) {
-            (new Bootstrap\DiscoverRoutes())->bootstrap($app);
-        });
     }
 }
