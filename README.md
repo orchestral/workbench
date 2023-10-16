@@ -9,33 +9,19 @@ Workbench Component is a simple package that has been designed to help you previ
 [![Latest Unstable Version](https://poser.pugx.org/orchestra/workbench/v/unstable)](https://packagist.org/packages/orchestra/workbench)
 [![License](https://poser.pugx.org/orchestra/workbench/license)](https://packagist.org/packages/orchestra/workbench)
 
-### `testbench.yaml` Example
+## Official Documentation
 
-```yaml
-workbench:
-  welcome: true
-  install: true
-  start: /nova
-  user: taylor@laravel.com
-  guard: web
-  sync:
-    - from: ./public/
-      to: public/vendor/nova
-  build:
-    - asset-publish
-    - create-sqlite-db
-    - migrate:refresh
-  assets:
-    - nova-assets
+Documentation for Workbench can be found on the [packages.tools/workbench](https://packages.tools/workbench).
 
-purge:
-  directories: []
-  files: []
-```
+## Contributing
 
-### Commands
+Thank you for considering contributing to Workbench! You can read the contribution guide [here](CONTRIBUTING.md).
 
-* `workbench:install`
-* `workbench:build`
-* `workbench:create-sqlite-db`
-* `workbench:drop-sqlite-db`
+## Code of Conduct
+
+In order to ensure that the community is welcoming to all, please review and abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+## License
+
+Workbench is open-sourced software licensed under the [MIT license](LICENSE).
+
