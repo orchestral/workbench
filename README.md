@@ -11,11 +11,11 @@ Workbench Component is a simple package that has been designed to help you previ
 
 ## Official Documentation
 
-Documentation for Testbench can be found on the [packages.tools/workbench](https://packages.tools/workbench).
+Documentation for Workbench can be found on the [packages.tools/workbench](https://packages.tools/workbench).
 
 ## Contributing
 
-Thank you for considering contributing to Testbench! You can read the contribution guide [here](CONTRIBUTING.md).
+Thank you for considering contributing to Workbench! You can read the contribution guide [here](CONTRIBUTING.md).
 
 ## Code of Conduct
 
@@ -23,5 +23,5 @@ In order to ensure that the community is welcoming to all, please review and abi
 
 ## License
 
-Testbench is open-sourced software licensed under the [MIT license](LICENSE).
+Workbench is open-sourced software licensed under the [MIT license](LICENSE).
 
