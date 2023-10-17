@@ -27,7 +27,7 @@
         "php": "^8.0",
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.21",
-        "laravel/framework": "^9.52.15 || ^10.26.0",
+        "laravel/framework": "dev-generator-presets as 10.x-dev",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "dev-generator-presets as 8.12.0",
         "orchestra/testbench-core": "^7.34.0 || ^8.14.0",
