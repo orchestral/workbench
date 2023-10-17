@@ -16,13 +16,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 class BuildCommand extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'workbench:build';
-
-    /**
      * Execute the console command.
      *
      * @return int
