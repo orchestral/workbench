@@ -4,7 +4,6 @@ providers:
 
 workbench:
   start: '/'
-  welcome: true
   build:
     - asset-publish
     - create-sqlite-db
@@ -16,6 +15,7 @@ workbench:
     - workbench-assets
   discovers:
     web: true
+    api: true
     commands: true
 
 purge:

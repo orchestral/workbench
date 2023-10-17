@@ -35,10 +35,9 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
 
-      # - name: Install Laravel 10
-      #   run: |
-      #     composer require "illuminate/contracts:10.x" --no-interaction --no-update
-      #     composer require "orchestra/testbench-core:^8.12.0" --dev --no-interaction --no-update
+      - name: Install Laravel 10
+        run: |
+          composer require "illuminate/contracts:10.x" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
@@ -85,7 +84,6 @@ jobs:
   #     - name: Install Laravel 9
   #       run: |
   #         composer require "illuminate/contracts:9.x" --no-interaction --no-update
-  #         composer require "orchestra/testbench-core:^7.32.0" --dev --no-interaction --no-update
 
   #     - name: Install dependencies
   #       uses: "ramsey/composer-install@v2"
