@@ -9,13 +9,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 class DropSqliteDbCommand extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'workbench:drop-sqlite-db';
-
-    /**
      * Execute the console command.
      *
      * @return int

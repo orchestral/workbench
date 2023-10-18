@@ -21,13 +21,6 @@ class DevToolCommand extends Command
     protected $signature = 'workbench:devtool {--force : Overwrite any existing files}';
 
     /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Configure Workbench for package development';
-
-    /**
      * Execute the console command.
      *
      * @return int
