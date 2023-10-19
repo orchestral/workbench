@@ -2,7 +2,7 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
-1.0.0 
+## 1.0.0
 
 Unreleased
 
