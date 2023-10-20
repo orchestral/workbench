@@ -16,7 +16,7 @@
     <coverage includeUncoveredFiles="false">
         <include>
             <directory suffix=".php">src/</directory>
-            <file>vendor/orchestra/testbench-core/src/Foundation/Workbench.php</file>
+            <file>vendor/orchestra/testbench-core/src/Workbench/Workbench.php</file>
         </include>
         <exclude>
             <file>src/Console/BuildCommand.php</file>
