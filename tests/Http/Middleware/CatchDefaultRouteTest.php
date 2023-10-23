@@ -7,6 +7,7 @@ use Orchestra\Testbench\Factories\UserFactory;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 class CatchDefaultRouteTest extends TestCase
 {
@@ -60,7 +61,7 @@ class CatchDefaultRouteTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function it_would_redirect_to_workbench_path()
     {
         $user = UserFactory::new()->create();
@@ -73,7 +74,7 @@ class CatchDefaultRouteTest extends TestCase
             ->assertRedirect('/_workbench');
     }
 
-    /** @test */
+    #[Test]
     public function it_would_show_default_page()
     {
         $this->instance(ConfigContract::class, new Config([
@@ -98,7 +99,7 @@ class CatchDefaultRouteTest extends TestCase
             ->assertOk();
     }
 
-    /** @test */
+    #[Test]
     public function it_would_not_redirect_to_workbench_path_if_configuration_doesnt_requires_it()
     {
         $this->instance(ConfigContract::class, new Config([
@@ -123,7 +124,7 @@ class CatchDefaultRouteTest extends TestCase
             ->assertNotFound();
     }
 
-    /** @test */
+    #[Test]
     public function it_would_not_redirect_to_workbench_path_on_path_other_than_root()
     {
         $user = UserFactory::new()->create();

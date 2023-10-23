@@ -7,12 +7,13 @@ use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Canvas\Core\Presets\Preset;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class GeneratorPresetTest extends TestCase
 {
     use WithWorkbench;
 
-    /** @test */
+    #[Test]
     public function it_can_be_resolved_and_has_correct_signature()
     {
         $workingPath = realpath(__DIR__.'/../workbench');
@@ -41,7 +42,7 @@ class GeneratorPresetTest extends TestCase
         $this->assertSame('Illuminate\Foundation\Auth\User', $preset->userProviderModel());
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_access_testing_path()
     {
         $this->expectException(BadMethodCallException::class);
@@ -50,7 +51,7 @@ class GeneratorPresetTest extends TestCase
         $this->app[PresetManager::class]->driver('workbench')->testingPath();
     }
 
-    /** @test */
+    #[Test]
     public function it_cant_access_testing_namespace()
     {
         $this->expectException(BadMethodCallException::class);
