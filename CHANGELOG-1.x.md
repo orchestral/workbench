@@ -4,7 +4,7 @@ This changelog references the relevant changes (bug and security fixes) done to 
 
 ## 1.0.0
 
-Unreleased
+Released: 2023-10-24
 
 ### Added
 
