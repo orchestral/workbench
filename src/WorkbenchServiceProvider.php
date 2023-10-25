@@ -2,10 +2,12 @@
 
 namespace Orchestra\Workbench;
 
+use Composer\InstalledVersions;
 use Illuminate\Console\Generators\PresetManager;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
@@ -30,6 +32,10 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $manager->setDefaultDriver('workbench');
             });
         }
+
+        AboutCommand::add('Workbench', fn () => array_filter([
+            'Version' => InstalledVersions::getPrettyVersion('orchestra/workbench'),
+        ]));
     }
 
     /**
