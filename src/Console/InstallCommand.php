@@ -147,8 +147,8 @@ class InstallCommand extends Command
 
         $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build --ansi';
         $content['scripts']['serve'] = [
-            '@build',
             'Composer\\Config::disableProcessTimeout',
+            '@build',
             '@php vendor/bin/testbench serve',
         ];
 
