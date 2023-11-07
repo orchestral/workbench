@@ -13,6 +13,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
+          - "windows-latest"
         php:
           - 8.2
           - 8.3
@@ -22,7 +23,7 @@ jobs:
         experimental:
           - false
 
-    name: PHP${{ matrix.php }}-${{ matrix.os }} (${{ matrix.dependencies }})
+    name: PHP${{ matrix.php }} on ${{ matrix.os }} (${{ matrix.dependencies }})
 
     steps:
       - name: Checkout code
