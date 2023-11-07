@@ -9,7 +9,6 @@ use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Laravel\Prompts\select;
-use function Orchestra\Testbench\laravel_version_compare;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
@@ -82,9 +81,7 @@ class DevToolCommand extends Command
             return;
         }
 
-        $choice = laravel_version_compare('10.17', '>=')
-            ? select("Export '.env' file as?", $choices)
-            : $this->components->choice("Export '.env' file as?", $choices);
+        $choice = select("Export '.env' file as?", $choices);
 
         if ($choice === 'Skip exporting .env') {
             return;
