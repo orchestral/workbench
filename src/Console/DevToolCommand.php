@@ -81,10 +81,7 @@ class DevToolCommand extends Command
             return;
         }
 
-        $choice = select(
-            "Export '.env' file as?",
-            $choices,
-        );
+        $choice = select("Export '.env' file as?", $choices);
 
         if ($choice === 'Skip exporting .env') {
             return;
