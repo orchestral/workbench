@@ -2,6 +2,18 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 1.0.1
+
+Released: 2023-10-31
+
+### Added
+
+* Added Workbench information to `about` artisan command.
+
+### Changes
+
+* Disable Composer script timeout to `composer run serve` generator.
+
 ## 1.0.0
 
 Released: 2023-10-24
