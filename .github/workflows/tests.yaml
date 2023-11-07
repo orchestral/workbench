@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests-on-laravel-10:
+  tests:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     strategy:
@@ -39,52 +39,6 @@ jobs:
       - name: Install Laravel 10
         run: |
           composer require "illuminate/contracts:10.x" --no-interaction --no-update
-
-      - name: Install dependencies
-        uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: "${{ matrix.dependencies }}"
-          composer-options: "--prefer-dist --no-cache"
-
-      - name: Installed dependencies
-        run: composer show -D
-
-      - name: Execute tests
-        run: vendor/bin/phpunit --testdox
-
-  tests-on-laravel-9:
-    runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.experimental }}
-    strategy:
-      matrix:
-        os:
-          - "ubuntu-latest"
-        php:
-          - '8.0'
-          - 8.1
-          - 8.2
-        dependencies:
-          - "highest"
-          - "lowest"
-        experimental:
-          - false
-
-    name: PHP${{ matrix.php }}-${{ matrix.os }} with Laravel 9 (${{ matrix.dependencies }})
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
-          coverage: none
-
-      - name: Install Laravel 9
-        run: |
-          composer require "illuminate/contracts:9.x" --no-interaction --no-update
 
       - name: Install dependencies
         uses: "ramsey/composer-install@v2"
