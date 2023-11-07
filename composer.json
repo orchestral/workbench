@@ -30,7 +30,7 @@
         "laravel/framework": "^10.26",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^8.11",
-        "orchestra/testbench-core": "8.14",
+        "orchestra/testbench-core": "^8.14",
         "symfony/yaml": "^6.0.9"
     },
     "require-dev": {
