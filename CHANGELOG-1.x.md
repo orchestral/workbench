@@ -4,6 +4,8 @@ This changelog references the relevant changes (bug and security fixes) done to 
 
 ## 1.0.1
 
+Released: 2023-10-31
+
 ### Added
 
 * Added Workbench information to `about` artisan command.
