@@ -7,9 +7,9 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Composer;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
-use Orchestra\Workbench\Composer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
@@ -147,6 +147,7 @@ class InstallCommand extends Command
 
         $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build --ansi';
         $content['scripts']['serve'] = [
+            'Composer\\Config::disableProcessTimeout',
             '@build',
             '@php vendor/bin/testbench serve',
         ];
