@@ -31,7 +31,7 @@
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^8.11",
         "orchestra/testbench-core": "^8.14",
-        "symfony/yaml": "^6.0.9"
+        "symfony/yaml": "^6.2"
     },
     "require-dev": {
         "laravel/pint": "^1.4",
@@ -39,7 +39,7 @@
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6",
         "spatie/laravel-ray": "^1.32.4",
-        "symfony/process": "^6.0.9"
+        "symfony/process": "^6.2"
     },
     "extra": {
         "branch-alias": {
