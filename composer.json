@@ -31,6 +31,7 @@
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^7.10.0 || ^8.11.0",
         "orchestra/testbench-core": "^7.34.0 || ^8.14.0",
+        "spatie/laravel-ray": "^1.32.4",
         "symfony/yaml": "^6.0.9"
     },
     "require-dev": {
@@ -38,7 +39,6 @@
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
         "phpunit/phpunit": "^9.6",
-        "spatie/laravel-ray": "^1.32.4",
         "symfony/process": "^6.0.9"
     },
     "extra": {
