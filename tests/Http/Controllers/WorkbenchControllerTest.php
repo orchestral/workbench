@@ -2,17 +2,19 @@
 
 namespace Orchestra\Workbench\Tests\Http\Controllers;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Factories\UserFactory;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 
-/**
- * @covers \Orchestra\Workbench\Http\Controllers\WorkbenchController
- */
+#[WithMigration]
 class WorkbenchControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Define environment setup.
      *

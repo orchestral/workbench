@@ -2,14 +2,19 @@
 
 namespace Orchestra\Workbench\Tests\Http\Middleware;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Factories\UserFactory;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 
+#[WithMigration]
 class CatchDefaultRouteTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Define environment setup.
      *
@@ -35,16 +40,6 @@ class CatchDefaultRouteTest extends TestCase
         $router->get('/workbench', ['uses' => function () {
             return 'hello world';
         }]);
-    }
-
-    /**
-     * Define database migrations.
-     *
-     * @return void
-     */
-    protected function defineDatabaseMigrations()
-    {
-        $this->loadLaravelMigrations(['--database' => 'testing']);
     }
 
     /**
