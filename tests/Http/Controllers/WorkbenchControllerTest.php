@@ -41,16 +41,6 @@ class WorkbenchControllerTest extends TestCase
     }
 
     /**
-     * Define database migrations.
-     *
-     * @return void
-     */
-    protected function defineDatabaseMigrations()
-    {
-        $this->loadLaravelMigrations(['--database' => 'testing']);
-    }
-
-    /**
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
