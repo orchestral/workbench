@@ -7,10 +7,8 @@ use Orchestra\Testbench\Factories\UserFactory;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
+use PHPUnit\Framework\Attributes\Test;
 
-/**
- * @covers \Orchestra\Workbench\Http\Controllers\WorkbenchController
- */
 class WorkbenchControllerTest extends TestCase
 {
     /**
@@ -61,7 +59,7 @@ class WorkbenchControllerTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_current_user_information()
     {
         $user = UserFactory::new()->create();
@@ -76,7 +74,7 @@ class WorkbenchControllerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_get_current_user_information_without_authenticated_user_return_empty_array()
     {
         $user = UserFactory::new()->create();
@@ -87,7 +85,7 @@ class WorkbenchControllerTest extends TestCase
         $response->assertOk()->assertExactJson([]);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_authenticate_a_user()
     {
         $user = UserFactory::new()->create();
@@ -101,7 +99,7 @@ class WorkbenchControllerTest extends TestCase
             ->assertAuthenticatedAs($user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_authenticate_a_user_using_email()
     {
         $user = UserFactory::new()->create();
@@ -115,7 +113,7 @@ class WorkbenchControllerTest extends TestCase
             ->assertAuthenticatedAs($user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_deauthenticate_a_user()
     {
         $user = UserFactory::new()->create();
@@ -129,7 +127,7 @@ class WorkbenchControllerTest extends TestCase
         $this->assertGuest('web');
     }
 
-    /** @test */
+    #[Test]
     public function it_can_automatically_authenticate_a_user()
     {
         $user = UserFactory::new()->create();
@@ -146,7 +144,7 @@ class WorkbenchControllerTest extends TestCase
             ->assertAuthenticatedAs($user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_automatically_authenticate_a_user_using_email()
     {
         $user = UserFactory::new()->create();
@@ -163,7 +161,7 @@ class WorkbenchControllerTest extends TestCase
             ->assertAuthenticatedAs($user);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_automatically_deauthenticate_a_user()
     {
         $user = UserFactory::new()->create();

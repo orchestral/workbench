@@ -6,12 +6,12 @@ use Orchestra\Testbench\Concerns\Database\InteractsWithSqliteDatabaseFile;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
+use PHPUnit\Framework\Attributes\Test;
 
-/**
- * @requires OS Linux|DAR
- *
- * @group database
- */
+#[RequiresOperatingSystem('Linux|DAR')]
+#[Group('database')]
 class DropSqliteDbCommandTest extends TestCase
 {
     use InteractsWithSqliteDatabaseFile;
@@ -30,7 +30,7 @@ class DropSqliteDbCommandTest extends TestCase
         ];
     }
 
-    /** @test */
+    #[Test]
     public function it_can_drop_database_using_command()
     {
         $this->withSqliteDatabase(function () {
@@ -44,7 +44,7 @@ class DropSqliteDbCommandTest extends TestCase
         });
     }
 
-    /** @test */
+    #[Test]
     public function it_cannot_drop_database_using_command_when_database_doesnt_exists()
     {
         $this->withoutSqliteDatabase(function () {

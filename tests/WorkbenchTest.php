@@ -6,18 +6,19 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Workbench;
+use PHPUnit\Framework\Attributes\Test;
 
 class WorkbenchTest extends TestCase
 {
     use WithWorkbench;
 
-    /** @test */
+    #[Test]
     public function it_can_resolve_with_workbench_traits()
     {
         $this->assertTrue(value(app('orchestra.workbench.loaded')));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_resolve_laravel_path()
     {
         $this->assertSame(
@@ -29,7 +30,7 @@ class WorkbenchTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_resolve_package_path()
     {
         $this->assertSame(
@@ -41,7 +42,7 @@ class WorkbenchTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_resolve_workbench_path()
     {
         $this->assertSame(
@@ -53,7 +54,7 @@ class WorkbenchTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function it_can_resolve_workbench_config()
     {
         $config = app(ConfigContract::class)->getWorkbenchAttributes();
