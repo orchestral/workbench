@@ -32,6 +32,7 @@
         "orchestra/canvas": "^7.10.0 || ^8.11.0",
         "orchestra/testbench-core": "^7.35.0 || ^8.15.0",
         "spatie/laravel-ray": "^1.32.4",
+        "symfony/polyfill-php83": "^1.28",
         "symfony/yaml": "^6.0.9"
     },
     "require-dev": {
