@@ -31,6 +31,7 @@
         "laravel/tinker": "dev-develop",
         "orchestra/canvas": "^9.0",
         "orchestra/testbench-core": "^9.0",
+        "symfony/polyfill-php83": "^1.28",
         "symfony/yaml": "^7.0"
     },
     "require-dev": {
