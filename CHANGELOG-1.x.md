@@ -2,6 +2,13 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## Unreleased
+
+### Changes
+
+* Add `#[Override]` attribute to relevant methods, this require `symfony/polyfill-php83` as backward compatibility for PHP 8.1 and 8.2.
+* Move `spatie/laravel-ray` from `require-dev` to `require`.
+
 ## 1.0.1
 
 Released: 2023-10-31
