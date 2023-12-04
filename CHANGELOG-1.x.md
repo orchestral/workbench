@@ -2,7 +2,9 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
-## Unreleased
+## 1.1.0
+
+Released: 2023-12-04
 
 ### Changes
 
