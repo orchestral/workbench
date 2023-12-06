@@ -27,10 +27,10 @@
         "php": "^8.0",
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.21",
-        "laravel/framework": "^9.52.15 || ^10.26.0",
+        "laravel/framework": "^9.52.15 || ^10.26",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^7.11.1 || ^8.11.4",
-        "orchestra/testbench-core": "^7.36 || ^8.16",
+        "orchestra/testbench-core": "^7.37 || ^8.17",
         "spatie/laravel-ray": "^1.32.4",
         "symfony/polyfill-php83": "^1.28",
         "symfony/yaml": "^6.0.9"
