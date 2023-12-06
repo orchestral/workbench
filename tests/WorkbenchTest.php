@@ -71,7 +71,7 @@ class WorkbenchTest extends TestCase
             'web' => true,
             'api' => true,
             'commands' => true,
-            'components' => true,
+            'components' => false,
             'views' => false,
         ], Workbench::config('discovers'));
     }
