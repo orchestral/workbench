@@ -30,7 +30,7 @@
         "laravel/framework": "^10.26",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^8.11.4",
-        "orchestra/testbench-core": "^8.16",
+        "orchestra/testbench-core": "^8.17",
         "spatie/laravel-ray": "^1.32.4",
         "symfony/polyfill-php83": "^1.28",
         "symfony/yaml": "^6.2"
