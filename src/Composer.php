@@ -11,7 +11,6 @@ class Composer extends \Illuminate\Support\Composer
      *
      * @param  callable(array):array  $callback
      */
-    #[\Override]
     public function modify(callable $callback): void
     {
         $composerFile = "{$this->workingPath}/composer.json";
