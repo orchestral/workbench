@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.2.0
+
+Released: 2023-12-06
+
+### Added
+
+* Supports Workbench `discovers.components` configuration.
+
 ## 8.1.0
 
 Released: 2023-12-04
