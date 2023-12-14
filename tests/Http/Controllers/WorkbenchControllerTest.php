@@ -25,7 +25,6 @@ class WorkbenchControllerTest extends TestCase
     protected function defineEnvironment($app)
     {
         $app['config']->set([
-            'app.key' => 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF',
             'database.default' => 'testing',
         ]);
     }
