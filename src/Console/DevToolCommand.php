@@ -69,7 +69,7 @@ class DevToolCommand extends Command
 
         $choices = Collection::make($this->environmentFiles())
             ->reject(static function ($file) use ($filesystem, $workbenchWorkingPath) {
-                return $filesystem->exists("{$workbenchWorkingPath}/{$file}");
+                return $filesystem->exists(join_paths($workbenchWorkingPath, $file));
             })->values()
             ->prepend('Skip exporting .env')
             ->all();
@@ -82,6 +82,7 @@ class DevToolCommand extends Command
             return;
         }
 
+        /** @var string $choice */
         $choice = select("Export '.env' file as?", $choices);
 
         if ($choice === 'Skip exporting .env') {

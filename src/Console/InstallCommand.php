@@ -93,7 +93,7 @@ class InstallCommand extends Command
                 force: (bool) $this->option('force'),
             ))->handle(
                 (string) realpath(join_paths(__DIR__, 'stubs', 'routes', $route.'.php')),
-                join_paths($workbenchWorkingPath, 'routes' , $route.'.php')
+                join_paths($workbenchWorkingPath, 'routes', $route.'.php')
             );
         }
     }
