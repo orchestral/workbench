@@ -18,7 +18,7 @@ class GeneratorPresetTest extends TestCase
     #[Test]
     public function it_can_be_resolved_and_has_correct_signature()
     {
-        $workingPath = realpath(__DIR__.'/../workbench');
+        $workingPath = realpath(join_paths(__DIR__, '..', 'workbench'));
 
         $preset = $this->app[PresetManager::class]->driver('workbench');
 
@@ -28,10 +28,10 @@ class GeneratorPresetTest extends TestCase
         $this->assertSame($workingPath, $preset->basePath());
         $this->assertSame(join_paths($workingPath, 'app'), $preset->sourcePath());
         $this->assertSame(join_paths($workingPath, 'resources'), $preset->resourcePath());
-        $this->assertSame(join_paths($workingPath, 'resources/views'), $preset->viewPath());
-        $this->assertSame(join_paths($workingPath, 'database/factories'), $preset->factoryPath());
-        $this->assertSame(join_paths($workingPath, 'database/migrations'), $preset->migrationPath());
-        $this->assertSame(join_paths($workingPath, 'database/seeders'), $preset->seederPath());
+        $this->assertSame(join_paths($workingPath, 'resources', 'views'), $preset->viewPath());
+        $this->assertSame(join_paths($workingPath, 'database', 'factories'), $preset->factoryPath());
+        $this->assertSame(join_paths($workingPath, 'database', 'migrations'), $preset->migrationPath());
+        $this->assertSame(join_paths($workingPath, 'database', 'seeders'), $preset->seederPath());
 
         $this->assertSame('Workbench\App\\', $preset->rootNamespace());
         $this->assertSame('Workbench\App\Console\\', $preset->commandNamespace());
