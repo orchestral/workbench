@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\select;
 use function Orchestra\Testbench\package_path;
 
@@ -43,8 +44,8 @@ class DevToolCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(__DIR__.'/stubs/testbench.yaml');
-        $to = "{$workingPath}/testbench.yaml";
+        $from = (string) realpath(join_paths(__DIR__, 'stubs', 'testbench.yaml'));
+        $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
             filesystem: $filesystem,
@@ -58,7 +59,7 @@ class DevToolCommand extends Command
      */
     protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
     {
-        $workbenchWorkingPath = "{$workingPath}/workbench";
+        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
         $from = $this->laravel->basePath('.env.example');
 
@@ -87,7 +88,7 @@ class DevToolCommand extends Command
             return;
         }
 
-        $to = "{$workbenchWorkingPath}/{$choice}";
+        $to = join_paths($workbenchWorkingPath, $choice);
 
         (new GeneratesFile(
             filesystem: $filesystem,
@@ -98,7 +99,7 @@ class DevToolCommand extends Command
         (new GeneratesFile(
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
-        ))->handle((string) realpath(__DIR__.'/stubs/workbench.gitignore'), "{$workbenchWorkingPath}/.gitignore");
+        ))->handle((string) realpath(join_paths(__DIR__, 'stubs', 'workbench.gitignore')), join_paths($workbenchWorkingPath, '.gitignore'));
     }
 
     /**
