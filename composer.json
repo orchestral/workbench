@@ -47,6 +47,9 @@
             "dev-master": "0.5.x-dev"
         }
     },
+    "suggest": {
+        "ext-pcntl": "Required to use all features of the console signal trapping."
+    },
     "scripts": {
         "post-autoload-dump": [
             "@clear",
