@@ -15,6 +15,7 @@ use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use function Illuminate\Filesystem\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -57,21 +58,21 @@ class InstallCommand extends Command
      */
     protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
     {
-        $workbenchWorkingPath = "{$workingPath}/workbench";
+        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
         (new EnsureDirectoryExists(
             filesystem: $filesystem,
             components: $this->components,
         ))->handle(
             Collection::make([
-                'app/Models',
+                join_paths('app', 'Models'),
                 'routes',
-                'resources/views',
-                'database/factories',
-                'database/migrations',
-                'database/seeders',
+                join_paths('resources', 'views'),
+                join_paths('database', 'factories'),
+                join_paths('database', 'migrations'),
+                join_paths('database', 'seeders'),
             ])->map(static function ($directory) use ($workbenchWorkingPath) {
-                return "{$workbenchWorkingPath}/{$directory}";
+                return join_paths($workbenchWorkingPath, $directory);
             })
         );
 
@@ -91,8 +92,8 @@ class InstallCommand extends Command
                 components: $this->components,
                 force: (bool) $this->option('force'),
             ))->handle(
-                (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
-                "{$workbenchWorkingPath}/routes/{$route}.php"
+                (string) realpath(join_paths(__DIR__, 'stubs', 'routes', $route.'.php')),
+                join_paths($workbenchWorkingPath, 'routes', $route.'.php')
             );
         }
     }

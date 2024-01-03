@@ -17,20 +17,6 @@ class WorkbenchControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function defineEnvironment($app)
-    {
-        $app['config']->set([
-            'app.key' => 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF',
-            'database.default' => 'testing',
-        ]);
-    }
-
-    /**
      * Define routes setup.
      *
      * @param  \Illuminate\Routing\Router  $router
