@@ -71,9 +71,7 @@ class InstallCommand extends Command
                 join_paths('database', 'factories'),
                 join_paths('database', 'migrations'),
                 join_paths('database', 'seeders'),
-            ])->map(static function ($directory) use ($workbenchWorkingPath) {
-                return join_paths($workbenchWorkingPath, $directory);
-            })
+            ])->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
         );
 
         $this->callSilently('make:provider', [
