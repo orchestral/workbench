@@ -24,11 +24,8 @@ class BuildCommand extends Command
     {
         $commands = Collection::make($kernel->all())
             ->keys()
-            ->filter(static function ($command) {
-                return \is_string($command);
-            })->mapWithKeys(static function (string $command) {
-                return [str_replace(':', '-', $command) => $command];
-            });
+            ->filter(static fn ($command) => \is_string($command))
+            ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);
 
         /** @var array<int, string> $build */
         $build = Workbench::config('build');
@@ -41,9 +38,7 @@ class BuildCommand extends Command
                     return;
                 }
 
-                $command = $commands->get($build) ?? $commands->first(static function ($name) use ($build) {
-                    return $build === $name;
-                });
+                $command = $commands->get($build) ?? $commands->first(static fn ($name) => $build === $name);
 
                 if (! \is_null($command)) {
                     $recipes->commandUsing($command)->handle($kernel, $this->output);

@@ -21,20 +21,15 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(Contracts\RecipeManager::class, static function (Application $app) {
-            return new RecipeManager($app);
-        });
+        $this->app->singleton(Contracts\RecipeManager::class, static fn (Application $app) => new RecipeManager($app));
 
         $this->callAfterResolving(PresetManager::class, static function ($manager) {
-            $manager->extend('workbench', static function ($app) {
-                /** @var \Illuminate\Foundation\Application $app */
-                return new GeneratorPreset($app);
-            });
+            $manager->extend('workbench', static fn (Application $app) => new GeneratorPreset($app));
 
             $manager->setDefaultDriver('workbench');
         });
 
-        AboutCommand::add('Workbench', fn () => array_filter([
+        AboutCommand::add('Workbench', static fn () => array_filter([
             'Version' => InstalledVersions::getPrettyVersion('orchestra/workbench'),
         ]));
     }
@@ -44,7 +39,7 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom((string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php')));
+        $this->loadRoutesFrom(join_paths((string) realpath(__DIR__), '..', 'routes', 'workbench.php'));
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
