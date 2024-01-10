@@ -28,7 +28,7 @@
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.21",
         "laravel/framework": "^11.0",
-        "laravel/tinker": "dev-develop",
+        "laravel/tinker": "^2.9",
         "orchestra/canvas": "^9.0",
         "orchestra/testbench-core": "^9.0",
         "symfony/polyfill-php83": "^1.28",
