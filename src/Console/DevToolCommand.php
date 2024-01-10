@@ -68,9 +68,8 @@ class DevToolCommand extends Command
         }
 
         $choices = Collection::make($this->environmentFiles())
-            ->reject(static function ($file) use ($filesystem, $workbenchWorkingPath) {
-                return $filesystem->exists("{$workbenchWorkingPath}/{$file}");
-            })->values()
+            ->reject(static fn ($file) => $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
+            ->values()
             ->prepend('Skip exporting .env')
             ->all();
 
