@@ -70,9 +70,7 @@ class InstallCommand extends Command
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
-            ])->map(static function ($directory) use ($workbenchWorkingPath) {
-                return "{$workbenchWorkingPath}/{$directory}";
-            })
+            ])->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
         );
 
         $this->callSilently('make:provider', [
