@@ -44,7 +44,7 @@ class DevToolCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(join_paths(__DIR__, 'stubs', 'testbench.yaml'));
+        $from = join_paths((string) realpath(__DIR__), 'stubs', 'testbench.yaml');
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
