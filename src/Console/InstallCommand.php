@@ -84,14 +84,25 @@ class InstallCommand extends Command
             '--preset' => 'workbench',
         ]);
 
+        foreach (['app', 'providers'] as $bootstrap) {
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                (string) realpath(join_paths(__DIR__, 'stubs', 'bootstrap', "{$bootstrap}.php")),
+                join_paths($workbenchWorkingPath, 'bootstrap', "{$bootstrap}.php")
+            );
+        }
+
         foreach (['api', 'console', 'web'] as $route) {
             (new GeneratesFile(
                 filesystem: $filesystem,
                 components: $this->components,
                 force: (bool) $this->option('force'),
             ))->handle(
-                (string) realpath(join_paths(__DIR__, 'stubs', 'routes', $route.'.php')),
-                join_paths($workbenchWorkingPath, 'routes', $route.'.php')
+                (string) realpath(join_paths(__DIR__, 'stubs', 'routes', "{$route}.php")),
+                join_paths($workbenchWorkingPath, 'routes', "{$route}.php")
             );
         }
     }
