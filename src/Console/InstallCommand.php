@@ -114,11 +114,9 @@ class InstallCommand extends Command
     {
         $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
 
-        $composer->modify(function (array $content) use ($filesystem) {
-            return $this->appendScriptsToComposer(
-                $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
-            );
-        });
+        $composer->modify(fn (array $content) => $this->appendScriptsToComposer(
+            $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
+        ));
     }
 
     /**
