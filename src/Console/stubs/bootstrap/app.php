@@ -14,12 +14,12 @@ use function Orchestra\Testbench\default_skeleton_path;
 
 return Application::configure(default_skeleton_path())
     ->withProviders()
-    ->withRouting(
-        // web: __DIR__.'/../web.php',
-        // api: __DIR__.'/../routes/api.php',
-        // commands: __DIR__.'/../routes/console.php',
-        // channels: __DIR__.'/../routes/channels.php',
-    )
+    // ->withRouting(
+    //     web: __DIR__.'/../web.php',
+    //     api: __DIR__.'/../routes/api.php',
+    //     commands: __DIR__.'/../routes/console.php',
+    //     channels: __DIR__.'/../routes/channels.php',
+    // )
     ->withMiddleware(function (Middleware $middleware) {
         //
     })
