@@ -84,7 +84,7 @@ class InstallCommand extends Command
             '--preset' => 'workbench',
         ]);
 
-        foreach (['app', 'providers'] as $bootstrap) {
+        foreach (['providers'] as $bootstrap) {
             (new GeneratesFile(
                 filesystem: $filesystem,
                 components: $this->components,
@@ -95,7 +95,7 @@ class InstallCommand extends Command
             );
         }
 
-        foreach (['api', 'console', 'web'] as $route) {
+        foreach (['console', 'web'] as $route) {
             (new GeneratesFile(
                 filesystem: $filesystem,
                 components: $this->components,

@@ -8,7 +8,8 @@ require __DIR__.'/../vendor/autoload.php';
 $input = new Symfony\Component\Console\Input\ArgvInput();
 $files = new Illuminate\Filesystem\Filesystem();
 
-$version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '10.x-dev' : '^10.0';
+// $version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '11.x-dev' : '^11.0';
+$version = 'dev-master';
 
 $files->deleteDirectory("{$workingPath}/skeleton");
 
@@ -17,7 +18,8 @@ Symfony\Component\Process\Process::fromShellCommandline(
 )->mustRun();
 
 Illuminate\Support\Collection::make([
-    'routes/api.php',
+    'bootstrap/app.php',
+    // 'routes/api.php',
     'routes/console.php',
     'routes/web.php',
 ])->transform(fn ($file) => "{$workingPath}/skeleton/{$file}")
@@ -27,13 +29,13 @@ Illuminate\Support\Collection::make([
     $files->copy($file, "{$workingPath}/src/Console/stubs".Illuminate\Support\Str::after($file, "{$workingPath}/skeleton"));
 });
 
-transform([
-    'Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
-    return $request->user();
-});'.PHP_EOL => '// Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+// transform([
+//     'Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
 //     return $request->user();
-// });'.PHP_EOL,
-], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/api.php"));
+// });'.PHP_EOL => '// Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+// //     return $request->user();
+// // });'.PHP_EOL,
+// ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/api.php"));
 
 transform([
     'Artisan::command(\'inspire\', function () {
