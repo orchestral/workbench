@@ -10,6 +10,7 @@ seeders:
 workbench:
   start: '/'
   install: true
+  health: false
   discovers:
     web: true
     api: false
