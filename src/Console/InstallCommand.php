@@ -66,6 +66,7 @@ class InstallCommand extends Command
         ))->handle(
             Collection::make([
                 join_paths('app', 'Models'),
+                'bootstrap',
                 'routes',
                 join_paths('resources', 'views'),
                 join_paths('database', 'factories'),
@@ -84,7 +85,7 @@ class InstallCommand extends Command
             '--preset' => 'workbench',
         ]);
 
-        foreach (['providers'] as $bootstrap) {
+        foreach (['app', 'providers'] as $bootstrap) {
             (new GeneratesFile(
                 filesystem: $filesystem,
                 components: $this->components,
