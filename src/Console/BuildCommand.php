@@ -27,7 +27,7 @@ class BuildCommand extends Command
             ->filter(static fn ($command) => \is_string($command))
             ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);
 
-        /** @var array<int, string>|array<string, array<string, mixed>> $build */
+        /** @var array<int|string, array<string, mixed>|string> $build */
         $build = Workbench::config('build');
 
         Collection::make($build)
