@@ -27,21 +27,36 @@ class BuildCommand extends Command
             ->filter(static fn ($command) => \is_string($command))
             ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);
 
-        /** @var array<int, string> $build */
+        /** @var array<int, string>|array<string, array<string, mixed>> $build */
         $build = Workbench::config('build');
 
         Collection::make($build)
-            ->each(function (string $build) use ($kernel, $recipes, $commands) {
-                if ($recipes->hasCommand($build)) {
-                    $recipes->command($build)->handle($kernel, $this->output);
+            ->mapWithKeys(static function ($build) {
+                /** @var string $name */
+                $name = match (true) {
+                    \is_array($build) => array_key_first($build),
+                    \is_string($build) => $build,
+                };
+
+                /** @var array<string, mixed> $options */
+                $options = match (true) {
+                    \is_array($build) => $build[array_key_first($build)],
+                    \is_string($build) => [],
+                };
+
+                return [$name => Collection::make($options)->mapWithKeys(static fn ($value, $key) => ['--'.ltrim($key, '-') => $value])->all()];
+            })
+            ->each(function (array $options, string $name) use ($kernel, $recipes, $commands) {
+                if ($recipes->hasCommand($name)) {
+                    $recipes->command($name)->handle($kernel, $this->output);
 
                     return;
                 }
 
-                $command = $commands->get($build) ?? $commands->first(static fn ($name) => $build === $name);
+                $command = $commands->get($name) ?? $commands->first(static fn ($commandName) => $name === $commandName);
 
                 if (! \is_null($command)) {
-                    $recipes->commandUsing($command)->handle($kernel, $this->output);
+                    $recipes->commandUsing($command, $options)->handle($kernel, $this->output);
                 }
             });
 

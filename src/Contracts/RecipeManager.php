@@ -7,7 +7,7 @@ interface RecipeManager
     /**
      * Create anonymous command driver.
      */
-    public function commandUsing(string $command): Recipe;
+    public function commandUsing(string $command, array $options = []): Recipe;
 
     /**
      * Run the recipe by name.

@@ -7,7 +7,9 @@ workbench:
   build:
     - asset-publish
     - create-sqlite-db
-    - migrate:refresh
+    - migrate:refresh:
+        seed: true
+        drop-views: false
   sync:
     - from: workbench/dist
       to: public/vendor/workbench
