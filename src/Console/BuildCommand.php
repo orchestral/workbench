@@ -27,25 +27,7 @@ class BuildCommand extends Command
             ->filter(static fn ($command) => \is_string($command))
             ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);
 
-        /** @var array<int|string, array<string, mixed>|string> $build */
-        $build = Workbench::config('build');
-
-        Collection::make($build)
-            ->mapWithKeys(static function (array|string $build) {
-                /** @var string $name */
-                $name = match (true) {
-                    \is_array($build) => array_key_first($build),
-                    \is_string($build) => $build,
-                };
-
-                /** @var array<string, mixed> $options */
-                $options = match (true) {
-                    \is_array($build) => $build[array_key_first($build)],
-                    \is_string($build) => [],
-                };
-
-                return [$name => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all()];
-            })
+        Workbench::buildSteps()
             ->each(function (array $options, string $name) use ($kernel, $recipes, $commands) {
                 /** @var array<string, mixed> $options */
                 if ($recipes->hasCommand($name)) {
