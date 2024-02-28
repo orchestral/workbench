@@ -44,9 +44,10 @@ class BuildCommand extends Command
                     \is_string($build) => [],
                 };
 
-                return [$name => Collection::make($options)->mapWithKeys(static fn ($value, $key) => ['--'.ltrim($key, '-') => $value])->all()];
+                return [$name => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all()];
             })
             ->each(function (array $options, string $name) use ($kernel, $recipes, $commands) {
+                /** @var array<string, mixed> $options */
                 if ($recipes->hasCommand($name)) {
                     $recipes->command($name)->handle($kernel, $this->output);
 

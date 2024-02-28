@@ -8,8 +8,8 @@ workbench:
     - asset-publish
     - create-sqlite-db
     - migrate:refresh:
-        seed: true
-        drop-views: false
+        --seed: true
+        --drop-views: false
   sync:
     - from: workbench/dist
       to: public/vendor/workbench
