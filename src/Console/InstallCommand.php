@@ -17,6 +17,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
 use function Orchestra\Testbench\package_path;
+use function Laravel\Prompts\confirm;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command
@@ -85,7 +86,13 @@ class InstallCommand extends Command
             '--preset' => 'workbench',
         ]);
 
-        foreach (['app', 'providers'] as $bootstrap) {
+        foreach (['app' => true, 'providers' => false] as $bootstrap => $shouldAsk) {
+            if ($shouldAsk === true) {
+                if (! confirm("Generate `workbench/bootstrap/{$bootstrap}.php` file?", true)) {
+                    continue;
+                }
+            }
+
             (new GeneratesFile(
                 filesystem: $filesystem,
                 components: $this->components,
