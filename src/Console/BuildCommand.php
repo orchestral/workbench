@@ -27,21 +27,19 @@ class BuildCommand extends Command
             ->filter(static fn ($command) => \is_string($command))
             ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);
 
-        /** @var array<int, string> $build */
-        $build = Workbench::config('build');
-
-        Collection::make($build)
-            ->each(function (string $build) use ($kernel, $recipes, $commands) {
-                if ($recipes->hasCommand($build)) {
-                    $recipes->command($build)->handle($kernel, $this->output);
+        Workbench::buildSteps()
+            ->each(function (array $options, string $name) use ($kernel, $recipes, $commands) {
+                /** @var array<string, mixed> $options */
+                if ($recipes->hasCommand($name)) {
+                    $recipes->command($name)->handle($kernel, $this->output);
 
                     return;
                 }
 
-                $command = $commands->get($build) ?? $commands->first(static fn ($name) => $build === $name);
+                $command = $commands->get($name) ?? $commands->first(static fn ($commandName) => $name === $commandName);
 
                 if (! \is_null($command)) {
-                    $recipes->commandUsing($command)->handle($kernel, $this->output);
+                    $recipes->commandUsing($command, $options)->handle($kernel, $this->output);
                 }
             });
 
