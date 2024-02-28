@@ -4,3 +4,8 @@ parameters:
 			message: "#^Method Orchestra\\\\Workbench\\\\Http\\\\Middleware\\\\CatchDefaultRoute\\:\\:handle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Http/Middleware/CatchDefaultRoute.php
+
+		-
+			message: "#^Method Orchestra\\\\Workbench\\\\Workbench\\:\\:buildSteps\\(\\) should return Illuminate\\\\Support\\\\Collection\\<string, array\\<string, mixed\\>\\> but returns Illuminate\\\\Support\\\\Collection\\<string, array\\<int\\|string, mixed\\>\\>\\.$#"
+			count: 1
+			path: src/Workbench.php
