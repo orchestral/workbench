@@ -6,6 +6,8 @@ interface RecipeManager
 {
     /**
      * Create anonymous command driver.
+     *
+     * @param  array<string, mixed>  $options
      */
     public function commandUsing(string $command, array $options = []): Recipe;
 

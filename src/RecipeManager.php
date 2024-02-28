@@ -41,6 +41,8 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
 
     /**
      * Create anonymous command driver.
+     *
+     * @param  array<string, mixed>  $options
      */
     public function commandUsing(string $command, array $options = []): Contracts\Recipe
     {
