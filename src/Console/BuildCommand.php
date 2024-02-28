@@ -31,7 +31,7 @@ class BuildCommand extends Command
         $build = Workbench::config('build');
 
         Collection::make($build)
-            ->mapWithKeys(static function ($build) {
+            ->mapWithKeys(static function (array|string $build) {
                 /** @var string $name */
                 $name = match (true) {
                     \is_array($build) => array_key_first($build),
