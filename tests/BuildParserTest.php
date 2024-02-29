@@ -2,12 +2,15 @@
 
 namespace Orchestra\Workbench\Tests;
 
+use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\BuildParser;
 use Orchestra\Workbench\Workbench;
 
 class BuildParserTest extends TestCase
 {
+    use WithWorkbench;
+
     /** @test */
     public function it_can_parse_build_steps()
     {
