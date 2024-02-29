@@ -5,6 +5,7 @@ namespace Orchestra\Workbench\Console;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Collection;
+use Orchestra\Workbench\BuildParser;
 use Orchestra\Workbench\Contracts\RecipeManager;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -27,7 +28,10 @@ class BuildCommand extends Command
             ->filter(static fn ($command) => \is_string($command))
             ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);
 
-        Workbench::buildSteps()
+        /** @var array<int|string, array<string, mixed>|string> $build */
+        $build = Workbench::config('build');
+
+        BuildParser::make($build)
             ->each(function (array $options, string $name) use ($kernel, $recipes, $commands) {
                 /** @var array<string, mixed> $options */
                 if ($recipes->hasCommand($name)) {

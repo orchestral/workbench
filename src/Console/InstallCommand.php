@@ -16,8 +16,8 @@ use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
-use function Orchestra\Testbench\package_path;
 use function Laravel\Prompts\confirm;
+use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command
