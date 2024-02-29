@@ -75,19 +75,4 @@ class WorkbenchTest extends TestCase
             'views' => false,
         ], Workbench::config('discovers'));
     }
-
-    /** @test */
-    public function it_can_resolve_build_steps()
-    {
-        $steps = Workbench::buildSteps();
-
-        $this->assertSame([
-            'asset-publish' => [],
-            'create-sqlite-db' => [],
-            'migrate:refresh' => [
-                '--seed' => true,
-                '--drop-views' => false,
-            ],
-        ], $steps->all());
-    }
 }

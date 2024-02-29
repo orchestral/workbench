@@ -29,8 +29,13 @@
         "fakerphp/faker": "^1.21",
         "laravel/framework": "^9.52.15",
         "laravel/tinker": "^2.8.2",
+<<<<<<< HEAD
         "orchestra/canvas": "^7.11.1",
         "orchestra/testbench-core": "^7.37",
+=======
+        "orchestra/canvas": "^7.11.1 || ^8.11.4",
+        "orchestra/testbench-core": "^7.38 || ^8.18",
+>>>>>>> 1.x
         "spatie/laravel-ray": "^1.32.4",
         "symfony/polyfill-php83": "^1.28",
         "symfony/yaml": "^6.0.9"
