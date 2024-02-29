@@ -3,6 +3,7 @@
 namespace Orchestra\Workbench\Tests\Http\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Orchestra\Testbench\Attributes\WithConfig;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Factories\UserFactory;
@@ -11,23 +12,11 @@ use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 use PHPUnit\Framework\Attributes\Test;
 
+#[WithConfig('database.default', 'testing')]
 #[WithMigration]
 class WorkbenchControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function defineEnvironment($app)
-    {
-        $app['config']->set([
-            'database.default' => 'testing',
-        ]);
-    }
 
     /**
      * Define routes setup.
