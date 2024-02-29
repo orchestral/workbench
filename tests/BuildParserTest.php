@@ -8,6 +8,7 @@ use Orchestra\Workbench\Workbench;
 
 class BuildParserTest extends TestCase
 {
+    /** @test */
     public function it_can_parse_build_steps()
     {
         $steps = BuildParser::make(Workbench::config('build'));
