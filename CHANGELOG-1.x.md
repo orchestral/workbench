@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 1.3.0
+
+Released: 2024-03-03
+
+### Added
+
+* Added ability to configure `build` commands with arguments and options.
+
 ## 1.2.0
 
 Released: 2023-12-06
