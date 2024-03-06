@@ -41,7 +41,7 @@ jobs:
           composer require "illuminate/contracts:10.x" --no-interaction --no-update
 
       - name: Install dependencies
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           composer-options: "--prefer-dist --no-cache"
@@ -87,7 +87,7 @@ jobs:
           composer require "illuminate/contracts:9.x" --no-interaction --no-update
 
       - name: Install dependencies
-        uses: "ramsey/composer-install@v2"
+        uses: "ramsey/composer-install@v3"
         with:
           dependency-versions: "${{ matrix.dependencies }}"
           composer-options: "--prefer-dist --no-cache"
