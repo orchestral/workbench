@@ -35,7 +35,7 @@ class Workbench
      * Get the availale configuration.
      *
      * @param  string|null  $key
-     * @return mixed|array<string, mixed>
+     * @return array<string, mixed>|mixed
      *
      * @phpstan-return ($key is null ? TWorkbenchConfig : mixed)
      */
