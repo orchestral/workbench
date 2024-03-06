@@ -31,10 +31,8 @@ class Command implements Recipe
 
     /**
      * Run the recipe.
-     *
-     * @return void
      */
-    public function handle(ConsoleKernel $kernel, OutputInterface $output)
+    public function handle(ConsoleKernel $kernel, OutputInterface $output): void
     {
         $kernel->call(
             $this->commandName(), $this->commandOptions(), $output
