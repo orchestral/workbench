@@ -16,7 +16,6 @@ use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
-use function Laravel\Prompts\confirm;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -85,23 +84,6 @@ class InstallCommand extends Command
             'name' => 'DatabaseSeeder',
             '--preset' => 'workbench',
         ]);
-
-        foreach (['app' => true, 'providers' => false] as $bootstrap => $shouldAsk) {
-            if ($shouldAsk === true) {
-                if (! confirm("Generate `workbench/bootstrap/{$bootstrap}.php` file?", true)) {
-                    continue;
-                }
-            }
-
-            (new GeneratesFile(
-                filesystem: $filesystem,
-                components: $this->components,
-                force: (bool) $this->option('force'),
-            ))->handle(
-                (string) realpath(join_paths(__DIR__, 'stubs', 'bootstrap', "{$bootstrap}.php")),
-                join_paths($workbenchWorkingPath, 'bootstrap', "{$bootstrap}.php")
-            );
-        }
 
         foreach (['console', 'web'] as $route) {
             (new GeneratesFile(
