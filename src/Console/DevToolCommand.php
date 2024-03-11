@@ -9,6 +9,7 @@ use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 use function Orchestra\Testbench\package_path;
 
@@ -37,6 +38,29 @@ class DevToolCommand extends Command
         $this->call('workbench:create-sqlite-db', ['--force' => true]);
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Prepare workbench directories.
+     */
+    protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
+    {
+        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
+
+        foreach (['app' => true, 'providers' => false] as $bootstrap => $default) {
+            if (! confirm("Generate `workbench/bootstrap/{$bootstrap}.php` file?", default: $default)) {
+                continue;
+            }
+
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                (string) realpath(join_paths(__DIR__, 'stubs', 'bootstrap', "{$bootstrap}.php")),
+                join_paths($workbenchWorkingPath, 'bootstrap', "{$bootstrap}.php")
+            );
+        }
     }
 
     /**
