@@ -2,15 +2,20 @@
 
 namespace Orchestra\Workbench\Console;
 
+use Composer\InstalledVersions;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Composer;
+use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\Events\InstallEnded;
+use Orchestra\Workbench\Events\InstallStarted;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
-use function Laravel\Prompts\confirm;
-use function Laravel\Prompts\select;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
@@ -32,13 +37,20 @@ class DevToolCommand extends Command
     {
         $workingPath = package_path();
 
-        $this->copyTestbenchConfigurationFile($filesystem, $workingPath);
-        $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
+        event(new InstallStarted($this->input, $this->output, $this->components));
+
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
+        $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        $this->call('workbench:create-sqlite-db', ['--force' => true]);
+        $this->call('workbench:devtool', ['--force' => $this->option('force')]);
 
-        return Command::SUCCESS;
+        return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
+            event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
+
+            (new Composer($filesystem))
+                ->setWorkingPath($workingPath)
+                ->dumpAutoloads();
+        });
     }
 
     /**
@@ -48,100 +60,164 @@ class DevToolCommand extends Command
     {
         $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
-        foreach (['app' => true, 'providers' => false] as $bootstrap => $default) {
-            if (! confirm("Generate `workbench/bootstrap/{$bootstrap}.php` file?", default: $default)) {
-                continue;
-            }
+        (new EnsureDirectoryExists(
+            filesystem: $filesystem,
+            components: $this->components,
+        ))->handle(
+            Collection::make([
+                join_paths('app', 'Models'),
+                'bootstrap',
+                'routes',
+                join_paths('resources', 'views'),
+                join_paths('database', 'factories'),
+                join_paths('database', 'migrations'),
+                join_paths('database', 'seeders'),
+            ])->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
+        );
 
+        $this->callSilently('make:provider', [
+            'name' => 'WorkbenchServiceProvider',
+            '--preset' => 'workbench',
+        ]);
+
+        $this->callSilently('make:seeder', [
+            'name' => 'DatabaseSeeder',
+            '--preset' => 'workbench',
+        ]);
+
+        foreach (['console', 'web'] as $route) {
             (new GeneratesFile(
                 filesystem: $filesystem,
                 components: $this->components,
                 force: (bool) $this->option('force'),
             ))->handle(
-                (string) realpath(join_paths(__DIR__, 'stubs', 'bootstrap', "{$bootstrap}.php")),
-                join_paths($workbenchWorkingPath, 'bootstrap', "{$bootstrap}.php")
+                (string) realpath(join_paths(__DIR__, 'stubs', 'routes', "{$route}.php")),
+                join_paths($workbenchWorkingPath, 'routes', "{$route}.php")
             );
         }
     }
 
     /**
-     * Copy the "testbench.yaml" file.
+     * Prepare workbench namespace to `composer.json`.
      */
-    protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
+    protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
-        $from = join_paths((string) realpath(__DIR__), 'stubs', 'testbench.yaml');
-        $to = join_paths($workingPath, 'testbench.yaml');
+        $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
 
-        (new GeneratesFile(
-            filesystem: $filesystem,
-            components: $this->components,
-            force: (bool) $this->option('force'),
-        ))->handle($from, $to);
+        $composer->modify(fn (array $content) => $this->appendScriptsToComposer(
+            $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
+        ));
     }
 
     /**
-     * Copy the ".env" file.
+     * Append `scripts` to `composer.json`.
      */
-    protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
+    protected function appendScriptsToComposer(array $content, Filesystem $filesystem): array
     {
-        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
+        $hasScriptsSection = \array_key_exists('scripts', $content);
+        $hasTestbenchDusk = InstalledVersions::isInstalled('orchestra/testbench-dusk');
 
-        $from = $this->laravel->basePath('.env.example');
-
-        if (! $filesystem->exists($from)) {
-            return;
+        if (! $hasScriptsSection) {
+            $content['scripts'] = [];
         }
 
-        $choices = Collection::make($this->environmentFiles())
-            ->reject(static fn ($file) => $filesystem->exists(join_paths($workbenchWorkingPath, $file)))
-            ->values()
-            ->prepend('Skip exporting .env')
-            ->all();
+        $postAutoloadDumpScripts = array_filter([
+            '@clear',
+            '@prepare',
+            $hasTestbenchDusk ? '@dusk:install-chromedriver' : null,
+        ]);
 
-        if (! $this->option('force') && empty($choices)) {
-            $this->components->twoColumnDetail(
-                'File [.env] already exists', '<fg=yellow;options=bold>SKIPPED</>'
-            );
-
-            return;
+        if (! \array_key_exists('post-autoload-dump', $content['scripts'])) {
+            $content['scripts']['post-autoload-dump'] = $postAutoloadDumpScripts;
+        } else {
+            $content['scripts']['post-autoload-dump'] = array_values(array_unique([
+                ...$postAutoloadDumpScripts,
+                ...Arr::wrap($content['scripts']['post-autoload-dump']),
+            ]));
         }
 
-        /** @var string $choice */
-        $choice = select("Export '.env' file as?", $choices);
+        $content['scripts']['clear'] = '@php vendor/bin/testbench package:purge-skeleton --ansi';
+        $content['scripts']['prepare'] = '@php vendor/bin/testbench package:discover --ansi';
 
-        if ($choice === 'Skip exporting .env') {
-            return;
+        if ($hasTestbenchDusk) {
+            $content['scripts']['dusk:install-chromedriver'] = '@php vendor/bin/dusk-updater detect --auto-update --ansi';
         }
 
-        $to = join_paths($workbenchWorkingPath, $choice);
-
-        (new GeneratesFile(
-            filesystem: $filesystem,
-            components: $this->components,
-            force: (bool) $this->option('force'),
-        ))->handle($from, $to);
-
-        (new GeneratesFile(
-            filesystem: $filesystem,
-            force: (bool) $this->option('force'),
-        ))->handle((string) realpath(join_paths(__DIR__, 'stubs', 'workbench.gitignore')), join_paths($workbenchWorkingPath, '.gitignore'));
-    }
-
-    /**
-     * Get possible environment files.
-     *
-     * @return array<int, string>
-     */
-    protected function environmentFiles(): array
-    {
-        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
-            ? '.env.dusk'
-            : '.env';
-
-        return [
-            $environmentFile,
-            "{$environmentFile}.example",
-            "{$environmentFile}.dist",
+        $content['scripts']['build'] = '@php vendor/bin/testbench workbench:build --ansi';
+        $content['scripts']['serve'] = [
+            'Composer\\Config::disableProcessTimeout',
+            '@build',
+            '@php vendor/bin/testbench serve',
         ];
+
+        if (! \array_key_exists('lint', $content['scripts'])) {
+            $lintScripts = [];
+
+            if (InstalledVersions::isInstalled('laravel/pint')) {
+                $lintScripts[] = '@php vendor/bin/pint';
+            } elseif ($filesystem->exists(Workbench::packagePath('pint.json'))) {
+                $lintScripts[] = 'pint';
+            }
+
+            if (InstalledVersions::isInstalled('phpstan/phpstan')) {
+                $lintScripts[] = '@php vendor/bin/phpstan analyse';
+            }
+
+            if (\count($lintScripts) > 0) {
+                $content['scripts']['lint'] = $lintScripts;
+            }
+        }
+
+        if (
+            $filesystem->exists(Workbench::packagePath('phpunit.xml'))
+            || $filesystem->exists(Workbench::packagePath('phpunit.xml.dist'))
+        ) {
+            if (! \array_key_exists('test', $content['scripts'])) {
+                $content['scripts']['test'][] = InstalledVersions::isInstalled('pestphp/pest')
+                    ? '@php vendor/bin/pest'
+                    : '@php vendor/bin/phpunit';
+            }
+        }
+
+        return $content;
+    }
+
+    /**
+     * Append `autoload-dev` to `composer.json`.
+     */
+    protected function appendAutoloadDevToComposer(array $content, Filesystem $filesystem): array
+    {
+        /** @var array{autoload-dev?: array{psr-4?: array<string, string>}} $content */
+        if (! \array_key_exists('autoload-dev', $content)) {
+            $content['autoload-dev'] = [];
+        }
+
+        /** @var array{autoload-dev: array{psr-4?: array<string, string>}} $content */
+        if (! \array_key_exists('psr-4', $content['autoload-dev'])) {
+            $content['autoload-dev']['psr-4'] = [];
+        }
+
+        $namespaces = [
+            'Workbench\\App\\' => 'workbench/app/',
+            'Workbench\\Database\\Factories\\' => 'workbench/database/factories/',
+            'Workbench\\Database\\Seeders\\' => 'workbench/database/seeders/',
+        ];
+
+        foreach ($namespaces as $namespace => $path) {
+            if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
+                $content['autoload-dev']['psr-4'][$namespace] = $path;
+
+                $this->components->task(sprintf(
+                    'Added [%s] for [%s] to Composer', $namespace, $path
+                ));
+            } else {
+                $this->components->twoColumnDetail(
+                    sprintf('Composer already contain [%s] namespace', $namespace),
+                    '<fg=yellow;options=bold>SKIPPED</>'
+                );
+            }
+        }
+
+        return $content;
     }
 }
