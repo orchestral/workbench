@@ -41,7 +41,7 @@ class DevToolCommand extends Command
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        $this->call('workbench:devtool', ['--force' => $this->option('force')]);
+        $this->call('workbench:install', ['--force' => $this->option('force')]);
 
         return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
