@@ -15,6 +15,7 @@ use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use function Illuminate\Filesystem\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
