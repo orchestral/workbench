@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
-use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
