@@ -25,7 +25,9 @@ class DevToolCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'workbench:devtool {--force : Overwrite any existing files}';
+    protected $signature = 'workbench:devtool
+        {--force : Overwrite any existing files}
+        {--skip-install : Skipped Workbench installation}';
 
     /**
      * Execute the console command.
@@ -41,7 +43,12 @@ class DevToolCommand extends Command
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        $this->call('workbench:install', ['--force' => $this->option('force')]);
+        if (! $this->option('skip-install')) {
+            $this->call('workbench:install', [
+                '--force' => $this->option('force'),
+                '--skip-devtool' => true,
+            ]);
+        }
 
         return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
