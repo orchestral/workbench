@@ -20,7 +20,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'workbench:devtool {--force : Overwrite any existing files}';
+    protected $signature = 'workbench:install {--force : Overwrite any existing files}';
 
     /**
      * Execute the console command.
