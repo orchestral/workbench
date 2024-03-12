@@ -90,7 +90,7 @@ class DevToolCommand extends Command
                 components: $this->components,
                 force: (bool) $this->option('force'),
             ))->handle(
-                (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
+                (string) realpath(join_paths(__DIR__, 'stubs', 'routes', "{$route}.php")),
                 "{$workbenchWorkingPath}/routes/{$route}.php"
             );
         }
