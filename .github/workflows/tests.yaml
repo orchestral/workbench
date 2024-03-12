@@ -23,7 +23,7 @@ jobs:
         experimental:
           - false
 
-    name: PHP${{ matrix.php }}-${{ matrix.os }} with Laravel 10 (${{ matrix.dependencies }})
+    name: PHP:${{ matrix.php }}-${{ matrix.os }} with Laravel 10 (${{ matrix.dependencies }})
 
     steps:
       - name: Checkout code
@@ -69,7 +69,7 @@ jobs:
         experimental:
           - false
 
-    name: PHP${{ matrix.php }}-${{ matrix.os }} with Laravel 9 (${{ matrix.dependencies }})
+    name: PHP:${{ matrix.php }}-${{ matrix.os }} with Laravel 9 (${{ matrix.dependencies }})
 
     steps:
       - name: Checkout code
