@@ -30,10 +30,14 @@ class InstallCommand extends Command
     public function handle(Filesystem $filesystem)
     {
         if (! $this->option('skip-devtool')) {
-            $this->call('workbench:devtool', [
-                '--force' => $this->option('force'),
-                '--skip-install' => true,
-            ]);
+            $devtool = $this->components->confirm('Install Workbench DevTool?', true);
+
+            if ($devtool === true) {
+                $this->call('workbench:devtool', [
+                    '--force' => $this->option('force'),
+                    '--skip-install' => true,
+                ]);
+            }
         }
 
         $workingPath = package_path();
