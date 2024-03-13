@@ -34,8 +34,8 @@ class InstallCommand extends Command
     {
         if (! $this->option('skip-devtool')) {
             $devtool = laravel_version_compare('10.17', '>=')
-                ? confirm('Install Workbench Devtool?', true)
-                : $this->components->confirm('Install Workbench Devtool?', true);
+                ? confirm('Install Workbench DevTool?', true)
+                : $this->components->confirm('Install Workbench DevTool?', true);
 
             if ($devtool === true) {
                 $this->call('workbench:devtool', [
