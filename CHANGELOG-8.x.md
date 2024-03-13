@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.4.0
+
+Released: 2024-03-13
+
+### Changes
+
+* Swap `workbench:install` with `workbench:devtool` for smaller installation footprint.
+
 ## 8.3.0
 
 Released: 2024-03-03
