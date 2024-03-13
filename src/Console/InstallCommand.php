@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 use function Orchestra\Testbench\laravel_version_compare;
 use function Orchestra\Testbench\package_path;
@@ -32,10 +33,16 @@ class InstallCommand extends Command
     public function handle(Filesystem $filesystem)
     {
         if (! $this->option('skip-devtool')) {
-            $this->call('workbench:devtool', [
-                '--force' => $this->option('force'),
-                '--skip-install' => true,
-            ]);
+            $devtool = laravel_version_compare('10.17', '>=')
+                ? confirm('Install Workbench Devtool?', true)
+                : $this->components->confirm('Install Workbench Devtool?', true);
+
+            if ($devtool === true) {
+                $this->call('workbench:devtool', [
+                    '--force' => $this->option('force'),
+                    '--skip-install' => true,
+                ]);
+            }
         }
 
         $workingPath = package_path();
