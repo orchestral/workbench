@@ -9,6 +9,7 @@ use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 use function Illuminate\Filesystem\join_paths;
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 use function Orchestra\Testbench\package_path;
 
@@ -32,10 +33,14 @@ class InstallCommand extends Command
     public function handle(Filesystem $filesystem)
     {
         if (! $this->option('skip-devtool')) {
-            $this->call('workbench:devtool', [
-                '--force' => $this->option('force'),
-                '--skip-install' => true,
-            ]);
+            $devtool = confirm('Install Workbench DevTool?', true);
+
+            if ($devtool === true) {
+                $this->call('workbench:devtool', [
+                    '--force' => $this->option('force'),
+                    '--skip-install' => true,
+                ]);
+            }
         }
 
         $workingPath = package_path();

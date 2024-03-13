@@ -4,7 +4,7 @@ This changelog references the relevant changes (bug and security fixes) done to 
 
 ## 1.4.0
 
-Released: 2024-03-12
+Released: 2024-03-13
 
 ### Changes
 

@@ -59,6 +59,7 @@
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
         "serve": [
+            "Composer\\Config::disableProcessTimeout",
             "@build",
             "@php vendor/bin/testbench serve"
         ],
