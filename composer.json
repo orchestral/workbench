@@ -26,7 +26,6 @@
     "require": {
         "php": "^8.0",
         "composer-runtime-api": "^2.2",
-        "fakerphp/faker": "^1.21",
         "laravel/framework": "^9.52.15 || ^10.26",
         "laravel/tinker": "^2.8.2",
         "orchestra/canvas": "^7.11.1 || ^8.11.4",
@@ -36,6 +35,7 @@
         "symfony/yaml": "^6.0.9"
     },
     "require-dev": {
+        "fakerphp/faker": "^1.21",
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
         "phpstan/phpstan": "^1.10.7",
