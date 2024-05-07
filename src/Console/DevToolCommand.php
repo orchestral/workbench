@@ -79,7 +79,7 @@ class DevToolCommand extends Command
                 'database/seeders',
             ])->when(
                 $this->option('basic') === false,
-                fn ($directories) => $directories->push(['routes', 'resources/views'])
+                fn ($directories) => $directories->push(...['routes', 'resources/views'])
             )->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
         );
 
