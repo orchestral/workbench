@@ -20,7 +20,8 @@ class InstallCommand extends Command
      */
     protected $signature = 'workbench:install
         {--force : Overwrite any existing files}
-        {--skip-devtool : Skipped DevTool installation}';
+        {--skip-devtool : Skipped DevTool installation}
+        {--basic : Skipped routes and discovers installation}';
 
     /**
      * Execute the console command.
@@ -36,6 +37,7 @@ class InstallCommand extends Command
                 $this->call('workbench:devtool', [
                     '--force' => $this->option('force'),
                     '--skip-install' => true,
+                    '--basic' => $this->option('basic'),
                 ]);
             }
         }
@@ -55,7 +57,7 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(__DIR__.'/stubs/testbench.yaml');
+        $from = (string) realpath(__DIR__.'/stubs/'.($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml'));
         $to = "{$workingPath}/testbench.yaml";
 
         (new GeneratesFile(

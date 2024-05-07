@@ -27,7 +27,8 @@ class DevToolCommand extends Command
      */
     protected $signature = 'workbench:devtool
         {--force : Overwrite any existing files}
-        {--skip-install : Skipped Workbench installation}';
+        {--skip-install : Skipped Workbench installation}
+        {--basic : Workbench installation without discovers and routes}';
 
     /**
      * Execute the console command.
@@ -47,6 +48,7 @@ class DevToolCommand extends Command
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
                 '--skip-devtool' => true,
+                '--basic' => $this->option('basic'),
             ]);
         }
 
@@ -72,12 +74,13 @@ class DevToolCommand extends Command
         ))->handle(
             Collection::make([
                 'app/Models',
-                'routes',
-                'resources/views',
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
-            ])->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
+            ])->when(
+                $this->option('basic') === false,
+                fn ($directories) => $directories->push(['routes', 'resources/views'])
+            )->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
         );
 
         $this->callSilently('make:provider', [
@@ -90,15 +93,17 @@ class DevToolCommand extends Command
             '--preset' => 'workbench',
         ]);
 
-        foreach (['api', 'console', 'web'] as $route) {
-            (new GeneratesFile(
-                filesystem: $filesystem,
-                components: $this->components,
-                force: (bool) $this->option('force'),
-            ))->handle(
-                (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
-                "{$workbenchWorkingPath}/routes/{$route}.php"
-            );
+        if ($this->option('basic') === false) {
+            foreach (['api', 'console', 'web'] as $route) {
+                (new GeneratesFile(
+                    filesystem: $filesystem,
+                    components: $this->components,
+                    force: (bool) $this->option('force'),
+                ))->handle(
+                    (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
+                    "{$workbenchWorkingPath}/routes/{$route}.php"
+                );
+            }
         }
     }
 
