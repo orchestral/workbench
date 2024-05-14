@@ -60,7 +60,7 @@ class WorkbenchController extends Controller
         $guard = $guard ?: config('auth.defaults.guard');
 
         /** @var \Illuminate\Contracts\Auth\UserProvider $provider */
-        $provider = Auth::guard($guard)->getProvider(); /** @phpstan-ignore method.notFound
+        $provider = Auth::guard($guard)->getProvider(); /** @phpstan-ignore method.notFound */
 
         $user = Str::contains($userId, '@')
             ? $provider->retrieveByCredentials(['email' => $userId])
