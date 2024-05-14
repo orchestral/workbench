@@ -59,22 +59,16 @@ class WorkbenchController extends Controller
     {
         $guard = $guard ?: config('auth.defaults.guard');
 
-        /**
-         * @phpstan-ignore-next-line
-         *
-         * @var \Illuminate\Contracts\Auth\UserProvider $provider
-         */
-        $provider = Auth::guard($guard)->getProvider();
+        /** @var \Illuminate\Contracts\Auth\UserProvider $provider */
+        $provider = Auth::guard($guard)->getProvider(); /** @phpstan-ignore method.notFound
 
         $user = Str::contains($userId, '@')
             ? $provider->retrieveByCredentials(['email' => $userId])
             : $provider->retrieveById($userId);
 
-        /** @phpstan-ignore-next-line */
-        Auth::guard($guard)->login($user);
+        Auth::guard($guard)->login($user); /** @phpstan-ignore method.notFound */
 
-        /** @phpstan-ignore-next-line */
-        return redirect(Workbench::config('start'));
+        return redirect(Workbench::config('start')); /** @phpstan-ignore return.type */
     }
 
     /**
@@ -87,12 +81,10 @@ class WorkbenchController extends Controller
     {
         $guard = $guard ?: config('auth.defaults.guard');
 
-        /** @phpstan-ignore-next-line */
-        Auth::guard($guard)->logout();
+        Auth::guard($guard)->logout(); /** @phpstan-ignore method.notFound */
 
         Session::forget('password_hash_'.$guard);
 
-        /** @phpstan-ignore-next-line */
-        return redirect(Workbench::config('start'));
+        return redirect(Workbench::config('start')); /** @phpstan-ignore return.type */
     }
 }
