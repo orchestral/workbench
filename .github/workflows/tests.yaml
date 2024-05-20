@@ -37,6 +37,10 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
           coverage: none
 
+      - name: Set minimum Collision version for PHP 8.3
+        run: composer nunomaduro/collision:~7.10 --no-interaction --no-update
+        if: matrix.php >= 8.3
+
       - name: Install dependencies
         uses: "ramsey/composer-install@v3"
         with:
