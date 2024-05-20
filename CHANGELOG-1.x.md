@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 1.4.1
+
+Released: 2024-05-21
+
+### Changes
+
+* PHPStan Improvements.
+
 ## 1.4.0
 
 Released: 2024-03-13
