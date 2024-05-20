@@ -2,6 +2,15 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 1.5.0
+
+Released: 2024-05-21
+
+### Changes
+
+* Move `fakerphp/faker` to dev dependencies.
+* PHPStan Improvements.
+
 ## 1.4.0
 
 Released: 2024-03-13
