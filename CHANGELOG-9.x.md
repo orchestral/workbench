@@ -2,6 +2,18 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 9.1.0
+
+Released: 2024-05-21
+
+### Added
+
+* Added `nunomaduro/collision`.
+
+### Changes
+
+* PHPStan Improvements.
+
 ## 9.0.0
 
 Released: 2024-03-13
