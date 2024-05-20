@@ -60,7 +60,7 @@ class WorkbenchController extends Controller
         $guard = $guard ?: config('auth.defaults.guard');
 
         /**
-         * @phpstan-ignore-next-line
+         * @phpstan-ignore method.notFound
          *
          * @var \Illuminate\Contracts\Auth\UserProvider $provider
          */
@@ -70,10 +70,10 @@ class WorkbenchController extends Controller
             ? $provider->retrieveByCredentials(['email' => $userId])
             : $provider->retrieveById($userId);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore method.notFound */
         Auth::guard($guard)->login($user);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore return.type */
         return redirect(Workbench::config('start'));
     }
 
@@ -87,12 +87,12 @@ class WorkbenchController extends Controller
     {
         $guard = $guard ?: config('auth.defaults.guard');
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore method.notFound */
         Auth::guard($guard)->logout();
 
         Session::forget('password_hash_'.$guard);
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore return.type */
         return redirect(Workbench::config('start'));
     }
 }

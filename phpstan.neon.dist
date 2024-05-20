@@ -9,10 +9,9 @@ parameters:
   level: 8
 
   ignoreErrors:
+    - identifier: missingType.iterableValue
     # - '#Unsafe usage of new static#'
 
   excludePaths:
 
-  checkGenericClassInNonGenericObjectType: false
-  checkMissingIterableValueType: false
   treatPhpDocTypesAsCertain: false

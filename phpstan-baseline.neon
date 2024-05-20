@@ -9,8 +9,3 @@ parameters:
 			message: "#^Undefined variable\\: \\$this$#"
 			count: 1
 			path: src/Console/stubs/routes/console.php
-
-		-
-			message: "#^Method Orchestra\\\\Workbench\\\\Http\\\\Middleware\\\\CatchDefaultRoute\\:\\:handle\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Http/Middleware/CatchDefaultRoute.php
