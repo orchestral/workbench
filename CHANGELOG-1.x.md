@@ -8,7 +8,6 @@ Released: 2024-05-21
 
 ### Changes
 
-* Move `fakerphp/faker` to dev dependencies.
 * PHPStan Improvements.
 
 ## 1.4.0
