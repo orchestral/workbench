@@ -2,7 +2,7 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
-## 1.5.0
+## 1.4.1
 
 Released: 2024-05-21
 
