@@ -1,6 +1,2 @@
 parameters:
-	ignoreErrors:
-		-
-			message: "#^Method Orchestra\\\\Workbench\\\\BuildParser\\:\\:make\\(\\) should return Illuminate\\\\Support\\\\Collection\\<string, array\\<string, mixed\\>\\> but returns Illuminate\\\\Support\\\\Collection\\<string, array\\<int\\|string, mixed\\>\\>\\.$#"
-			count: 1
-			path: src/BuildParser.php
+	ignoreErrors: []
