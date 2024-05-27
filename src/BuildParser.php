@@ -24,7 +24,7 @@ class BuildParser
 
                 /** @var array<string, mixed> $options */
                 $options = match (true) {
-                    \is_array($build) => $build[array_key_first($build)],
+                    \is_array($build) => array_shift($build),
                     \is_string($build) => [],
                 };
 
@@ -32,14 +32,5 @@ class BuildParser
                     $name => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all(),
                 ];
             });
-    }
-
-    /**
-     * Resolve command options.
-     */
-    protected static function resolveOptions(array $options): array
-    {
-        var_dump($options);
-        return array_shift($options);
     }
 }
