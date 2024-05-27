@@ -155,7 +155,7 @@ class DevToolCommand extends Command
         $content['scripts']['serve'] = [
             'Composer\\Config::disableProcessTimeout',
             '@build',
-            '@php vendor/bin/testbench serve',
+            $hasTestbenchDusk ? '@php vendor/bin/testbench-dusk serve' : '@php vendor/bin/testbench serve',
         ];
 
         if (! \array_key_exists('lint', $content['scripts'])) {
