@@ -20,7 +20,7 @@ class AssetPublishCommandTest extends TestCase
         $kernel = m::mock(ConsoleKernel::class);
         $output = m::mock(OutputInterface::class);
 
-        $command = new AssetPublishCommand();
+        $command = new AssetPublishCommand;
 
         $kernel->shouldReceive('call')
             ->once()

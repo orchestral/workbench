@@ -155,7 +155,7 @@ class DevToolCommand extends Command
         $content['scripts']['serve'] = [
             'Composer\\Config::disableProcessTimeout',
             '@build',
-            $hasTestbenchDusk && defined('TESTBENCH_DUSK')
+            $hasTestbenchDusk && \defined('TESTBENCH_DUSK')
                 ? '@php vendor/bin/testbench-dusk serve'
                 : '@php vendor/bin/testbench serve',
         ];
