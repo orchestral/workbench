@@ -68,6 +68,7 @@ class WorkbenchTest extends TestCase
 
         $this->assertSame([
             'config' => false,
+            'factories' => false,
             'web' => true,
             'api' => true,
             'commands' => true,
