@@ -24,7 +24,7 @@ class BuildParser
 
                 /** @var array<string, mixed> $options */
                 $options = match (true) {
-                    \is_array($build) => $build[array_key_first($build)],
+                    \is_array($build) => array_shift($build),
                     \is_string($build) => [],
                 };
 
