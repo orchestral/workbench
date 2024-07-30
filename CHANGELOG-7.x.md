@@ -2,6 +2,18 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 7.6.0
+
+Released: 2024-07-30
+
+### Added
+
+* Added support for `factories` discovery.
+
+### Changes
+
+* Small improvements to `workbench:devtool` command.
+
 ## 7.5.0
 
 Released: 2024-05-21
