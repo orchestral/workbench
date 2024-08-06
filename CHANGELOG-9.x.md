@@ -2,6 +2,15 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 9.3.0
+
+Released: 2024-08-06
+
+### Changes
+
+* Flush session when loading the start page via `composer run serve`.
+* Disallow running `workbench:build`, `workbench:devtool` or `workbench:install` via `workbench:build` command.
+
 ## 9.2.0
 
 Released: 2024-07-30
