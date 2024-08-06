@@ -17,7 +17,6 @@ class BuildParser
     protected static $disallowedCommands = [
         'workbench:build',
         'workbench:devtool',
-        'workbench:devtool',
         'workbench:install',
     ];
 
