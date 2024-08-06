@@ -6,6 +6,7 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\BuildParser;
 use Orchestra\Workbench\Workbench;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 
 class BuildParserTest extends TestCase
@@ -13,17 +14,54 @@ class BuildParserTest extends TestCase
     use WithWorkbench;
 
     #[Test]
-    public function it_can_parse_build_steps()
+    #[DataProvider('buildDataProvider')]
+    public function it_can_parse_build_steps($given, array $expected)
     {
-        $steps = BuildParser::make(Workbench::config('build'));
+        $steps = BuildParser::make(value($given));
 
-        $this->assertSame([
-            'asset-publish' => [],
-            'create-sqlite-db' => [],
-            'migrate:refresh' => [
-                '--seed' => true,
-                '--drop-views' => false,
+        $this->assertSame($expected, $steps->all());
+    }
+
+    public static function buildDataProvider()
+    {
+        yield [
+            function () {
+                return Workbench::config('build');
+            }, [
+                'asset-publish' => [],
+                'create-sqlite-db' => [],
+                'migrate:refresh' => [
+                    '--seed' => true,
+                    '--drop-views' => false,
+                ],
             ],
-        ], $steps->all());
+        ];
+
+        yield [
+            [
+                'asset-publish',
+                'create-sqlite-db',
+                ['migrate:refresh' => ['--seed' => true, '--drop-views' => false]],
+            ], [
+                'asset-publish' => [],
+                'create-sqlite-db' => [],
+                'migrate:refresh' => [
+                    '--seed' => true,
+                    '--drop-views' => false,
+                ],
+            ],
+        ];
+
+        yield [
+            [
+                'asset-publish',
+                'workbench:build',
+                'workbench-install',
+                'create-sqlite-db',
+            ], [
+                'asset-publish' => [],
+                'create-sqlite-db' => [],
+            ],
+        ];
     }
 }
