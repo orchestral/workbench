@@ -46,10 +46,9 @@ class BuildParser
                     'name' => $name,
                     'options' => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all(),
                 ];
-            })->reject(static function (array $build) {
-                return \in_array($build['name'], static::$disallowedCommands);
-            })->mapWithKeys(static function (array $build) {
-                return [$build['name'] => $build['options']];
-            });
+            })->reject(static fn (array $build) => \in_array($build['name'], static::$disallowedCommands))
+            ->mapWithKeys(static fn (array $build) => [
+                $build['name'] => $build['options'],
+            ]);
     }
 }
