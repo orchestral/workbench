@@ -164,13 +164,13 @@ class DevToolCommand extends Command
             $lintScripts = [];
 
             if (InstalledVersions::isInstalled('laravel/pint')) {
-                $lintScripts[] = '@php vendor/bin/pint';
+                $lintScripts[] = '@php vendor/bin/pint --ansi';
             } elseif ($filesystem->exists(Workbench::packagePath('pint.json'))) {
                 $lintScripts[] = 'pint';
             }
 
             if (InstalledVersions::isInstalled('phpstan/phpstan')) {
-                $lintScripts[] = '@php vendor/bin/phpstan analyse';
+                $lintScripts[] = '@php vendor/bin/phpstan analyse --verbose --ansi';
             }
 
             if (\count($lintScripts) > 0) {
