@@ -46,8 +46,12 @@ class BuildParser
                     'name' => $name,
                     'options' => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all(),
                 ];
-            })->reject(static fn (array $build) => \in_array($build['name'], static::$disallowedCommands))
-            ->mapWithKeys(static fn (array $build) => [
+            })->whereNotIn(
+                'name',
+                Collection::make(static::$disallowedCommands)
+                    ->transform(static fn ($command) => [$command, str_replace(':', '-', $command)])
+                    ->flatten(),
+            )->mapWithKeys(static fn (array $build) => [
                 $build['name'] => $build['options'],
             ]);
     }
