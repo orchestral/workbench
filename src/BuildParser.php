@@ -17,6 +17,7 @@ class BuildParser
     protected static $disallowedCommands = [
         'workbench:build',
         'workbench:devtool',
+        'workbench:devtool',
         'workbench:install',
     ];
 
@@ -46,9 +47,13 @@ class BuildParser
                     'name' => $name,
                     'options' => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all(),
                 ];
-            })->reject(static function (array $build) {
-                return \in_array($build['name'], static::$disallowedCommands);
-            })->mapWithKeys(static function (array $build) {
+            })->whereNotIn(
+                'name',
+                Collection::make(static::$disallowedCommands)
+                    ->transform(static function ($command) {
+                        return [$command, str_replace(':', '-', $command)];
+                    })->flatten(),
+            )->mapWithKeys(static function (array $build) {
                 return [$build['name'] => $build['options']];
             });
     }
