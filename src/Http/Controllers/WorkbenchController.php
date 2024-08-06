@@ -14,7 +14,6 @@ class WorkbenchController extends Controller
     /**
      * Start page.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function start(Request $request)
