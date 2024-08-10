@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 9.4.0
+
+Released: 2023-08-10
+
+### Changes
+
+* Update generated `DatabaseSeeder.php` to match Laravel 11 skeleton.
+
 ## 9.3.0
 
 Released: 2024-08-06
