@@ -135,16 +135,16 @@ class DevToolCommand extends Command
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle(
-            (string) realpath(__DIR__.'/stubs/database/seeders/DatabaseSeeder.php'),
-            "{$workingPath}/database/seeders/DatabaseSeeder.php"
+            (string) realpath(join_paths(__DIR__, 'stubs', 'database', 'seeders', 'DatabaseSeeder.php')),
+            join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php')
         );
 
-        if ($filesystem->exists("{$workingPath}/database/factories/UserFactory.php")) {
-            $this->replaceInFile($filesystem, [
+        if ($filesystem->exists(join_paths($workingPath, 'database', 'factories', 'UserFactory.php'))) {
+            $filesystem->replaceInFile([
                 'use Orchestra\Testbench\Factories\UserFactory;',
             ], [
                 'use Workbench\Database\Factories\UserFactory;',
-            ], "{$workingPath}/database/seeders/DatabaseSeeder.php");
+            ], join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php'));
         }
     }
 
