@@ -17,6 +17,7 @@ Symfony\Component\Process\Process::fromShellCommandline(
 )->mustRun();
 
 Illuminate\Support\Collection::make([
+    'database/seeders/DatabaseSeeder.php',
     'routes/api.php',
     'routes/console.php',
     'routes/web.php',
@@ -26,6 +27,13 @@ Illuminate\Support\Collection::make([
 ->each(function ($file) use ($files, $workingPath) {
     $files->copy($file, "{$workingPath}/src/Console/stubs".Illuminate\Support\Str::after($file, "{$workingPath}/skeleton"));
 });
+
+transform([
+    'namespace Database\Seeders;' => 'namespace Workbench\Database\Seeders;',
+    'use Illuminate\Database\Seeder;' => 'use Illuminate\Database\Seeder;'.PHP_EOL.'use Orchestra\Testbench\Factories\UserFactory;',
+    '\App\Models\User::factory(10)->create' => 'UserFactory::new(10)->create',
+    '\App\Models\User::factory()->create' => 'UserFactory::new()->create',
+], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/database/seeders/DatabaseSeeder.php"));
 
 transform([
     'Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {

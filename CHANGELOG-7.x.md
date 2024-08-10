@@ -2,6 +2,15 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 7.8.0
+
+Released: 2023-08-10
+
+### Changes
+
+* Generate `User` model and `UserFactory` class via `workbench:install`.
+* Update generated `DatabaseSeeder.php` to match Laravel 11 skeleton.
+
 ## 7.7.0
 
 Released: 2024-08-06
