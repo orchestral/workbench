@@ -8,6 +8,7 @@ Released: 2023-08-10
 
 ### Changes
 
+* Generate `User` model and `UserFactory` class via `workbench:install`.
 * Update generated `DatabaseSeeder.php` to match Laravel 11 skeleton.
 
 ## 9.3.0
