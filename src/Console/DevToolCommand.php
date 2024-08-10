@@ -83,12 +83,10 @@ class DevToolCommand extends Command
         $this->callSilently('make:provider', [
             'name' => 'WorkbenchServiceProvider',
             '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
         ]);
 
-        $this->callSilently('make:seeder', [
-            'name' => 'DatabaseSeeder',
-            '--preset' => 'workbench',
-        ]);
+        $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
         foreach (['api', 'console', 'web'] as $route) {
             (new GeneratesFile(
@@ -114,6 +112,39 @@ class DevToolCommand extends Command
                 $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
             );
         });
+    }
+
+    /**
+     * Prepare workbench database schema including user model, factory and seeder.
+     */
+    protected function prepareWorkbenchDatabaseSchema(Filesystem $filesystem, string $workingPath): void
+    {
+        $this->callSilently('make:user-model', [
+            '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
+        ]);
+
+        $this->callSilently('make:user-factory', [
+            '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
+        ]);
+
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            components: $this->components,
+            force: (bool) $this->option('force'),
+        ))->handle(
+            (string) realpath(__DIR__.'/stubs/database/seeders/DatabaseSeeder.php'),
+            "{$workingPath}/database/seeders/DatabaseSeeder.php"
+        );
+
+        if ($filesystem->exists("{$workingPath}/database/factories/UserFactory.php")) {
+            $this->replaceInFile($filesystem, [
+                'use Orchestra\Testbench\Factories\UserFactory;',
+            ], [
+                'use Workbench\Database\Factories\UserFactory;',
+            ], "{$workingPath}/database/seeders/DatabaseSeeder.php");
+        }
     }
 
     /**
@@ -216,17 +247,26 @@ class DevToolCommand extends Command
             if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
                 $content['autoload-dev']['psr-4'][$namespace] = $path;
 
-                $this->components->task(sprintf(
+                $this->components->task(\sprintf(
                     'Added [%s] for [%s] to Composer', $namespace, $path
                 ));
             } else {
                 $this->components->twoColumnDetail(
-                    sprintf('Composer already contain [%s] namespace', $namespace),
+                    \sprintf('Composer already contain [%s] namespace', $namespace),
                     '<fg=yellow;options=bold>SKIPPED</>'
                 );
             }
         }
 
         return $content;
+    }
+
+    /**
+     * Replace a given string within a given file.
+     */
+    protected function replaceInFile(Filesystem $filesystem, array|string $search, array|string $replace, string $path): void
+    {
+        /** @phpstan-ignore argument.type */
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
 }
