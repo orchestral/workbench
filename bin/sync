@@ -34,12 +34,14 @@ transform([
     'return Application::configure(basePath: dirname(__DIR__))' => 'use function Orchestra\Testbench\default_skeleton_path;'.PHP_EOL.PHP_EOL.'return Application::configure(basePath: $APP_BASE_PATH ?? default_skeleton_path())',
     PHP_EOL."        health: '/up',".PHP_EOL => PHP_EOL,
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/bootstrap/app.php"));
+
 transform([
     'namespace Database\Seeders;' => 'namespace Workbench\Database\Seeders;',
     'use App\Models\User;' => 'use Orchestra\Testbench\Factories\UserFactory;',
     'User::factory(10)->create' => 'UserFactory::new(10)->create',
     'User::factory()->create' => 'UserFactory::new()->create',
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/database/seeders/DatabaseSeeder.php"));
+
 transform([
     'Artisan::command(\'inspire\', function () {
     $this->comment(Inspiring::quote());
