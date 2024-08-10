@@ -87,10 +87,14 @@ class DevToolCommand extends Command
             '--preset' => 'workbench',
         ]);
 
-        $this->callSilently('make:seeder', [
-            'name' => 'DatabaseSeeder',
-            '--preset' => 'workbench',
-        ]);
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            components: $this->components,
+            force: (bool) $this->option('force'),
+        ))->handle(
+            (string) realpath(join_paths(__DIR__, 'stubs', 'database', 'seeders', 'DatabaseSeeder.php')),
+            join_paths($workbenchWorkingPath, 'database', 'seeders', 'DatabaseSeeder.php')
+        );
 
         foreach (['console', 'web'] as $route) {
             (new GeneratesFile(
