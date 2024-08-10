@@ -220,12 +220,12 @@ class DevToolCommand extends Command
             if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
                 $content['autoload-dev']['psr-4'][$namespace] = $path;
 
-                $this->components->task(sprintf(
+                $this->components->task(\sprintf(
                     'Added [%s] for [%s] to Composer', $namespace, $path
                 ));
             } else {
                 $this->components->twoColumnDetail(
-                    sprintf('Composer already contain [%s] namespace', $namespace),
+                    \sprintf('Composer already contain [%s] namespace', $namespace),
                     '<fg=yellow;options=bold>SKIPPED</>'
                 );
             }

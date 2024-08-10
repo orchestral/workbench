@@ -2,9 +2,9 @@
 
 namespace Workbench\Database\Seeders;
 
-use Workbench\App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Workbench\App\Models\User;
 
 class DatabaseSeeder extends Seeder
 {
