@@ -87,14 +87,7 @@ class DevToolCommand extends Command
             '--preset' => 'workbench',
         ]);
 
-        (new GeneratesFile(
-            filesystem: $filesystem,
-            components: $this->components,
-            force: (bool) $this->option('force'),
-        ))->handle(
-            (string) realpath(join_paths(__DIR__, 'stubs', 'database', 'seeders', 'DatabaseSeeder.php')),
-            join_paths($workbenchWorkingPath, 'database', 'seeders', 'DatabaseSeeder.php')
-        );
+        $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
         foreach (['console', 'web'] as $route) {
             (new GeneratesFile(
@@ -118,6 +111,37 @@ class DevToolCommand extends Command
         $composer->modify(fn (array $content) => $this->appendScriptsToComposer(
             $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
         ));
+    }
+
+    /**
+     * Prepare workbench database schema including user model, factory and seeder.
+     */
+    protected function prepareWorkbenchDatabaseSchema(Filesystem $filesystem, string $workingPath): void
+    {
+        $this->callSilently('make:user-model', [
+            '--preset' => 'workbench',
+        ]);
+
+        $this->callSilently('make:user-factory', [
+            '--preset' => 'workbench',
+        ]);
+
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            components: $this->components,
+            force: (bool) $this->option('force'),
+        ))->handle(
+            (string) realpath(join_paths(__DIR__, 'stubs', 'database', 'seeders', 'DatabaseSeeder.php')),
+            join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php')
+        );
+
+        if ($filesystem->exists(join_paths($workingPath, 'database', 'factories', 'UserFactory.php'))) {
+            $filesystem->replaceInFile([
+                'use Orchestra\Testbench\Factories\UserFactory;',
+            ], [
+                'use Workbench\Database\Factories\UserFactory;',
+            ], join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php'));
+        }
     }
 
     /**

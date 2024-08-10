@@ -57,7 +57,6 @@ class WorkbenchServiceProvider extends ServiceProvider
             tap($this->app->make('events'), static function (EventDispatcher $event) {
                 $event->listen(ServeCommandStarted::class, [Listeners\AddAssetSymlinkFolders::class, 'handle']);
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
-                $event->listen(Events\InstallEnded::class, [Listeners\UpdatesUserFactoryClassName::class, 'handle']);
             });
         }
     }
