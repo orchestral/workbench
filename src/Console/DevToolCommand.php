@@ -83,6 +83,7 @@ class DevToolCommand extends Command
         $this->callSilently('make:provider', [
             'name' => 'WorkbenchServiceProvider',
             '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
         ]);
 
         $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
@@ -120,15 +121,12 @@ class DevToolCommand extends Command
     {
         $this->callSilently('make:user-model', [
             '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
         ]);
 
         $this->callSilently('make:user-factory', [
             '--preset' => 'workbench',
-        ]);
-
-        $this->callSilently('make:seeder', [
-            'name' => 'DatabaseSeeder',
-            '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
         ]);
 
         (new GeneratesFile(
