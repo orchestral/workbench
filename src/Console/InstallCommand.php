@@ -144,7 +144,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         if ($input->getOption('skip-devtool') === true) {
             $devtool = false;
         } elseif (\is_null($input->getOption('devtool'))) {
-            $devtool = confirm('Install Workbench DevTool?', true);
+            $devtool = confirm('Run Workbench DevTool installation?', true);
         }
 
         if (! \is_null($devtool)) {

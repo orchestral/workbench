@@ -4,6 +4,7 @@ namespace Orchestra\Workbench\Console;
 
 use Composer\InstalledVersions;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -14,13 +15,16 @@ use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function Illuminate\Filesystem\join_paths;
+use function Laravel\Prompts\confirm;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
-class DevToolCommand extends Command
+class DevToolCommand extends Command implements PromptsForMissingInput
 {
     /**
      * Execute the console command.
@@ -36,7 +40,7 @@ class DevToolCommand extends Command
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        if ($this->option('install') === true && $this->option('skip-install') === false) {
+        if ($this->option('install') === true) {
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
                 '--no-devtool' => true,
@@ -255,12 +259,23 @@ class DevToolCommand extends Command
     }
 
     /**
-     * Replace a given string within a given file.
+     * Prompt the user for any missing arguments.
+     *
+     * @return void
      */
-    protected function replaceInFile(Filesystem $filesystem, array|string $search, array|string $replace, string $path): void
+    protected function promptForMissingArguments(InputInterface $input, OutputInterface $output)
     {
-        /** @phpstan-ignore argument.type */
-        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+        $install = null;
+
+        if ($input->getOption('skip-install') === true) {
+            $install = false;
+        } elseif (\is_null($input->getOption('install'))) {
+            $install = confirm('Run Workbench installation?', true);
+        }
+
+        if (! \is_null($install)) {
+            $input->setOption('install', $install);
+        }
     }
 
     /**
