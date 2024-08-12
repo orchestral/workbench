@@ -30,17 +30,17 @@ class DevToolCommand extends Command
     {
         $workingPath = package_path();
 
+        event(new InstallStarted($this->input, $this->output, $this->components));
+
+        $this->prepareWorkbenchDirectories($filesystem, $workingPath);
+        $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
+
         if ($this->option('install') === true && $this->option('skip-install') === false) {
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
                 '--no-devtool' => true,
             ]);
         }
-
-        event(new InstallStarted($this->input, $this->output, $this->components));
-
-        $this->prepareWorkbenchDirectories($filesystem, $workingPath);
-        $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
         return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
