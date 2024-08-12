@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 1.7.1
+
+Released: 2023-08-12
+
+### Changes
+
+* Update `workbench:devtool` command.
+
 ## 1.7.0
 
 Released: 2023-08-10
