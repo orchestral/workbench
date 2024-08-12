@@ -26,6 +26,11 @@ class InstallCommand extends Command
         {--skip-devtool : Skipped DevTool installation}';
 
     /**
+     * The `testbench.yaml` default configuration file.
+     */
+    public static ?string $configurationBaseFile;
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -82,7 +87,7 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(join_paths(__DIR__, 'stubs', 'testbench.yaml'));
+        $from = static::$configurationBaseFile ?? (string) realpath(join_paths(__DIR__, 'stubs', 'testbench.yaml'));
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
