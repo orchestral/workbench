@@ -30,7 +30,7 @@ class DevToolCommand extends Command
     {
         $workingPath = package_path();
 
-        if ($this->option('install') === true) {
+        if ($this->option('install') === true && $this->option('skip-install') === false) {
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
                 '--no-devtool' => true,
@@ -272,6 +272,9 @@ class DevToolCommand extends Command
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
+
+            /** @deprecated */
+            ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation'],
         ];
     }
 }
