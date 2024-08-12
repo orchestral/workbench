@@ -3,11 +3,14 @@
 namespace Orchestra\Workbench\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\confirm;
@@ -15,7 +18,7 @@ use function Laravel\Prompts\select;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
-class InstallCommand extends Command
+class InstallCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The `testbench.yaml` default configuration file.
@@ -29,18 +32,11 @@ class InstallCommand extends Command
      */
     public function handle(Filesystem $filesystem)
     {
-        if (! $this->option('skip-devtool')) {
-            $devtool = match (true) {
-                \is_bool($this->option('devtool')) => $this->option('devtool'),
-                default => confirm('Install Workbench DevTool?', true),
-            };
-
-            if ($devtool === true) {
-                $this->call('workbench:devtool', [
-                    '--force' => $this->option('force'),
-                    '--no-install' => true,
-                ]);
-            }
+        if ($this->option('devtool') === true) {
+            $this->call('workbench:devtool', [
+                '--force' => $this->option('force'),
+                '--no-install' => true,
+            ]);
         }
 
         $workingPath = package_path();
@@ -134,6 +130,26 @@ class InstallCommand extends Command
             "{$environmentFile}.example",
             "{$environmentFile}.dist",
         ];
+    }
+
+    /**
+     * Prompt the user for any missing arguments.
+     *
+     * @return void
+     */
+    protected function promptForMissingArguments(InputInterface $input, OutputInterface $output)
+    {
+        $devtool = null;
+
+        if ($input->getOption('skip-devtool') === true) {
+            $devtool = false;
+        } elseif (\is_null($input->getOption('devtool'))) {
+            $devtool = confirm('Install Workbench DevTool?', true);
+        }
+
+        if (! \is_null($devtool)) {
+            $input->setOption('devtool', $devtool);
+        }
     }
 
     /**
