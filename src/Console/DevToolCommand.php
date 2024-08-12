@@ -186,8 +186,8 @@ class DevToolCommand extends Command
             'Composer\\Config::disableProcessTimeout',
             '@build',
             $hasTestbenchDusk && \defined('TESTBENCH_DUSK')
-                ? '@php vendor/bin/testbench-dusk serve'
-                : '@php vendor/bin/testbench serve',
+                ? '@php vendor/bin/testbench-dusk serve --ansi'
+                : '@php vendor/bin/testbench serve --ansi',
         ];
 
         if (! \array_key_exists('lint', $content['scripts'])) {
