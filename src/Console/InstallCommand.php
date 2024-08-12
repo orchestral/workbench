@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\confirm;
@@ -16,15 +17,6 @@ use function Orchestra\Testbench\package_path;
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'workbench:install
-        {--force : Overwrite any existing files}
-        {--skip-devtool : Skipped DevTool installation}';
-
     /**
      * The `testbench.yaml` default configuration file.
      */
@@ -38,12 +30,15 @@ class InstallCommand extends Command
     public function handle(Filesystem $filesystem)
     {
         if (! $this->option('skip-devtool')) {
-            $devtool = confirm('Install Workbench DevTool?', true);
+            $devtool = match (true) {
+                \is_bool($this->option('devtool')) => $this->option('devtool'),
+                default => confirm('Install Workbench DevTool?', true),
+            };
 
             if ($devtool === true) {
                 $this->call('workbench:devtool', [
                     '--force' => $this->option('force'),
-                    '--skip-install' => true,
+                    '--no-install' => true,
                 ]);
             }
         }
@@ -138,6 +133,22 @@ class InstallCommand extends Command
             $environmentFile,
             "{$environmentFile}.example",
             "{$environmentFile}.dist",
+        ];
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
+            ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
+
+            /** @deprecated */
+            ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation'],
         ];
     }
 }

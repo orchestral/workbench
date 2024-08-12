@@ -14,6 +14,7 @@ use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 use function Illuminate\Filesystem\join_paths;
 use function Orchestra\Testbench\package_path;
@@ -21,15 +22,6 @@ use function Orchestra\Testbench\package_path;
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
 class DevToolCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'workbench:devtool
-        {--force : Overwrite any existing files}
-        {--skip-install : Skipped Workbench installation}';
-
     /**
      * Execute the console command.
      *
@@ -44,10 +36,10 @@ class DevToolCommand extends Command
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        if (! $this->option('skip-install')) {
+        if ($this->option('install') === true && $this->option('skip-install') === false) {
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
-                '--skip-devtool' => true,
+                '--no-devtool' => true,
             ]);
         }
 
@@ -269,5 +261,21 @@ class DevToolCommand extends Command
     {
         /** @phpstan-ignore argument.type */
         file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
+            ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
+
+            /** @deprecated */
+            ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation'],
+        ];
     }
 }
