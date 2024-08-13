@@ -2,12 +2,7 @@
     "name": "orchestra/workbench",
     "description": "Workbench Companion for Laravel Packages Development",
     "type": "library",
-    "keywords": [
-        "laravel",
-        "laravel-packages",
-        "testing",
-        "dev"
-    ],
+    "keywords": ["laravel", "laravel-packages", "testing", "dev"],
     "license": "MIT",
     "authors": [
         {
