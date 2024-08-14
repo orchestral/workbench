@@ -189,7 +189,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
 
             /** @deprecated */
-            ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation'],
+            ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],
         ];
     }
 }

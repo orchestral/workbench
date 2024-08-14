@@ -2,9 +2,19 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 9.5.0
+
+Released: 2024-08-14
+
+### Added
+
+* Added `Orchestra\Workbench\Console\InstallCommand::$configurationBaseFile` option to define the default `testbench.yaml` stub.
+* Utilise Symfony Console `InputOption::VALUE_NEGATABLE` feature on `workbench:install` and `workbench:devtool` command.
+* Implements `Illuminate\Contracts\Console\PromptsForMissingInput` on `workbench:install` and `workbench:devtool` command.
+
 ## 9.4.1
 
-Released: 2023-08-12
+Released: 2024-08-12
 
 ### Changes
 
@@ -12,7 +22,7 @@ Released: 2023-08-12
 
 ## 9.4.0
 
-Released: 2023-08-10
+Released: 2024-08-10
 
 ### Changes
 
