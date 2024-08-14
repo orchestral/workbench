@@ -290,7 +290,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
             ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
 
             /** @deprecated */
-            ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation'],
+            ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation (deprecated)'],
         ];
     }
 }
