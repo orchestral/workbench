@@ -2,6 +2,7 @@
 
 namespace Orchestra\Workbench\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -15,13 +16,15 @@ class WorkbenchController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function start()
+    public function start(Request $request)
     {
         $workbench = Workbench::config();
 
         if (\is_null($workbench['user'])) {
             return $this->logout($workbench['guard']);
         }
+
+        $request->session()->flush();
 
         return $this->login((string) $workbench['user'], $workbench['guard']);
     }

@@ -3,10 +3,14 @@
 namespace Orchestra\Workbench\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\confirm;
@@ -14,16 +18,12 @@ use function Laravel\Prompts\select;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
-class InstallCommand extends Command
+class InstallCommand extends Command implements PromptsForMissingInput
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * The `testbench.yaml` default configuration file.
      */
-    protected $signature = 'workbench:install
-        {--force : Overwrite any existing files}
-        {--skip-devtool : Skipped DevTool installation}';
+    public static ?string $configurationBaseFile;
 
     /**
      * Execute the console command.
@@ -32,15 +32,11 @@ class InstallCommand extends Command
      */
     public function handle(Filesystem $filesystem)
     {
-        if (! $this->option('skip-devtool')) {
-            $devtool = confirm('Install Workbench DevTool?', true);
-
-            if ($devtool === true) {
-                $this->call('workbench:devtool', [
-                    '--force' => $this->option('force'),
-                    '--skip-install' => true,
-                ]);
-            }
+        if ($this->option('devtool') === true) {
+            $this->call('workbench:devtool', [
+                '--force' => $this->option('force'),
+                '--no-install' => true,
+            ]);
         }
 
         $workingPath = package_path();
@@ -82,7 +78,7 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(join_paths(__DIR__, 'stubs', 'testbench.yaml'));
+        $from = (string) realpath(static::$configurationBaseFile ?? join_paths(__DIR__, 'stubs', 'testbench.yaml'));
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
@@ -158,6 +154,42 @@ class InstallCommand extends Command
             $environmentFile,
             "{$environmentFile}.example",
             "{$environmentFile}.dist",
+        ];
+    }
+
+    /**
+     * Prompt the user for any missing arguments.
+     *
+     * @return void
+     */
+    protected function promptForMissingArguments(InputInterface $input, OutputInterface $output)
+    {
+        $devtool = null;
+
+        if ($input->getOption('skip-devtool') === true) {
+            $devtool = false;
+        } elseif (\is_null($input->getOption('devtool'))) {
+            $devtool = confirm('Run Workbench DevTool installation?', true);
+        }
+
+        if (! \is_null($devtool)) {
+            $input->setOption('devtool', $devtool);
+        }
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
+            ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
+
+            /** @deprecated */
+            ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],
         ];
     }
 }
