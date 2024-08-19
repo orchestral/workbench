@@ -31,7 +31,7 @@
         "laravel/tinker": "^2.8.2",
         "nunomaduro/collision": "^6.4 || ^7.10",
         "orchestra/canvas": "^8.11.9",
-        "orchestra/testbench-core": "^8.25",
+        "orchestra/testbench-core": "^8.27",
         "spatie/laravel-ray": "^1.32.4",
         "symfony/polyfill-php83": "^1.28",
         "symfony/yaml": "^6.2"

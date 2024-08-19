@@ -8,8 +8,6 @@ use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Workbench;
 use PHPUnit\Framework\Attributes\Test;
 
-use function Illuminate\Filesystem\join_paths;
-
 class WorkbenchTest extends TestCase
 {
     use WithWorkbench;
@@ -42,6 +40,14 @@ class WorkbenchTest extends TestCase
         $this->assertSame(
             realpath(__DIR__.'/../testbench.yaml'), Workbench::packagePath('testbench.yaml')
         );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../tests/WorkbenchTest.php'), Workbench::packagePath(['tests', 'WorkbenchTest.php'])
+        );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../tests/WorkbenchTest.php'), Workbench::packagePath('tests', 'WorkbenchTest.php')
+        );
     }
 
     #[Test]
@@ -52,7 +58,11 @@ class WorkbenchTest extends TestCase
         );
 
         $this->assertSame(
-            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path(join_paths('dist', 'app.js'))
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path(['dist', 'app.js'])
+        );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist', 'app.js')
         );
     }
 
