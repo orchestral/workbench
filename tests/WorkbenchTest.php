@@ -39,6 +39,14 @@ class WorkbenchTest extends TestCase
         $this->assertSame(
             realpath(__DIR__.'/../testbench.yaml'), Workbench::packagePath('testbench.yaml')
         );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../tests/WorkbenchTest.php'), Workbench::packagePath(['tests', 'WorkbenchTest.php'])
+        );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../tests/WorkbenchTest.php'), Workbench::packagePath('tests', 'WorkbenchTest.php')
+        );
     }
 
     /** @test */
@@ -50,6 +58,14 @@ class WorkbenchTest extends TestCase
 
         $this->assertSame(
             realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist'.DIRECTORY_SEPARATOR.'app.js')
+        );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path(['dist', 'app.js'])
+        );
+
+        $this->assertSame(
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist', 'app.js')
         );
     }
 
