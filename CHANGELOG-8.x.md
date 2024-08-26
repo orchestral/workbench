@@ -2,6 +2,17 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.10.0
+
+Released: 2024-08-26
+
+### Changes
+
+* Allows following methods on `Orchestra\Workbench\Workbench` to accept arrays:
+    - `laravelPath()`
+    - `packagePath()`
+    - `path()`
+
 ## 8.9.0
 
 Released: 2024-08-14
