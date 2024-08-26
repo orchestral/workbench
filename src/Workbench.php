@@ -2,6 +2,8 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Support\Arr;
+
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
  */
@@ -10,25 +12,31 @@ class Workbench
     /**
      * Get the path to the laravel folder.
      */
-    public static function laravelPath(string $path = ''): string
+    public static function laravelPath(array|string $path = ''): string
     {
-        return app()->basePath($path);
+        return app()->basePath(
+            \Orchestra\Testbench\join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
+        );
     }
 
     /**
      * Get the path to the package folder.
      */
-    public static function packagePath(string $path = ''): string
+    public static function packagePath(array|string $path = ''): string
     {
-        return \Orchestra\Testbench\package_path($path);
+        return \Orchestra\Testbench\package_path(
+            ...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path)
+        );
     }
 
     /**
      * Get the path to the workbench folder.
      */
-    public static function path(string $path = ''): string
+    public static function path(array|string $path = ''): string
     {
-        return \Orchestra\Testbench\workbench_path($path);
+        return \Orchestra\Testbench\workbench_path(
+            ...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path)
+        );
     }
 
     /**
