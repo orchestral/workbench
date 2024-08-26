@@ -4,10 +4,6 @@ namespace Orchestra\Workbench;
 
 use Illuminate\Support\Arr;
 
-use function Illuminate\Filesystem\join_paths;
-use function Orchestra\Testbench\package_path;
-use function Orchestra\Testbench\workbench_path;
-
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
  */
@@ -19,7 +15,7 @@ class Workbench
     public static function laravelPath(array|string $path = ''): string
     {
         return app()->basePath(
-            join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
+            \Orchestra\Testbench\join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
         );
     }
 
@@ -28,11 +24,9 @@ class Workbench
      */
     public static function packagePath(array|string $path = ''): string
     {
-        if (\func_num_args() > 1) {
-            return package_path(...\func_get_args());
-        }
-
-        return package_path($path);
+        return \Orchestra\Testbench\package_path(
+            ...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path)
+        );
     }
 
     /**
@@ -40,11 +34,9 @@ class Workbench
      */
     public static function path(array|string $path = ''): string
     {
-        if (\func_num_args() > 1) {
-            return workbench_path(...\func_get_args());
-        }
-
-        return workbench_path($path);
+        return \Orchestra\Testbench\workbench_path(
+            ...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path)
+        );
     }
 
     /**
