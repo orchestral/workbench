@@ -41,11 +41,11 @@ class WorkbenchTest extends TestCase
         );
 
         $this->assertSame(
-            realpath(__DIR__.'/../tests/WorkbenchTest.php'), Workbench::packagePath(['tests', 'WorkbenchTest.php'])
+            realpath(__FILE__), Workbench::packagePath('tests', 'WorkbenchTest.php')
         );
 
         $this->assertSame(
-            realpath(__DIR__.'/../tests/WorkbenchTest.php'), Workbench::packagePath('tests', 'WorkbenchTest.php')
+            realpath(__FILE__), Workbench::packagePath(['tests', 'WorkbenchTest.php'])
         );
     }
 
@@ -61,11 +61,11 @@ class WorkbenchTest extends TestCase
         );
 
         $this->assertSame(
-            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path(['dist', 'app.js'])
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist', 'app.js')
         );
 
         $this->assertSame(
-            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path('dist', 'app.js')
+            realpath(__DIR__.'/../workbench/dist/app.js'), Workbench::path(['dist', 'app.js'])
         );
     }
 
