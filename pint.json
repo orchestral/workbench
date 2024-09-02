@@ -6,7 +6,13 @@
             "scope": "namespaced",
             "strict": true
         },
-        "no_superfluous_phpdoc_tags": true,
+        "new_with_parentheses": {
+            "named_class": false,
+            "anonymous_class": false
+        },
+        "no_superfluous_phpdoc_tags": {
+            "allow_mixed": true
+        },
         "php_unit_method_casing": false,
         "nullable_type_declaration_for_default_null_value": {
             "use_nullable_type_declaration": true

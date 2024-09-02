@@ -14,22 +14,13 @@ use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
 class DevToolCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'workbench:devtool
-        {--force : Overwrite any existing files}
-        {--skip-install : Skipped Workbench installation}
-        {--basic : Workbench installation without discovers and routes}';
-
     /**
      * Execute the console command.
      *
@@ -44,10 +35,10 @@ class DevToolCommand extends Command
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
 
-        if (! $this->option('skip-install')) {
+        if ($this->option('install') === true && $this->option('skip-install') === false) {
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
-                '--skip-devtool' => true,
+                '--no-devtool' => true,
                 '--basic' => $this->option('basic'),
             ]);
         }
@@ -86,12 +77,10 @@ class DevToolCommand extends Command
         $this->callSilently('make:provider', [
             'name' => 'WorkbenchServiceProvider',
             '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
         ]);
 
-        $this->callSilently('make:seeder', [
-            'name' => 'DatabaseSeeder',
-            '--preset' => 'workbench',
-        ]);
+        $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
         if ($this->option('basic') === false) {
             foreach (['api', 'console', 'web'] as $route) {
@@ -119,6 +108,39 @@ class DevToolCommand extends Command
                 $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
             );
         });
+    }
+
+    /**
+     * Prepare workbench database schema including user model, factory and seeder.
+     */
+    protected function prepareWorkbenchDatabaseSchema(Filesystem $filesystem, string $workingPath): void
+    {
+        $this->callSilently('make:user-model', [
+            '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
+        ]);
+
+        $this->callSilently('make:user-factory', [
+            '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
+        ]);
+
+        (new GeneratesFile(
+            filesystem: $filesystem,
+            components: $this->components,
+            force: (bool) $this->option('force'),
+        ))->handle(
+            (string) realpath(__DIR__.'/stubs/database/seeders/DatabaseSeeder.php'),
+            "{$workingPath}/database/seeders/DatabaseSeeder.php"
+        );
+
+        if ($filesystem->exists("{$workingPath}/database/factories/UserFactory.php")) {
+            $this->replaceInFile($filesystem, [
+                'use Orchestra\Testbench\Factories\UserFactory;',
+            ], [
+                'use Workbench\Database\Factories\UserFactory;',
+            ], "{$workingPath}/database/seeders/DatabaseSeeder.php");
+        }
     }
 
     /**
@@ -159,20 +181,22 @@ class DevToolCommand extends Command
         $content['scripts']['serve'] = [
             'Composer\\Config::disableProcessTimeout',
             '@build',
-            '@php vendor/bin/testbench serve',
+            $hasTestbenchDusk && \defined('TESTBENCH_DUSK')
+                ? '@php vendor/bin/testbench-dusk serve --ansi'
+                : '@php vendor/bin/testbench serve --ansi',
         ];
 
         if (! \array_key_exists('lint', $content['scripts'])) {
             $lintScripts = [];
 
             if (InstalledVersions::isInstalled('laravel/pint')) {
-                $lintScripts[] = '@php vendor/bin/pint';
+                $lintScripts[] = '@php vendor/bin/pint --ansi';
             } elseif ($filesystem->exists(Workbench::packagePath('pint.json'))) {
                 $lintScripts[] = 'pint';
             }
 
             if (InstalledVersions::isInstalled('phpstan/phpstan')) {
-                $lintScripts[] = '@php vendor/bin/phpstan analyse';
+                $lintScripts[] = '@php vendor/bin/phpstan analyse --verbose --ansi';
             }
 
             if (\count($lintScripts) > 0) {
@@ -219,17 +243,43 @@ class DevToolCommand extends Command
             if (! \array_key_exists($namespace, $content['autoload-dev']['psr-4'])) {
                 $content['autoload-dev']['psr-4'][$namespace] = $path;
 
-                $this->components->task(sprintf(
+                $this->components->task(\sprintf(
                     'Added [%s] for [%s] to Composer', $namespace, $path
                 ));
             } else {
                 $this->components->twoColumnDetail(
-                    sprintf('Composer already contain [%s] namespace', $namespace),
+                    \sprintf('Composer already contain [%s] namespace', $namespace),
                     '<fg=yellow;options=bold>SKIPPED</>'
                 );
             }
         }
 
         return $content;
+    }
+
+    /**
+     * Replace a given string within a given file.
+     */
+    protected function replaceInFile(Filesystem $filesystem, array|string $search, array|string $replace, string $path): void
+    {
+        /** @phpstan-ignore argument.type */
+        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
+            ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Workbench installation without discovers and routes'],
+
+            /** @deprecated */
+            ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation (deprecated)'],
+        ];
     }
 }

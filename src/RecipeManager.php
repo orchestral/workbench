@@ -12,7 +12,7 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function createAssetPublishDriver(): Contracts\Recipe
     {
-        return new Recipes\AssetPublishCommand();
+        return new Recipes\AssetPublishCommand;
     }
 
     /**

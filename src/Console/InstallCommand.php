@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 use function Orchestra\Testbench\package_path;
 
@@ -14,14 +15,9 @@ use function Orchestra\Testbench\package_path;
 class InstallCommand extends Command
 {
     /**
-     * The name and signature of the console command.
-     *
-     * @var string
+     * The `testbench.yaml` default configuration file.
      */
-    protected $signature = 'workbench:install
-        {--force : Overwrite any existing files}
-        {--skip-devtool : Skipped DevTool installation}
-        {--basic : Skipped routes and discovers installation}';
+    public static ?string $configurationBaseFile;
 
     /**
      * Execute the console command.
@@ -31,12 +27,15 @@ class InstallCommand extends Command
     public function handle(Filesystem $filesystem)
     {
         if (! $this->option('skip-devtool')) {
-            $devtool = $this->components->confirm('Install Workbench DevTool?', true);
+            $devtool = match (true) {
+                \is_bool($this->option('devtool')) => $this->option('devtool'),
+                default => $this->components->confirm('Install Workbench DevTool?', true),
+            };
 
             if ($devtool === true) {
                 $this->call('workbench:devtool', [
                     '--force' => $this->option('force'),
-                    '--skip-install' => true,
+                    '--no-install' => true,
                     '--basic' => $this->option('basic'),
                 ]);
             }
@@ -57,7 +56,7 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(__DIR__.'/stubs/'.($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml'));
+        $from = (string) realpath(static::$configurationBaseFile ?? __DIR__.'/stubs/'.($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml'));
         $to = "{$workingPath}/testbench.yaml";
 
         (new GeneratesFile(
@@ -129,6 +128,23 @@ class InstallCommand extends Command
             $environmentFile,
             "{$environmentFile}.example",
             "{$environmentFile}.dist",
+        ];
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
+            ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Skipped routes and discovers installation'],
+
+            /** @deprecated */
+            ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],
         ];
     }
 }
