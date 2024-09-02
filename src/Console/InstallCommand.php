@@ -36,6 +36,7 @@ class InstallCommand extends Command
                 $this->call('workbench:devtool', [
                     '--force' => $this->option('force'),
                     '--no-install' => true,
+                    '--basic' => $this->option('basic'),
                 ]);
             }
         }
@@ -55,7 +56,7 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(static::$configurationBaseFile ?? __DIR__.'/stubs/testbench.yaml');
+        $from = (string) realpath(static::$configurationBaseFile ?? __DIR__.'/stubs/'.($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml'));
         $to = "{$workingPath}/testbench.yaml";
 
         (new GeneratesFile(
@@ -140,6 +141,7 @@ class InstallCommand extends Command
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Skipped routes and discovers installation'],
 
             /** @deprecated */
             ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],

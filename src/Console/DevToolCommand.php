@@ -39,6 +39,7 @@ class DevToolCommand extends Command
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
                 '--no-devtool' => true,
+                '--basic' => $this->option('basic'),
             ]);
         }
 
@@ -64,12 +65,13 @@ class DevToolCommand extends Command
         ))->handle(
             Collection::make([
                 'app/Models',
-                'routes',
-                'resources/views',
                 'database/factories',
                 'database/migrations',
                 'database/seeders',
-            ])->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
+            ])->when(
+                $this->option('basic') === false,
+                fn ($directories) => $directories->push(...['routes', 'resources/views'])
+            )->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
         );
 
         $this->callSilently('make:provider', [
@@ -80,15 +82,17 @@ class DevToolCommand extends Command
 
         $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
-        foreach (['api', 'console', 'web'] as $route) {
-            (new GeneratesFile(
-                filesystem: $filesystem,
-                components: $this->components,
-                force: (bool) $this->option('force'),
-            ))->handle(
-                (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
-                "{$workbenchWorkingPath}/routes/{$route}.php"
-            );
+        if ($this->option('basic') === false) {
+            foreach (['api', 'console', 'web'] as $route) {
+                (new GeneratesFile(
+                    filesystem: $filesystem,
+                    components: $this->components,
+                    force: (bool) $this->option('force'),
+                ))->handle(
+                    (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
+                    "{$workbenchWorkingPath}/routes/{$route}.php"
+                );
+            }
         }
     }
 
@@ -272,6 +276,7 @@ class DevToolCommand extends Command
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Workbench installation without discovers and routes'],
 
             /** @deprecated */
             ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation (deprecated)'],
