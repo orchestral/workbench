@@ -187,9 +187,6 @@ class InstallCommand extends Command implements PromptsForMissingInput
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
-
-            /** @deprecated */
-            ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],
         ];
     }
 }

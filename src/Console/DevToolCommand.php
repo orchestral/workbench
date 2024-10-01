@@ -287,9 +287,6 @@ class DevToolCommand extends Command implements PromptsForMissingInput
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
-
-            /** @deprecated */
-            ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation (deprecated)'],
         ];
     }
 }
