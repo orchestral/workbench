@@ -12,9 +12,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
+use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -32,11 +32,19 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     public function handle(Filesystem $filesystem)
     {
-        if ($this->option('devtool') === true) {
-            $this->call('workbench:devtool', [
-                '--force' => $this->option('force'),
-                '--no-install' => true,
-            ]);
+        if (! $this->option('skip-devtool')) {
+            $devtool = match (true) {
+                \is_bool($this->option('devtool')) => $this->option('devtool'),
+                default => $this->components->confirm('Install Workbench DevTool?', true),
+            };
+
+            if ($devtool === true) {
+                $this->call('workbench:devtool', [
+                    '--force' => $this->option('force'),
+                    '--no-install' => true,
+                    '--basic' => $this->option('basic'),
+                ]);
+            }
         }
 
         $workingPath = package_path();
@@ -54,7 +62,11 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(static::$configurationBaseFile ?? join_paths(__DIR__, 'stubs', 'testbench.yaml'));
+        $from = (string) realpath(
+            static::$configurationBaseFile ?? join_paths(
+                __DIR__, 'stubs', ($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml')
+            )
+        );
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
@@ -97,7 +109,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return;
         }
 
-        $to = "{$workbenchWorkingPath}/{$choice}";
+        $to = join_paths($workbenchWorkingPath, $choice);
 
         (new GeneratesFile(
             filesystem: $filesystem,
@@ -162,6 +174,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Skipped routes and discovers installation'],
 
             /** @deprecated */
             ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],
