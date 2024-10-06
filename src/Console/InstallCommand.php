@@ -89,8 +89,9 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return;
         }
 
+        /** @var array<int, string> $choices */
         $choices = Collection::make($this->environmentFiles())
-            ->reject(static fn ($file) => $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
+            ->reject(static fn ($file) => $filesystem->exists(join_paths($workbenchWorkingPath, $file)))
             ->values()
             ->prepend('Skip exporting .env')
             ->all();
@@ -103,6 +104,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return;
         }
 
+        /** @var string $choice */
         $choice = select("Export '.env' file as?", $choices);
 
         if ($choice === 'Skip exporting .env') {
