@@ -85,7 +85,7 @@ class InstallCommand extends Command
         }
 
         $choices = Collection::make($this->environmentFiles())
-            ->reject(static fn ($file) => $filesystem->exists("{$workbenchWorkingPath}/{$file}"))
+            ->reject(static fn ($file) => $filesystem->exists(join_paths($workbenchWorkingPath, $file)))
             ->values()
             ->prepend('Skip exporting .env')
             ->all();
