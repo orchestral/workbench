@@ -9,6 +9,7 @@ use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -71,7 +72,7 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
     {
-        $workbenchWorkingPath = "{$workingPath}/workbench";
+        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
         $from = $this->laravel->basePath('.env.example');
 
@@ -99,7 +100,7 @@ class InstallCommand extends Command
             return;
         }
 
-        $to = "{$workbenchWorkingPath}/{$choice}";
+        $to = join_paths($workbenchWorkingPath, $choice);
 
         (new GeneratesFile(
             filesystem: $filesystem,
@@ -110,7 +111,10 @@ class InstallCommand extends Command
         (new GeneratesFile(
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
-        ))->handle((string) realpath(__DIR__.'/stubs/workbench.gitignore'), "{$workbenchWorkingPath}/.gitignore");
+        ))->handle(
+            (string) realpath(join_paths(__DIR__, 'stubs', 'workbench.gitignore')),
+            join_paths($workbenchWorkingPath, '.gitignore')
+        );
     }
 
     /**

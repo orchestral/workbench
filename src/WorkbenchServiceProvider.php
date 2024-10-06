@@ -12,6 +12,8 @@ use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 
+use function Orchestra\Testbench\join_paths;
+
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
@@ -37,7 +39,9 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom((string) realpath(__DIR__.'/../routes/workbench.php'));
+        $this->loadRoutesFrom(
+            (string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php'))
+        );
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 

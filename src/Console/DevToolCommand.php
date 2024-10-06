@@ -16,6 +16,7 @@ use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
+use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
@@ -57,21 +58,21 @@ class DevToolCommand extends Command
      */
     protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
     {
-        $workbenchWorkingPath = "{$workingPath}/workbench";
+        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
         (new EnsureDirectoryExists(
             filesystem: $filesystem,
             components: $this->components,
         ))->handle(
             Collection::make([
-                'app/Models',
-                'database/factories',
-                'database/migrations',
-                'database/seeders',
+                join_paths('app', 'Models'),
+                join_paths('database', 'factories'),
+                join_paths('database', 'migrations'),
+                join_paths('database', 'seeders'),
             ])->when(
                 $this->option('basic') === false,
-                fn ($directories) => $directories->push(...['routes', 'resources/views'])
-            )->map(static fn ($directory) => "{$workbenchWorkingPath}/{$directory}")
+                fn ($directories) => $directories->push(...['routes', join_paths('resources', 'views')])
+            )->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
         );
 
         $this->callSilently('make:provider', [
@@ -89,8 +90,8 @@ class DevToolCommand extends Command
                     components: $this->components,
                     force: (bool) $this->option('force'),
                 ))->handle(
-                    (string) realpath(__DIR__.'/stubs/routes/'.$route.'.php'),
-                    "{$workbenchWorkingPath}/routes/{$route}.php"
+                    (string) realpath(join_paths(__DIR__, 'stubs', 'routes', "{$route}.php")),
+                    join_paths($workbenchWorkingPath, 'routes', "{$route}.php")
                 );
             }
         }
@@ -130,16 +131,16 @@ class DevToolCommand extends Command
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle(
-            (string) realpath(__DIR__.'/stubs/database/seeders/DatabaseSeeder.php'),
-            "{$workingPath}/database/seeders/DatabaseSeeder.php"
+            (string) realpath(join_paths(__DIR__, 'stubs', 'database', 'seeders', 'DatabaseSeeder.php')),
+            join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php')
         );
 
-        if ($filesystem->exists("{$workingPath}/database/factories/UserFactory.php")) {
+        if ($filesystem->exists(join_paths($workingPath, 'database', 'factories', 'UserFactory.php'))) {
             $this->replaceInFile($filesystem, [
                 'use Orchestra\Testbench\Factories\UserFactory;',
             ], [
                 'use Workbench\Database\Factories\UserFactory;',
-            ], "{$workingPath}/database/seeders/DatabaseSeeder.php");
+            ], join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php'));
         }
     }
 
