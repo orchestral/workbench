@@ -19,8 +19,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\confirm;
+use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
@@ -44,6 +44,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
             $this->call('workbench:install', [
                 '--force' => $this->option('force'),
                 '--no-devtool' => true,
+                '--basic' => $this->option('basic'),
             ]);
         }
 
@@ -69,13 +70,14 @@ class DevToolCommand extends Command implements PromptsForMissingInput
         ))->handle(
             Collection::make([
                 join_paths('app', 'Models'),
-                'bootstrap',
-                'routes',
-                join_paths('resources', 'views'),
+
                 join_paths('database', 'factories'),
                 join_paths('database', 'migrations'),
                 join_paths('database', 'seeders'),
-            ])->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
+            ])->when(
+                $this->option('basic') === false,
+                fn ($directories) => $directories->push(...['bootstrap', 'routes', join_paths('resources', 'views')])
+            )->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
         );
 
         $this->callSilently('make:provider', [
@@ -86,15 +88,17 @@ class DevToolCommand extends Command implements PromptsForMissingInput
 
         $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
-        foreach (['console', 'web'] as $route) {
-            (new GeneratesFile(
-                filesystem: $filesystem,
-                components: $this->components,
-                force: (bool) $this->option('force'),
-            ))->handle(
-                (string) realpath(join_paths(__DIR__, 'stubs', 'routes', "{$route}.php")),
-                join_paths($workbenchWorkingPath, 'routes', "{$route}.php")
-            );
+        if ($this->option('basic') === false) {
+            foreach (['console', 'web'] as $route) {
+                (new GeneratesFile(
+                    filesystem: $filesystem,
+                    components: $this->components,
+                    force: (bool) $this->option('force'),
+                ))->handle(
+                    (string) realpath(join_paths(__DIR__, 'stubs', 'routes', "{$route}.php")),
+                    join_paths($workbenchWorkingPath, 'routes', "{$route}.php")
+                );
+            }
         }
     }
 
@@ -287,6 +291,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['install', null, InputOption::VALUE_NEGATABLE, 'Run Workbench installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Workbench installation without discovers and routes'],
 
             /** @deprecated */
             ['skip-install', null, InputOption::VALUE_NONE, 'Skipped Workbench installation (deprecated)'],
