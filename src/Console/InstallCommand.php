@@ -57,8 +57,12 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(static::$configurationBaseFile ?? __DIR__.'/stubs/'.($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml'));
-        $to = "{$workingPath}/testbench.yaml";
+        $from = (string) realpath(
+            static::$configurationBaseFile ?? join_paths(
+                __DIR__, 'stubs', ($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml')
+            )
+        );
+        $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
             filesystem: $filesystem,
