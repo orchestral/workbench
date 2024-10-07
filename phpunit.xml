@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.4/phpunit.xsd" backupGlobals="false" beStrictAboutTestsThatDoNotTestAnything="false" bootstrap="vendor/autoload.php" colors="true" processIsolation="false" stopOnFailure="false" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
-  <coverage/>
-  <testsuites>
-    <testsuite name="Testbench Test Suite">
-      <directory suffix="Test.php">./tests/</directory>
-    </testsuite>
-  </testsuites>
-  <php>
-    <server name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
-    <server name="DB_CONNECTION" value="testing"/>
-    <server name="SEND_DEPRECATED_NOTICES_TO_RAY" value="(true)"/>
-  </php>
-  <source>
-    <include>
-      <directory suffix=".php">src/</directory>
-      <file>vendor/orchestra/testbench-core/src/Workbench/Workbench.php</file>
-    </include>
-    <exclude>
-      <directory>src/Console/stubs/</directory>
-      <file>src/Console/BuildCommand.php</file>
-      <file>src/Console/DevToolCommand.php</file>
-      <file>src/Console/InstallCommand.php</file>
-    </exclude>
-  </source>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.4/phpunit.xsd"
+         backupGlobals="false"
+         beStrictAboutTestsThatDoNotTestAnything="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         processIsolation="false"
+         stopOnFailure="false"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false">
+    <coverage/>
+    <testsuites>
+        <testsuite name="Testbench Test Suite">
+            <directory suffix="Test.php">./tests/</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
+        <server name="DB_CONNECTION" value="testing"/>
+        <server name="SEND_DEPRECATED_NOTICES_TO_RAY" value="(true)"/>
+    </php>
+    <source>
+        <include>
+            <directory suffix=".php">src/</directory>
+            <file>vendor/orchestra/testbench-core/src/Workbench/Workbench.php</file>
+        </include>
+        <exclude>
+            <directory>src/Console/stubs/</directory>
+            <directory>src/Events/</directory>
+            <directory>src/Listeners/</directory>
+            <file>src/Console/BuildCommand.php</file>
+            <file>src/Console/DevToolCommand.php</file>
+            <file>src/Console/InstallCommand.php</file>
+        </exclude>
+    </source>
 </phpunit>
