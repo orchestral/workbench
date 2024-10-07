@@ -1,19 +1,20 @@
-<?php 
+<?php
 
 namespace Orchestra\Workbench\Tests;
 
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
-use Orchestra\Workbench\RecipeManager;
 use Orchestra\Workbench\Contracts\RecipeManager as RecipeManagerContract;
+use Orchestra\Workbench\RecipeManager;
 use Orchestra\Workbench\Recipes\AssetPublishCommand;
+use Orchestra\Workbench\Recipes\Command;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 
 class RecipeManagerTest extends TestCase
 {
     use WithWorkbench;
 
-    /** @{inheritDoc} */
+    /** {@inheritDoc} */
     #[\Override]
     protected function getPackageProviders($app)
     {
@@ -29,12 +30,25 @@ class RecipeManagerTest extends TestCase
             $this->assertInstanceOf(RecipeManager::class, $manager);
             $this->assertInstanceOf(RecipeManagerContract::class, $manager);
             $this->assertSame('asset-publish', $manager->getDefaultDriver());
+
+            $this->assertInstanceOf(AssetPublishCommand::class, $manager->command('asset-publish'));
+
+            tap($manager->command('create-sqlite-db'), function ($recipe) {
+                $this->assertInstanceOf(Command::class, $recipe);
+                $this->assertSame('workbench:create-sqlite-db', $recipe->command);
+            });
+
+            tap($manager->command('drop-sqlite-db'), function ($recipe) {
+                $this->assertInstanceOf(Command::class, $recipe);
+                $this->assertSame('workbench:drop-sqlite-db', $recipe->command);
+            });
         });
     }
 
-    /** 
+    /**
      * @test
-     * @dataProvider validCommands 
+     *
+     * @dataProvider validCommands
      */
     public function it_can_check_for_valid_commands(string $command)
     {
@@ -45,6 +59,7 @@ class RecipeManagerTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider invalidCommands
      */
     public function it_can_check_for_invalid_commands(string $command)
@@ -63,7 +78,6 @@ class RecipeManagerTest extends TestCase
             $this->assertTrue($manager->hasCommand('foo-asset-publish'));
         });
     }
-
 
     /** @test */
     public function it_can_check_for_invalid_custom_commands()
