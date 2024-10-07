@@ -6,6 +6,7 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\RecipeManager;
 use Orchestra\Workbench\Contracts\RecipeManager as RecipeManagerContract;
+use Orchestra\Workbench\Recipes\AssetPublishCommand;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 
 class RecipeManagerTest extends TestCase
@@ -42,10 +43,47 @@ class RecipeManagerTest extends TestCase
         });
     }
 
+    /**
+     * @test
+     * @dataProvider invalidCommands
+     */
+    public function it_can_check_for_invalid_commands(string $command)
+    {
+        tap($this->app->make(RecipeManagerContract::class), function ($manager) use ($command) {
+            $this->assertFalse($manager->hasCommand($command));
+        });
+    }
+
+    /** @test */
+    public function it_can_check_for_valid_custom_commands()
+    {
+        tap($this->app->make(RecipeManagerContract::class), function ($manager) {
+            $manager->extend('foo-asset-publish', fn () => new AssetPublishCommand);
+
+            $this->assertTrue($manager->hasCommand('foo-asset-publish'));
+        });
+    }
+
+
+    /** @test */
+    public function it_can_check_for_invalid_custom_commands()
+    {
+        tap($this->app->make(RecipeManagerContract::class), function ($manager) {
+            $manager->extend('foo-asset-publish', fn () => new AssetPublishCommand);
+
+            $this->assertFalse($manager->hasCommand('foobar-asset-publish'));
+        });
+    }
+
     public static function validCommands()
     {
         yield ['asset-publish'];
         yield ['create-sqlite-db'];
         yield ['drop-sqlite-db'];
+    }
+
+    public static function invalidCommands()
+    {
+        yield ['laravel-serve'];
     }
 }
