@@ -21,11 +21,31 @@ class RecipeManagerTest extends TestCase
         ]);
     }
 
-    public function test_it_can_be_resolved()
+    /** @test */
+    public function it_can_be_resolved()
     {
         tap($this->app->make(RecipeManagerContract::class), function ($manager) {
             $this->assertInstanceOf(RecipeManager::class, $manager);
             $this->assertInstanceOf(RecipeManagerContract::class, $manager);
+            $this->assertSame('asset-publish', $manager->getDefaultDriver());
         });
+    }
+
+    /** 
+     * @test
+     * @dataProvider validCommands 
+     */
+    public function it_can_check_for_valid_commands(string $command)
+    {
+        tap($this->app->make(RecipeManagerContract::class), function ($manager) use ($command) {
+            $this->assertTrue($manager->hasCommand($command));
+        });
+    }
+
+    public static function validCommands()
+    {
+        yield ['asset-publish'];
+        yield ['create-sqlite-db'];
+        yield ['drop-sqlite-db'];
     }
 }
