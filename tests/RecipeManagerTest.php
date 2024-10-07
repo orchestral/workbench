@@ -36,11 +36,13 @@ class RecipeManagerTest extends TestCase
             tap($manager->command('create-sqlite-db'), function ($recipe) {
                 $this->assertInstanceOf(Command::class, $recipe);
                 $this->assertSame('workbench:create-sqlite-db', $recipe->command);
+                $this->assertSame([], $recipe->options);
             });
 
             tap($manager->command('drop-sqlite-db'), function ($recipe) {
                 $this->assertInstanceOf(Command::class, $recipe);
                 $this->assertSame('workbench:drop-sqlite-db', $recipe->command);
+                $this->assertSame([], $recipe->options);
             });
         });
     }
@@ -86,6 +88,17 @@ class RecipeManagerTest extends TestCase
             $manager->extend('foo-asset-publish', fn () => new AssetPublishCommand);
 
             $this->assertFalse($manager->hasCommand('foobar-asset-publish'));
+        });
+    }
+
+    /** @test */
+    public function it_can_generate_anonymous_command()
+    {
+        tap($this->app->make(RecipeManagerContract::class), function ($manager) {
+            $recipe = $manager->commandUsing('migrate:refresh', ['--seed' => true]);
+
+            $this->assertSame('migrate:refresh', $recipe->command);
+            $this->assertSame(['--seed' => true], $recipe->options);
         });
     }
 
