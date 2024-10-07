@@ -8,6 +8,8 @@ use Orchestra\Canvas\Core\Presets\Preset;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 
+use function Orchestra\Testbench\join_paths;
+
 class GeneratorPresetTest extends TestCase
 {
     use WithWorkbench;
@@ -23,12 +25,12 @@ class GeneratorPresetTest extends TestCase
         $this->assertSame('workbench', $preset->name());
 
         $this->assertSame($workingPath, $preset->basePath());
-        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'app', $preset->sourcePath());
-        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'resources', $preset->resourcePath());
-        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'resources/views', $preset->viewPath());
-        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'database/factories', $preset->factoryPath());
-        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'database/migrations', $preset->migrationPath());
-        $this->assertSame($workingPath.DIRECTORY_SEPARATOR.'database/seeders', $preset->seederPath());
+        $this->assertSame(join_paths($workingPath, 'app'), $preset->sourcePath());
+        $this->assertSame(join_paths($workingPath, 'resources'), $preset->resourcePath());
+        $this->assertSame(join_paths($workingPath, 'resources', 'views'), $preset->viewPath());
+        $this->assertSame(join_paths($workingPath, 'database', 'factories'), $preset->factoryPath());
+        $this->assertSame(join_paths($workingPath, 'database', 'migrations'), $preset->migrationPath());
+        $this->assertSame(join_paths($workingPath, 'database', 'seeders'), $preset->seederPath());
 
         $this->assertSame('Workbench\App\\', $preset->rootNamespace());
         $this->assertSame('Workbench\App\Console\\', $preset->commandNamespace());
