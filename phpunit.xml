@@ -13,12 +13,15 @@
          processIsolation="false"
          stopOnFailure="false"
          verbose="true">
-    <coverage includeUncoveredFiles="false">
+    <coverage>
         <include>
             <directory suffix=".php">src/</directory>
             <file>vendor/orchestra/testbench-core/src/Workbench/Workbench.php</file>
         </include>
         <exclude>
+            <directory>src/Console/stubs/</directory>
+            <directory>src/Events/</directory>
+            <directory>src/Listeners/</directory>
             <file>src/Console/BuildCommand.php</file>
             <file>src/Console/DevToolCommand.php</file>
             <file>src/Console/InstallCommand.php</file>
