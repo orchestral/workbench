@@ -35,7 +35,8 @@
         "spatie/laravel-ray": "^1.35",
         "symfony/polyfill-php83": "^1.31",
         "symfony/polyfill-php84": "^1.31",
-        "symfony/yaml": "^7.0.3"
+        "symfony/yaml": "^7.0.3",
+        "laravel/pail": "^1.1"
     },
     "require-dev": {
         "laravel/pint": "^1.17",
