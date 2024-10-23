@@ -8,9 +8,22 @@ use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Workbench;
 use PHPUnit\Framework\Attributes\Test;
 
+use function Orchestra\Testbench\package_path;
+
 class WorkbenchTest extends TestCase
 {
     use WithWorkbench;
+
+    #[Test]
+    public function it_can_resolve_files()
+    {
+        $this->assertSame(
+            package_path('src', 'Console', 'stubs', 'database', 'seeders', 'DatabaseSeeder.php'),
+            Workbench::stubFile('seeders.database')
+        );
+
+        $this->assertNull(Workbench::stubFile('testbench'));
+    }
 
     #[Test]
     public function it_can_resolve_with_workbench_traits()

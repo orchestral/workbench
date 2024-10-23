@@ -7,6 +7,7 @@ use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -86,11 +87,10 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(
-            static::$configurationBaseFile ?? join_paths(
-                __DIR__, 'stubs', ($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml')
-            )
-        );
+        $from = ! \is_null(static::$configurationBaseFile)
+            ? (string) realpath(static::$configurationBaseFile)
+            : (string) Workbench::stubFile($this->option('basic') === true ? 'config.basic' : 'config');
+
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
@@ -147,7 +147,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
         ))->handle(
-            (string) realpath(join_paths(__DIR__, 'stubs', 'workbench.gitignore')),
+            (string) Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
         );
     }
