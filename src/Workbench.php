@@ -14,12 +14,12 @@ use function Orchestra\Testbench\workbench_path;
  *
  * @phpstan-type TStubFiles array{
  *   config: ?string,
- *   config.basic: ?string,
+ *   'config.basic': ?string,
  *   gitignore: ?string,
- *   routes.api: ?string,
- *   routes.console: ?string,
- *   routes.web: ?string,
- *   seeder.database: ?string
+ *   'routes.api': ?string,
+ *   'routes.console': ?string,
+ *   'routes.web': ?string,
+ *   'seeders.database': ?string
  * }
  */
 class Workbench
@@ -28,6 +28,7 @@ class Workbench
      * Files of stub files overrides.
      *
      * @var array<string, ?string>
+     *
      * @phpstan-var TStubFiles
      */
     protected static array $files = [
@@ -73,7 +74,6 @@ class Workbench
     /**
      * Get the availale configuration.
      *
-     * @param  string|null  $key
      * @return array<string, mixed>|mixed
      *
      * @phpstan-return ($key is null ? TWorkbenchConfig : mixed)
@@ -90,7 +90,9 @@ class Workbench
      */
     public static function swapFile(string $name, ?string $file): void
     {
-        static::$files[$name] = $file;
+        if (\array_key_exists($name, static::$files)) {
+            static::$files[$name] = $file;
+        }
     }
 
     /**

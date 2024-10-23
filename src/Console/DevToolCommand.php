@@ -90,7 +90,7 @@ class DevToolCommand extends Command
                     components: $this->components,
                     force: (bool) $this->option('force'),
                 ))->handle(
-                    Workbench::stubFile("routes.{$route}"),
+                    (string) Workbench::stubFile("routes.{$route}"),
                     join_paths($workbenchWorkingPath, 'routes', "{$route}.php")
                 );
             }
@@ -131,7 +131,7 @@ class DevToolCommand extends Command
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle(
-            Workbench::stubFile('seeders.database'),
+            (string) Workbench::stubFile('seeders.database'),
             join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php')
         );
 

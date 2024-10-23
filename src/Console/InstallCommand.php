@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -59,7 +60,7 @@ class InstallCommand extends Command
     {
         $from = ! \is_null(static::$configurationBaseFile)
             ? (string) realpath(static::$configurationBaseFile)
-            : Workbench::stubFile($this->option('basic') === true ? 'config.basic' : 'config');
+            : (string) Workbench::stubFile($this->option('basic') === true ? 'config.basic' : 'config');
 
         $to = join_paths($workingPath, 'testbench.yaml');
 
@@ -115,7 +116,7 @@ class InstallCommand extends Command
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
         ))->handle(
-            Workbench::stubFile('gitignore'),
+            (string) Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
         );
     }
