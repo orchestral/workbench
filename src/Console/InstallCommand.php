@@ -19,7 +19,7 @@ class InstallCommand extends Command
     /**
      * The `testbench.yaml` default configuration file.
      */
-    public static ?string $configurationBaseFile;
+    public static ?string $configurationBaseFile = null;
 
     /**
      * Execute the console command.
