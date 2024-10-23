@@ -57,11 +57,10 @@ class InstallCommand extends Command
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(
-            static::$configurationBaseFile ?? join_paths(
-                __DIR__, 'stubs', ($this->option('basic') === true ? 'testbench.plain.yaml' : 'testbench.yaml')
-            )
-        );
+        $from = ! \is_null(static::$configurationBaseFile)
+            ? (string) realpath(static::$configurationBaseFile)
+            : Workbench::stubFile($this->option('basic') === true ? 'config.basic' : 'config');
+
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
@@ -116,7 +115,7 @@ class InstallCommand extends Command
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
         ))->handle(
-            (string) realpath(join_paths(__DIR__, 'stubs', 'workbench.gitignore')),
+            Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
         );
     }

@@ -7,9 +7,22 @@ use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Workbench;
 
+use function Orchestra\Testbench\package_path;
+
 class WorkbenchTest extends TestCase
 {
     use WithWorkbench;
+
+    /** @test */
+    public function it_can_resolve_files()
+    {
+        $this->assertSame(
+            package_path('src', 'Console', 'stubs', 'database', 'seeders', 'DatabaseSeeder.php'),
+            Workbench::stubFile('seeders.database')
+        );
+
+        $this->assertNull(Workbench::stubFile('testbench'));
+    }
 
     /** @test */
     public function it_can_resolve_with_workbench_traits()
