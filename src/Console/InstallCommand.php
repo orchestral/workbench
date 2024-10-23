@@ -24,7 +24,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
     /**
      * The `testbench.yaml` default configuration file.
      */
-    public static ?string $configurationBaseFile;
+    public static ?string $configurationBaseFile = null;
 
     /**
      * Execute the console command.
