@@ -28,6 +28,7 @@
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^11.11",
+        "laravel/pail": "^1.2",
         "laravel/tinker": "^2.9",
         "nunomaduro/collision": "^8.0",
         "orchestra/canvas": "^9.1",
