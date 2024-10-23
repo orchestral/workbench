@@ -16,6 +16,7 @@ class InstallStartedTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider basicInstallationDataProvider
      */
     public function it_can_determine_using_basic_installation(bool $hasOption, ?bool $getOption, bool $expected)
