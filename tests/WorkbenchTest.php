@@ -14,7 +14,7 @@ class WorkbenchTest extends TestCase
     use WithWorkbench;
 
     /** @test */
-    public function it_can_resolve_files()
+    public function it_can_resolve_stub_files()
     {
         $this->assertSame(
             package_path('src', 'Console', 'stubs', 'database', 'seeders', 'DatabaseSeeder.php'),

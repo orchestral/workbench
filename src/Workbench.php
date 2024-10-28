@@ -11,35 +11,15 @@ use function Orchestra\Testbench\workbench_path;
 
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
- *
- * @phpstan-type TStubFiles array{
- *   config: ?string,
- *   'config.basic': ?string,
- *   gitignore: ?string,
- *   'routes.api': ?string,
- *   'routes.console': ?string,
- *   'routes.web': ?string,
- *   'seeders.database': ?string
- * }
  */
 class Workbench
 {
     /**
-     * Files of stub files overrides.
+     * The Stub Registrar instance.
      *
-     * @var array<string, ?string>
-     *
-     * @phpstan-var TStubFiles
+     * @var \Orchestra\Workbench\StubRegistrar|null
      */
-    protected static array $files = [
-        'config' => null,
-        'config.basic' => null,
-        'gitignore' => null,
-        'routes.api' => null,
-        'routes.console' => null,
-        'routes.web' => null,
-        'seeders.database' => null,
-    ];
+    protected static $stubRegistrar = null;
 
     /**
      * Get the path to the laravel folder.
@@ -86,13 +66,19 @@ class Workbench
     }
 
     /**
+     * Retrieve Stub Registrar instance.
+     */
+    public static function stub(): StubRegistrar
+    {
+        return static::$stubRegistrar ??= new StubRegistrar;
+    }
+
+    /**
      * Swap stub file by name.
      */
     public static function swapFile(string $name, ?string $file): void
     {
-        if (\array_key_exists($name, static::$files)) {
-            static::$files[$name] = $file;
-        }
+        static::stub()->swap($name, $file);
     }
 
     /**
@@ -100,23 +86,6 @@ class Workbench
      */
     public static function stubFile(string $name): ?string
     {
-        $defaultStub = join_paths(__DIR__, 'Console', 'stubs');
-
-        return transform(
-            Arr::get(array_merge([
-                'config' => join_paths($defaultStub, 'testbench.yaml'),
-                'config.basic' => join_paths($defaultStub, 'testbench.plain.yaml'),
-                'gitignore' => join_paths($defaultStub, 'workbench.gitignore'),
-                'routes.api' => join_paths($defaultStub, 'routes', 'api.php'),
-                'routes.console' => join_paths($defaultStub, 'routes', 'console.php'),
-                'routes.web' => join_paths($defaultStub, 'routes', 'web.php'),
-                'seeders.database' => join_paths($defaultStub, 'database', 'seeders', 'DatabaseSeeder.php'),
-            ], array_filter(static::$files)), $name),
-            function ($file) {
-                $realpath = realpath($file);
-
-                return $realpath !== false ? $realpath : null;
-            }
-        );
+        return static::stub()->file($name);
     }
 }
