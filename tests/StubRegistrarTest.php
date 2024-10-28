@@ -11,11 +11,22 @@ class StubRegistrarTest extends TestCase
 {
     /**
      * @test
+     *
      * @dataProvider defaultStubsDataProvider
      */
     public function it_can_resolve_default_configuration(string $given, ?string $expected)
     {
         $this->assertSame($expected, (new StubRegistrar)->file($given));
+    }
+
+    public function it_can_swap_stub_file()
+    {
+        $registrar = new StubRegistrar;
+
+        $registrar->swap('config', $file = realpath(join_paths(__DIR__, '..', 'testbench.yaml')));
+
+        $this->assertSame($file, $registrar->file('config'));
+        $this->assertNotSame(join_paths(__DIR__, '..', 'src', 'Console', 'stubs', 'testbench.yaml'), $registrar->file('config'));
     }
 
     public static function defaultStubsDataProvider()
