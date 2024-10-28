@@ -11,6 +11,7 @@ use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 
+#[WithConfig('app.key', 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF')]
 #[WithConfig('database.default', 'testing')]
 #[WithMigration]
 class WorkbenchControllerTest extends TestCase
