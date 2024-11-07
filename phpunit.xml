@@ -20,10 +20,6 @@
         </include>
         <exclude>
             <directory>src/Console/stubs/</directory>
-            <directory>src/Listeners/</directory>
-            <file>src/Console/BuildCommand.php</file>
-            <file>src/Console/DevToolCommand.php</file>
-            <file>src/Console/InstallCommand.php</file>
         </exclude>
     </coverage>
     <testsuites>

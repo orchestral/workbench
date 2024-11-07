@@ -8,6 +8,9 @@ use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Workbench\Workbench;
 
+/**
+ * @codeCoverageIgnore
+ */
 class RemoveAssetSymlinkFolders
 {
     /**

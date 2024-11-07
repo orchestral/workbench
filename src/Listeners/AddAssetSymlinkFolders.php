@@ -9,6 +9,9 @@ use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 use Orchestra\Workbench\Workbench;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AddAssetSymlinkFolders
 {
     /**
