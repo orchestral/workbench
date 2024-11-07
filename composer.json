@@ -1,4 +1,5 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
     "name": "orchestra/workbench",
     "description": "Workbench Companion for Laravel Packages Development",
     "type": "library",
