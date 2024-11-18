@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 readonly class InstallStarted
 {
+    use Concerns\InteractsWithInput;
+
     /**
      * Construct a new event.
      */
@@ -15,7 +17,5 @@ readonly class InstallStarted
         public InputInterface $input,
         public OutputInterface $output,
         public Factory $components
-    ) {
-        //
-    }
+    ) {}
 }

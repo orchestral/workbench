@@ -9,12 +9,24 @@ use Symfony\Component\Console\Attribute\AsCommand;
 class DropSqliteDbCommand extends Command
 {
     /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'workbench:drop-sqlite-db
+                                {--database=database.sqlite : Set the database name}
+                                {--all : Delete all SQLite databases}';
+
+    /**
      * Execute the console command.
      *
      * @return int
      */
     public function handle()
     {
-        return $this->call('package:drop-sqlite-db');
+        return $this->call('package:drop-sqlite-db', [
+            '--database' => $this->option('database'),
+            '--all' => $this->option('all'),
+        ]);
     }
 }

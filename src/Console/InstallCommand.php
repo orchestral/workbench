@@ -7,23 +7,27 @@ use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function Illuminate\Filesystem\join_paths;
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
+use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The `testbench.yaml` default configuration file.
      */
-    public static ?string $configurationBaseFile;
+    public static ?string $configurationBaseFile = null;
 
     /**
      * Execute the console command.
@@ -32,11 +36,19 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     public function handle(Filesystem $filesystem)
     {
-        if ($this->option('devtool') === true) {
-            $this->call('workbench:devtool', [
-                '--force' => $this->option('force'),
-                '--no-install' => true,
-            ]);
+        if (! $this->option('skip-devtool')) {
+            $devtool = match (true) {
+                \is_bool($this->option('devtool')) => $this->option('devtool'),
+                default => $this->components->confirm('Install Workbench DevTool?', true),
+            };
+
+            if ($devtool === true) {
+                $this->call('workbench:devtool', [
+                    '--force' => $this->option('force'),
+                    '--no-install' => true,
+                    '--basic' => $this->option('basic'),
+                ]);
+            }
         }
 
         $workingPath = package_path();
@@ -78,7 +90,10 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
-        $from = (string) realpath(static::$configurationBaseFile ?? join_paths(__DIR__, 'stubs', 'testbench.yaml'));
+        $from = ! \is_null(static::$configurationBaseFile)
+            ? (string) realpath(static::$configurationBaseFile)
+            : (string) Workbench::stubFile($this->option('basic') === true ? 'config.basic' : 'config');
+
         $to = join_paths($workingPath, 'testbench.yaml');
 
         (new GeneratesFile(
@@ -101,6 +116,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return;
         }
 
+        /** @var array<int, string> $choices */
         $choices = Collection::make($this->environmentFiles())
             ->reject(static fn ($file) => $filesystem->exists(join_paths($workbenchWorkingPath, $file)))
             ->values()
@@ -134,7 +150,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
         ))->handle(
-            (string) realpath(join_paths(__DIR__, 'stubs', 'workbench.gitignore')),
+            (string) Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
         );
     }
@@ -187,6 +203,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         return [
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
+            ['basic', null, InputOption::VALUE_NONE, 'Skipped routes and discovers installation'],
         ];
     }
 }

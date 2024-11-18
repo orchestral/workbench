@@ -9,6 +9,9 @@ use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
 use Orchestra\Workbench\Workbench;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AddAssetSymlinkFolders
 {
     /**
@@ -17,9 +20,7 @@ class AddAssetSymlinkFolders
     public function __construct(
         public ConfigContract $config,
         public Filesystem $files
-    ) {
-        //
-    }
+    ) {}
 
     /**
      * Handle the event.

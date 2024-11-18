@@ -13,7 +13,9 @@ class CreateSqliteDbCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'workbench:create-sqlite-db {--force : Overwrite the database file}';
+    protected $signature = 'workbench:create-sqlite-db
+                                {--database=database.sqlite : Set the database name}
+                                {--force : Overwrite the database file}';
 
     /**
      * Execute the console command.
@@ -22,6 +24,9 @@ class CreateSqliteDbCommand extends Command
      */
     public function handle()
     {
-        return $this->call('package:create-sqlite-db', ['--force' => $this->option('force')]);
+        return $this->call('package:create-sqlite-db', [
+            '--database' => $this->option('database'),
+            '--force' => $this->option('force'),
+        ]);
     }
 }

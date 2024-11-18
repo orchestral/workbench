@@ -12,6 +12,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
+ *
+ * @codeCoverageIgnore
  */
 #[AsCommand(name: 'workbench:build', description: 'Run builds for workbench')]
 class BuildCommand extends Command

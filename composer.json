@@ -1,4 +1,5 @@
 {
+    "$schema": "https://getcomposer.org/schema.json",
     "name": "orchestra/workbench",
     "description": "Workbench Companion for Laravel Packages Development",
     "type": "library",
@@ -24,21 +25,22 @@
         }
     },
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^12.0",
         "orchestra/canvas": "^10.0",
         "orchestra/testbench-core": "^10.0",
-        "symfony/polyfill-php83": "^1.28",
-        "symfony/yaml": "^7.0"
+        "symfony/polyfill-php83": "^1.31",
+        "symfony/polyfill-php84": "^1.31",
+        "symfony/yaml": "^7.0.3"
     },
     "require-dev": {
         "laravel/pint": "^1.17",
-        "mockery/mockery": "^1.6",
-        "phpstan/phpstan": "^1.11",
-        "phpunit/phpunit": "^10.5 || ^11.0",
-        "symfony/process": "^7.0"
+        "mockery/mockery": "^1.6.10",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^10.5.35 || ^11.3.6",
+        "symfony/process": "^7.0.3"
     },
     "suggest": {
         "ext-pcntl": "Required to use all features of the console signal trapping."
@@ -60,7 +62,7 @@
             "@php vendor/bin/pint --ansi",
             "@php vendor/bin/phpstan analyse --verbose"
         ],
-        "test": "@php vendor/bin/phpunit",
+        "test": "@php vendor/bin/phpunit --no-coverage --no-configuration --dont-report-useless-tests --bootstrap vendor/autoload.php --color tests",
         "ci": [
             "@composer audit",
             "@prepare",

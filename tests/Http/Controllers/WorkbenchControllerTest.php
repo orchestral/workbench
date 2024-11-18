@@ -12,6 +12,7 @@ use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 use PHPUnit\Framework\Attributes\Test;
 
+#[WithConfig('app.key', 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF')]
 #[WithConfig('database.default', 'testing')]
 #[WithMigration]
 class WorkbenchControllerTest extends TestCase

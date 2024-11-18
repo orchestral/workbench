@@ -17,13 +17,17 @@ jobs:
         php:
           - 8.2
           - 8.3
+          - 8.4
         dependencies:
           - "highest"
           - "lowest"
         experimental:
           - false
+        exclude:
+          - php: 8.3
+            dependencies: "lowest"
 
-    name: PHP:${{ matrix.php }} on ${{ matrix.os }} (${{ matrix.dependencies }})
+    name: PHP:${{ matrix.php }} / OS:${{ matrix.os }} ${{ matrix.dependencies == 'highest' && '⬆️' || '⬇️' }}
 
     steps:
       - name: Checkout code
@@ -46,4 +50,4 @@ jobs:
         run: composer show -D
 
       - name: Execute tests
-        run: vendor/bin/phpunit --testdox
+        run: vendor/bin/phpunit

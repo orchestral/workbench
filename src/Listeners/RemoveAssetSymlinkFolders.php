@@ -8,6 +8,9 @@ use Orchestra\Testbench\Contracts\Config as ConfigContract;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Workbench\Workbench;
 
+/**
+ * @codeCoverageIgnore
+ */
 class RemoveAssetSymlinkFolders
 {
     /**
@@ -16,9 +19,7 @@ class RemoveAssetSymlinkFolders
     public function __construct(
         public ConfigContract $config,
         public Filesystem $files
-    ) {
-        //
-    }
+    ) {}
 
     /**
      * Handle the event.

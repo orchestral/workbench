@@ -2,6 +2,40 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.12.0
+
+Released: 2024-11-19
+
+### Added
+
+* Added `Workbench::swapFile()` method to override the default generated stub file.
+* Added `--database` option to `workbench:create-sqlite-db` command.
+* Added `--database` and `--all` options to `workbench:drop-sqlite-db` command.
+
+### Remove
+
+* Remove `spatie/laravel-ray`.
+
+## 8.11.0
+
+Released: 2024-10-24
+
+### Added
+
+* Added `--basic` option to `workbench:install` and `workbench:devtool` command to simplify installation.
+* Add `Orchestra\Workbench\Workbench::swapFile()` to override the default stub files:
+    - `config`
+    - `config.basic`
+    - `gitignore`
+    - `routes.api`
+    - `routes.console`
+    - `routes.web`
+    - `seeders.database`
+
+### Changes
+
+* Utilise `Orchestra\Testbench\join_paths()` function.
+
 ## 8.10.0
 
 Released: 2024-08-26

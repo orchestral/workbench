@@ -4,18 +4,30 @@ namespace Orchestra\Workbench;
 
 use Illuminate\Support\Arr;
 
+use function Orchestra\Testbench\join_paths;
+use function Orchestra\Testbench\package_path;
+use function Orchestra\Testbench\workbench;
+use function Orchestra\Testbench\workbench_path;
+
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
  */
 class Workbench
 {
     /**
+     * The Stub Registrar instance.
+     *
+     * @var \Orchestra\Workbench\StubRegistrar|null
+     */
+    protected static $stubRegistrar = null;
+
+    /**
      * Get the path to the laravel folder.
      */
     public static function laravelPath(array|string $path = ''): string
     {
         return app()->basePath(
-            \Orchestra\Testbench\join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
+            join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
         );
     }
 
@@ -24,7 +36,7 @@ class Workbench
      */
     public static function packagePath(array|string $path = ''): string
     {
-        return \Orchestra\Testbench\package_path(
+        return package_path(
             ...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path)
         );
     }
@@ -34,7 +46,7 @@ class Workbench
      */
     public static function path(array|string $path = ''): string
     {
-        return \Orchestra\Testbench\workbench_path(
+        return workbench_path(
             ...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path)
         );
     }
@@ -42,19 +54,38 @@ class Workbench
     /**
      * Get the availale configuration.
      *
-     * @param  string|null  $key
      * @return array<string, mixed>|mixed
      *
      * @phpstan-return ($key is null ? TWorkbenchConfig : mixed)
      */
-    public static function config($key = null)
+    public static function config(?string $key = null): mixed
     {
-        $workbench = \Orchestra\Testbench\workbench();
+        return ! \is_null($key)
+            ? Arr::get(workbench(), $key)
+            : workbench();
+    }
 
-        if (! \is_null($key)) {
-            return $workbench[$key] ?? null;
-        }
+    /**
+     * Retrieve Stub Registrar instance.
+     */
+    public static function stub(): StubRegistrar
+    {
+        return static::$stubRegistrar ??= new StubRegistrar;
+    }
 
-        return $workbench;
+    /**
+     * Swap stub file by name.
+     */
+    public static function swapFile(string $name, ?string $file): void
+    {
+        static::stub()->swap($name, $file);
+    }
+
+    /**
+     * Retrieve the stub file from name.
+     */
+    public static function stubFile(string $name): ?string
+    {
+        return static::stub()->file($name);
     }
 }

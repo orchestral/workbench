@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 readonly class InstallEnded
 {
+    use Concerns\InteractsWithInput;
+
     /**
      * Construct a new event.
      */
@@ -16,7 +18,5 @@ readonly class InstallEnded
         public OutputInterface $output,
         public Factory $components,
         public int $exitCode
-    ) {
-        //
-    }
+    ) {}
 }
