@@ -61,4 +61,25 @@ Symfony\Component\Process\Process::fromShellCommandline(
     'composer create-project "laravel/breeze" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
+Illuminate\Support\Collection::make([
+    'Http/Controllers/ProfileController.php',
+    'Http/Controllers/Auth/*.php',
+    'Http/Requests/ProfileUpdateRequest.php',
+    'Http/Requests/Auth/*.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/app/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+        'namespace App' => 'namespace Orchestra\Workbench',
+        'use App' => 'use Orchestra\Workbench',
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/app"));
+});
+
+transform([
+    'Rule::unique(User::class)->ignore($this->user()->id),' => 'Rule::unique(\'users\')->ignore($this->user()->id),',
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Requests/ProfileUpdateRequest.php"));
+
 $purgeSkeletonDirectories();
