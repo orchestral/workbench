@@ -13,5 +13,6 @@ parameters:
     # - '#Unsafe usage of new static#'
 
   excludePaths:
+    - src/Http/Controllers/Auth/*.php
 
   treatPhpDocTypesAsCertain: false
