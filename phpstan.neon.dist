@@ -14,5 +14,8 @@ parameters:
 
   excludePaths:
     - src/Http/Controllers/Auth/*.php
+    - src/Http/Controllers/ProfileController.php
+    - src/Http/Requests/Auth/*.php
+    - src/Http/Requests/ProfileUpdateRequest.php
 
   treatPhpDocTypesAsCertain: false

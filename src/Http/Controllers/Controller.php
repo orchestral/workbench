@@ -2,7 +2,7 @@
 
 namespace Orchestra\Workbench\Http\Controllers;
 
-abstract class Controller extends \Illuminate\Http\Controller
+abstract class Controller extends \Illuminate\Routing\Controller
 {
     //
 }
