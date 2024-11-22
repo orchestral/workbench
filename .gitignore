@@ -6,3 +6,7 @@
 /coverage/*
 /.phpunit.cache/*
 /.phpunit.result.cache
+
+# Stubs
+/skeleton/*
+/breeze-skeleton/*
