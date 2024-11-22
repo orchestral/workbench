@@ -6,6 +6,7 @@ use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\BuildParser;
 use Orchestra\Workbench\Workbench;
+use Workbench\Database\Seeders\DatabaseSeeder;
 
 class BuildParserTest extends TestCase
 {
@@ -33,7 +34,7 @@ class BuildParserTest extends TestCase
                 'create-sqlite-db' => [],
                 'migrate:refresh' => [
                     '--seed' => true,
-                    '--drop-views' => false,
+                    '--seeder' => DatabaseSeeder::class,
                 ],
             ],
         ];
@@ -42,13 +43,13 @@ class BuildParserTest extends TestCase
             [
                 'asset-publish',
                 'create-sqlite-db',
-                ['migrate:refresh' => ['--seed' => true, '--drop-views' => false]],
+                ['migrate:refresh' => ['--seed' => true, '--seeder' => DatabaseSeeder::class]],
             ], [
                 'asset-publish' => [],
                 'create-sqlite-db' => [],
                 'migrate:refresh' => [
                     '--seed' => true,
-                    '--drop-views' => false,
+                    '--seeder' => DatabaseSeeder::class,
                 ],
             ],
         ];

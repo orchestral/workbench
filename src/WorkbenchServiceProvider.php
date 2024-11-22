@@ -7,6 +7,7 @@ use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
@@ -39,9 +40,13 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom(
-            (string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php'))
-        );
+        Collection::make(['workbench'])
+            ->when(Workbench::config('auth') === true, static fn ($routes) => $routes->push('dashboard', 'auth'))
+            ->mapWithKeys(static fn ($route) => [$route => (string) realpath(join_paths(__DIR__, '..', 'routes', "{$route}.php"))])
+            ->filter(static fn ($route) => is_file($route))
+            ->each(function ($route) {
+                $this->loadRoutesFrom($route);
+            });
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
