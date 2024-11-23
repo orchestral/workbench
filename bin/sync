@@ -100,6 +100,14 @@ Illuminate\Support\Collection::make([
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
 
+transform([
+    'Route::get(\'/\', function () {
+    return view(\'welcome\');
+});'.PHP_EOL => '// Route::get(\'/\', function () {
+//     return view(\'welcome\');
+// });'.PHP_EOL,
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/routes/web.php"));
+
 Illuminate\Support\Collection::make([
     'auth/*.blade.php',
     'components/*.blade.php',
