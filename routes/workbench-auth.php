@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 use function Orchestra\Testbench\join_paths;

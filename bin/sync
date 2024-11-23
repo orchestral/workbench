@@ -94,6 +94,7 @@ Illuminate\Support\Collection::make([
 ->each(static function ($file) use ($files, $workingPath) {
     transform([
         'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
+        'return view(\'dashboard\');' => 'return view(\'workbench-auth::dashboard\');',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
@@ -103,6 +104,7 @@ Illuminate\Support\Collection::make([
     'auth/*.blade.php',
     'components/*.blade.php',
     'layouts/*.blade.php',
+    'profile/partials/*.blade.php',
     'profile/*.blade.php',
     'dashboard.blade.php',
 ])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/resources/views/{$file}")
