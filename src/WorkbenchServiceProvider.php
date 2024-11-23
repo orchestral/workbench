@@ -65,6 +65,10 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $event->listen(ServeCommandStarted::class, [Listeners\AddAssetSymlinkFolders::class, 'handle']);
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
+
+            $this->publishes([
+                __DIR__.'/../public/' => public_path(''),
+            ], ['laravel-assets']);
         }
     }
 }
