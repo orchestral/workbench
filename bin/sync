@@ -73,6 +73,7 @@ Illuminate\Support\Collection::make([
     transform([
         'namespace App' => 'namespace Orchestra\Workbench',
         'use App' => 'use Orchestra\Workbench',
+        'view(\'' => 'view(\'workbench-auth::',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/app"));

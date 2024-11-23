@@ -48,6 +48,8 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $this->loadRoutesFrom($route);
             });
 
+        $this->loadViewsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'view')), 'workbench-auth');
+
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
         if ($this->app->runningInConsole()) {
