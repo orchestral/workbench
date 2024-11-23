@@ -32,7 +32,7 @@
         "laravel/tinker": "^2.8.2",
         "nunomaduro/collision": "^6.2",
         "orchestra/canvas": "^7.11.1",
-        "orchestra/testbench-core": "^7.48",
+        "orchestra/testbench-core": "^7.49",
         "symfony/polyfill-php83": "^1.31",
         "symfony/yaml": "^6.0.9"
     },
@@ -51,13 +51,6 @@
             "@clear",
             "@prepare"
         ],
-        "sync": [
-            "@clear",
-            "@php bin/sync",
-            "@lint",
-            "npm ci",
-            "npm run build"
-        ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
@@ -71,6 +64,12 @@
             "@php vendor/bin/phpstan analyse --verbose"
         ],
         "test": "@php vendor/bin/phpunit --no-coverage --no-configuration --dont-report-useless-tests --bootstrap vendor/autoload.php --color tests",
+        "sync": [
+            "@php bin/sync",
+            "@php vendor/bin/pint --ansi",
+            "npm ci",
+            "npm run build"
+        ],
         "ci": [
             "@composer audit",
             "@prepare",

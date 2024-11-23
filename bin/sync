@@ -75,7 +75,6 @@ Illuminate\Support\Collection::make([
         'namespace App\\' => 'namespace Orchestra\Workbench\\',
         'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
         'use App\\Models\\User;' => 'use Workbench\\App\\Models\\User;',
-        // 'view(\'' => 'view(\'workbench-auth::',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/app"));
@@ -94,7 +93,6 @@ Illuminate\Support\Collection::make([
 ->each(static function ($file) use ($files, $workingPath) {
     transform([
         'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
-        // 'return view(\'dashboard\');' => 'return view(\'workbench-auth::dashboard\');',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
@@ -119,11 +117,6 @@ Illuminate\Support\Collection::make([
 ->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
 ->flatten()
 ->each(static function ($file) use ($files, $workingPath) {
-    transform([
-        // '@include(\'layouts.' => '@include(\'workbench-auth::layouts.',
-        // '@include(\'profile.' => '@include(\'workbench-auth::profile.',
-    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
-
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
 
@@ -137,9 +130,6 @@ Illuminate\Support\Collection::make([
 ->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
 ->flatten()
 ->each(static function ($file) use ($files, $workingPath) {
-    transform([
-    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
-
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
 
