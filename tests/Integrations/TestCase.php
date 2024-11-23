@@ -15,6 +15,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
     protected function defineEnvironment($app)
     {
+        $this->withoutVite();
+        
         Workbench::start($app, static::cachedConfigurationForWorkbench());
     }
 
