@@ -7,8 +7,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::redirect('/home', '/dashboard')->name('home');
+
 Route::get('/dashboard', function () {
-    return view('workbench-auth::dashboard');
+    return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

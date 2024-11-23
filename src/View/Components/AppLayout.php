@@ -12,6 +12,6 @@ class AppLayout extends Component
      */
     public function render(): View
     {
-        return view('workbench-auth::layouts.app');
+        return view('layouts.app');
     }
 }

@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('workbench-auth::auth.login');
+        return view('auth.login');
     }
 
     /**

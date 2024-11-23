@@ -75,7 +75,7 @@ Illuminate\Support\Collection::make([
         'namespace App\\' => 'namespace Orchestra\Workbench\\',
         'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
         'use App\\Models\\User;' => 'use Workbench\\App\\Models\\User;',
-        'view(\'' => 'view(\'workbench-auth::',
+        // 'view(\'' => 'view(\'workbench-auth::',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/app"));
@@ -94,7 +94,7 @@ Illuminate\Support\Collection::make([
 ->each(static function ($file) use ($files, $workingPath) {
     transform([
         'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
-        'return view(\'dashboard\');' => 'return view(\'workbench-auth::dashboard\');',
+        // 'return view(\'dashboard\');' => 'return view(\'workbench-auth::dashboard\');',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
@@ -112,8 +112,8 @@ Illuminate\Support\Collection::make([
 ->flatten()
 ->each(static function ($file) use ($files, $workingPath) {
     transform([
-        '@include(\'layouts.' => '@include(\'workbench-auth::layouts.',
-        '@include(\'profile.' => '@include(\'workbench-auth::profile.',
+        // '@include(\'layouts.' => '@include(\'workbench-auth::layouts.',
+        // '@include(\'profile.' => '@include(\'workbench-auth::profile.',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
@@ -133,6 +133,23 @@ Illuminate\Support\Collection::make([
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
+});
+
+Illuminate\Support\Collection::make([
+    'Auth/*Test.php',
+    '*Test.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+        'namespace Tests\Feature' => 'namespace Orchestra\Workbench\Tests\Integrations',
+        'use App\Models\User;' => 'use Workbench\Database\Factories\UserFactory;',
+        'use Tests\TestCase;' => 'use Orchestra\Workbench\Tests\Integrations\TestCase;',
+        'User::factory()' => 'UserFactory::new()',
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}/tests/Integrations".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature"));
 });
 
 $purgeSkeletonDirectories();
