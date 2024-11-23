@@ -84,4 +84,34 @@ transform([
     'Rule::unique(User::class)->ignore($this->user()->id),' => 'Rule::unique(\'users\')->ignore($this->user()->id),',
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Requests/ProfileUpdateRequest.php"));
 
+
+Illuminate\Support\Collection::make([
+    // Views
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/resources/views/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/resources/views"));
+});
+
+
+Illuminate\Support\Collection::make([
+    'postcss.config.js',
+    'tailwind.config.js',
+    'vite.config.js',
+    'resources/css/*.css',
+    'resources/js/*.js',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
+});
+
 $purgeSkeletonDirectories();
