@@ -66,6 +66,7 @@ Illuminate\Support\Collection::make([
     'Http/Controllers/Auth/*.php',
     'Http/Requests/ProfileUpdateRequest.php',
     'Http/Requests/Auth/*.php',
+    'View/Components/*.php',
 ])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/app/{$file}")
 ->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
 ->flatten()
