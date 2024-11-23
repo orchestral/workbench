@@ -9,6 +9,7 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
 use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
@@ -33,6 +34,15 @@ class WorkbenchServiceProvider extends ServiceProvider
         AboutCommand::add('Workbench', static fn () => array_filter([
             'Version' => InstalledVersions::getPrettyVersion('orchestra/workbench'),
         ]));
+
+        $this->loadViewsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'views')), 'workbench-auth');
+
+        $this->loadViewComponentsAs('', [
+            View\Components\AppLayout::class,
+            View\Components\GuestLayout::class,
+        ]);
+
+        $this->loadAnonymousComponentsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'views', 'components')));
     }
 
     /**
@@ -41,14 +51,12 @@ class WorkbenchServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Collection::make(['workbench'])
-            ->when(Workbench::config('auth') === true, static fn ($routes) => $routes->push('dashboard', 'auth'))
+            ->when(Workbench::config('auth') === true, static fn ($routes) => $routes->push('workbench-auth'))
             ->mapWithKeys(static fn ($route) => [$route => (string) realpath(join_paths(__DIR__, '..', 'routes', "{$route}.php"))])
             ->filter(static fn ($route) => is_file($route))
             ->each(function ($route) {
                 $this->loadRoutesFrom($route);
             });
-
-        $this->loadViewsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'view')), 'workbench-auth');
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
@@ -70,5 +78,18 @@ class WorkbenchServiceProvider extends ServiceProvider
                 __DIR__.'/../public/' => public_path(''),
             ], ['laravel-assets']);
         }
+
+    }
+
+    /**
+     * Register the given view components with a custom prefix.
+     *
+     * @return void
+     */
+    protected function loadAnonymousComponentsFrom(string $path, ?string $prefix = null)
+    {
+        $this->callAfterResolving(BladeCompiler::class, function ($blade) use ($path, $prefix) {
+            $blade->anonymousComponentPath($path, $prefix);
+        });
     }
 }

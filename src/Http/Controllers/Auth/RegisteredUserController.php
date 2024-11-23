@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Orchestra\Workbench\Http\Controllers\Controller;
-use Orchestra\Workbench\Models\User;
+use Workbench\App\Models\User;
 
 class RegisteredUserController extends Controller
 {

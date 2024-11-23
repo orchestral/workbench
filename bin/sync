@@ -72,8 +72,9 @@ Illuminate\Support\Collection::make([
 ->flatten()
 ->each(static function ($file) use ($files, $workingPath) {
     transform([
-        'namespace App' => 'namespace Orchestra\Workbench',
-        'use App' => 'use Orchestra\Workbench',
+        'namespace App\\' => 'namespace Orchestra\Workbench\\',
+        'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
+        'use App\\Models\\User;' => 'use Workbench\\App\\Models\\User;',
         'view(\'' => 'view(\'workbench-auth::',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
@@ -84,19 +85,37 @@ transform([
     'Rule::unique(User::class)->ignore($this->user()->id),' => 'Rule::unique(\'users\')->ignore($this->user()->id),',
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Requests/ProfileUpdateRequest.php"));
 
+Illuminate\Support\Collection::make([
+    'routes/auth.php',
+    'routes/web.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+        'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
+});
 
 Illuminate\Support\Collection::make([
-    // Views
+    'auth/*.blade.php',
+    'components/*.blade.php',
+    'layouts/*.blade.php',
+    'profile/*.blade.php',
+    'dashboard.blade.php',
 ])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/resources/views/{$file}")
 ->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
 ->flatten()
 ->each(static function ($file) use ($files, $workingPath) {
     transform([
+        '@include(\'layouts.' => '@include(\'workbench-auth::layouts.',
+        '@include(\'profile.' => '@include(\'workbench-auth::profile.',
     ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
 
-    $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/resources/views"));
+    $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
-
 
 Illuminate\Support\Collection::make([
     'postcss.config.js',
