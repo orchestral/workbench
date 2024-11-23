@@ -21,7 +21,7 @@ Symfony\Component\Process\Process::fromShellCommandline(
     'composer create-project "laravel/laravel:'.$version.'" skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
-Illuminate\Support\Collection::make([
+collect([
     'database/seeders/DatabaseSeeder.php',
     'routes/api.php',
     'routes/console.php',
@@ -61,7 +61,7 @@ Symfony\Component\Process\Process::fromShellCommandline(
     'composer create-project "laravel/breeze" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
-Illuminate\Support\Collection::make([
+collect([
     'Http/Controllers/ProfileController.php',
     'Http/Controllers/Auth/*.php',
     'Http/Requests/ProfileUpdateRequest.php',
@@ -84,7 +84,7 @@ transform([
     'Rule::unique(User::class)->ignore($this->user()->id),' => 'Rule::unique(\'users\')->ignore($this->user()->id),',
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Requests/ProfileUpdateRequest.php"));
 
-Illuminate\Support\Collection::make([
+collect([
     'routes/auth.php',
     'routes/web.php',
 ])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/{$file}")
@@ -106,7 +106,7 @@ transform([
 // });'.PHP_EOL,
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/routes/web.php"));
 
-Illuminate\Support\Collection::make([
+collect([
     'auth/*.blade.php',
     'components/*.blade.php',
     'layouts/*.blade.php',
@@ -120,7 +120,7 @@ Illuminate\Support\Collection::make([
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
 
-Illuminate\Support\Collection::make([
+collect([
     'postcss.config.js',
     'tailwind.config.js',
     'vite.config.js',
@@ -133,7 +133,7 @@ Illuminate\Support\Collection::make([
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
 
-Illuminate\Support\Collection::make([
+collect([
     'Auth/*Test.php',
     '*Test.php',
 ])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature/{$file}")
