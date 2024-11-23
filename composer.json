@@ -51,6 +51,13 @@
             "@clear",
             "@prepare"
         ],
+        "sync": [
+            "@clear",
+            "@php bin/sync",
+            "@lint",
+            "npm ci",
+            "npm run build"
+        ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
@@ -69,12 +76,6 @@
             "@prepare",
             "@lint",
             "@test"
-        ],
-        "sync": [
-            "@php bin/sync",
-            "@php vendor/bin/pint --ansi",
-            "npm ci",
-            "npm run build"
         ]
     },
     "prefer-stable": true,
