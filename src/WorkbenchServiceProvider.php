@@ -90,7 +90,7 @@ class WorkbenchServiceProvider extends ServiceProvider
      * Register a view file namespace.
      *
      * @param  string|array  $path
-     * @param  string|null  $namespace
+     * @param  string  $namespace
      * @return void
      */
     #[\Override]
