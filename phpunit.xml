@@ -28,8 +28,6 @@
         </testsuite>
     </testsuites>
     <php>
-        <server name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
-        <server name="DB_CONNECTION" value="testing"/>
         <server name="SEND_DEPRECATED_NOTICES_TO_RAY" value="(true)"/>
     </php>
 </phpunit>
