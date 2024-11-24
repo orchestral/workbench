@@ -8,12 +8,16 @@ require __DIR__.'/../vendor/autoload.php';
 $input = new Symfony\Component\Console\Input\ArgvInput();
 $files = new Illuminate\Filesystem\Filesystem();
 
+$version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '9.x-dev' : '^9.0';
+
 $purgeSkeletonDirectories = static function () use ($files, $workingPath) {
     $files->deleteDirectory("{$workingPath}/skeleton");
     $files->deleteDirectory("{$workingPath}/breeze-skeleton");
 };
 
-$version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '10.x-dev' : '^10.0';
+function line(string $code, int $tab = 0): string {
+    return implode('', [PHP_EOL, str_repeat(' ', ($tab * 4)), $code]);
+}
 
 $purgeSkeletonDirectories();
 
@@ -39,25 +43,25 @@ collect([
 
 transform([
     'namespace Database\Seeders;' => 'namespace Workbench\Database\Seeders;',
-    'use Illuminate\Database\Seeder;' => 'use Illuminate\Database\Seeder;'.PHP_EOL.'use Orchestra\Testbench\Factories\UserFactory;',
+    'use Illuminate\Database\Seeder;' => 'use Illuminate\Database\Seeder;'.line('use Orchestra\Testbench\Factories\UserFactory;'),
     '\App\Models\User::factory(10)->create' => 'UserFactory::new(10)->create',
     '\App\Models\User::factory()->create' => 'UserFactory::new()->create',
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/database/seeders/DatabaseSeeder.php"));
 
 transform([
-    'Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+    line('Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
     return $request->user();
-});'.PHP_EOL => '// Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
+});') => line('// Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
 //     return $request->user();
-// });'.PHP_EOL,
+// });'),
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/api.php"));
 
 transform([
-    'Artisan::command(\'inspire\', function () {
+    line('Artisan::command(\'inspire\', function () {
     $this->comment(Inspiring::quote());
-})->purpose(\'Display an inspiring quote\');'.PHP_EOL => '// Artisan::command(\'inspire\', function () {
+})->purpose(\'Display an inspiring quote\');') => line('// Artisan::command(\'inspire\', function () {
 //     $this->comment(Inspiring::quote());
-// })->purpose(\'Display an inspiring quote\');'.PHP_EOL,
+// })->purpose(\'Display an inspiring quote\');'),
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/console.php"));
 
 collect([
@@ -98,11 +102,11 @@ collect([
 });
 
 transform([
-    'Route::get(\'/\', function () {
+    line('Route::get(\'/\', function () {
     return view(\'welcome\');
-});'.PHP_EOL => '// Route::get(\'/\', function () {
+});') => line('// Route::get(\'/\', function () {
 //     return view(\'welcome\');
-// });'.PHP_EOL,
+// });'),
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/routes/web.php"));
 
 collect([
@@ -131,6 +135,10 @@ collect([
 ->each(static function ($file) use ($files, $workingPath) {
     $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
 });
+
+transform([
+    line("'./storage/framework/views/*.php',", 2) => line("'./vendor/orchestra/testbench-core/laravel/resources/views/**/*.blade.php',", 2),
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/tailwind.config.js"));
 
 collect([
     'Auth/*Test.php',
