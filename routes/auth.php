@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use Orchestra\Workbench\Http\Controllers\Auth\AuthenticatedSessionController;
 use Orchestra\Workbench\Http\Controllers\Auth\ConfirmablePasswordController;
 use Orchestra\Workbench\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -9,7 +10,6 @@ use Orchestra\Workbench\Http\Controllers\Auth\PasswordController;
 use Orchestra\Workbench\Http\Controllers\Auth\PasswordResetLinkController;
 use Orchestra\Workbench\Http\Controllers\Auth\RegisteredUserController;
 use Orchestra\Workbench\Http\Controllers\Auth\VerifyEmailController;
-use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])

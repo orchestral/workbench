@@ -2,12 +2,12 @@
 
 namespace Orchestra\Workbench\Http\Controllers\Auth;
 
-use Orchestra\Workbench\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Orchestra\Workbench\Http\Controllers\Controller;
 
 class ConfirmablePasswordController extends Controller
 {

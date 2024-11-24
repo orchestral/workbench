@@ -2,9 +2,9 @@
 
 namespace Workbench\Database\Seeders;
 
-use Orchestra\Testbench\Factories\UserFactory;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Orchestra\Testbench\Factories\UserFactory;
 
 class DatabaseSeeder extends Seeder
 {
