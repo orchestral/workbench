@@ -21,6 +21,10 @@ Symfony\Component\Process\Process::fromShellCommandline(
     'composer create-project "laravel/laravel:'.$version.'" skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
+Symfony\Component\Process\Process::fromShellCommandline(
+    'composer create-project "laravel/breeze" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
+)->mustRun();
+
 collect([
     'database/seeders/DatabaseSeeder.php',
     'routes/api.php',
@@ -55,11 +59,6 @@ transform([
 //     $this->comment(Inspiring::quote());
 // })->purpose(\'Display an inspiring quote\');'.PHP_EOL,
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/console.php"));
-
-
-Symfony\Component\Process\Process::fromShellCommandline(
-    'composer create-project "laravel/breeze" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
-)->mustRun();
 
 collect([
     'Http/Controllers/ProfileController.php',
