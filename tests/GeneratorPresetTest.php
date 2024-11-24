@@ -41,7 +41,7 @@ class GeneratorPresetTest extends TestCase
         $this->assertSame('Workbench\Database\Seeders\\', $preset->seederNamespace());
 
         $this->assertFalse($preset->hasCustomStubPath());
-        $this->assertSame('Illuminate\Foundation\Auth\User', $preset->userProviderModel());
+        $this->assertSame('Workbench\App\Models\User', $preset->userProviderModel());
     }
 
     #[Test]

@@ -4,12 +4,14 @@ providers:
 
 workbench:
   start: '/'
+  install: true
+  auth: true
   build:
     - asset-publish
     - create-sqlite-db
     - migrate:refresh:
         --seed: true
-        --drop-views: false
+        --seeder: Workbench\Database\Seeders\DatabaseSeeder
   sync:
     - from: workbench/dist
       to: public/vendor/workbench
