@@ -2,10 +2,10 @@
 
 namespace Orchestra\Workbench\Tests\Integrations;
 
-use Illuminate\Support\Facades\File;
-use Workbench\Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\Concerns\InteractsWithPublishedFiles;
+use Workbench\Database\Factories\UserFactory;
 
 use function Orchestra\Testbench\join_paths;
 
@@ -28,8 +28,9 @@ class WorkbenchTest extends TestCase
             ->assertSee('You\'re logged in!');
     }
 
-    /** 
+    /**
      * @test
+     *
      * @depends it_can_display_the_default_dashboard
      */
     public function it_can_override_the_configured_views()
