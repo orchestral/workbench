@@ -98,7 +98,7 @@ class WorkbenchServiceProvider extends ServiceProvider
     {
         if (empty($namespace)) {
             $this->callAfterResolving('view', static function ($view) use ($path) {
-                $view->getFinder()->prependLocation($path);
+                $view->getFinder()->addLocation($path);
             });
         }
 
