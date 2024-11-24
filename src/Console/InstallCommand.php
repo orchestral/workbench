@@ -55,10 +55,34 @@ class InstallCommand extends Command implements PromptsForMissingInput
 
         $this->copyTestbenchConfigurationFile($filesystem, $workingPath);
         $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
+        $this->prepareWorkbenchDirectories($filesystem, $workingPath);
 
         $this->call('workbench:create-sqlite-db', ['--force' => true]);
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * Prepare workbench directories.
+     */
+    protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
+    {
+        $workbenchWorkingPath = join_paths($workingPath, 'workbench');
+
+        foreach (['app' => true, 'providers' => false] as $bootstrap => $default) {
+            if (! confirm("Generate `workbench/bootstrap/{$bootstrap}.php` file?", default: $default)) {
+                continue;
+            }
+
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                (string) realpath(join_paths(__DIR__, 'stubs', 'bootstrap', "{$bootstrap}.php")),
+                join_paths($workbenchWorkingPath, 'bootstrap', "{$bootstrap}.php")
+            );
+        }
     }
 
     /**

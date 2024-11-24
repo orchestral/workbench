@@ -36,7 +36,6 @@ class StubRegistrarTest extends TestCase
         yield ['config', realpath(join_paths($defaultStubFile, 'testbench.yaml'))];
         yield ['config.basic', realpath(join_paths($defaultStubFile, 'testbench.plain.yaml'))];
         yield ['gitignore', realpath(join_paths($defaultStubFile, 'workbench.gitignore'))];
-        yield ['routes.api', realpath(join_paths($defaultStubFile, 'routes', 'api.php'))];
         yield ['routes.console', realpath(join_paths($defaultStubFile, 'routes', 'console.php'))];
         yield ['routes.web', realpath(join_paths($defaultStubFile, 'routes', 'web.php'))];
         yield ['seeders.database', realpath(join_paths($defaultStubFile, 'database', 'seeders', 'DatabaseSeeder.php'))];
