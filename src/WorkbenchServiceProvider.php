@@ -7,7 +7,9 @@ use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
 use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
 use Orchestra\Testbench\Foundation\Events\ServeCommandStarted;
@@ -39,11 +41,28 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom(
-            (string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php'))
-        );
+        $hasAuthentication = Workbench::config('auth') === true;
+
+        Collection::make(['workbench'])
+            ->when($hasAuthentication, static fn ($routes) => $routes->push('workbench-auth'))
+            ->mapWithKeys(static fn ($route) => [$route => (string) realpath(join_paths(__DIR__, '..', 'routes', "{$route}.php"))])
+            ->filter(static fn ($route) => is_file($route))
+            ->each(function ($route) {
+                $this->loadRoutesFrom($route);
+            });
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
+
+        if ($hasAuthentication) {
+            $this->loadViewsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'views')), '');
+
+            $this->loadViewComponentsAs('', [
+                View\Components\AppLayout::class,
+                View\Components\GuestLayout::class,
+            ]);
+
+            $this->loadAnonymousComponentsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'views', 'components')));
+        }
 
         if ($this->app->runningInConsole()) {
             $this->commands([
@@ -58,6 +77,41 @@ class WorkbenchServiceProvider extends ServiceProvider
                 $event->listen(ServeCommandStarted::class, [Listeners\AddAssetSymlinkFolders::class, 'handle']);
                 $event->listen(ServeCommandEnded::class, [Listeners\RemoveAssetSymlinkFolders::class, 'handle']);
             });
+
+            if ($hasAuthentication) {
+                $this->publishes([
+                    __DIR__.'/../public/' => public_path(''),
+                ], ['laravel-assets']);
+            }
         }
+    }
+
+    /**
+     * Register a view file namespace.
+     *
+     * @param  string|array  $path
+     * @param  string  $namespace
+     * @return void
+     */
+    #[\Override]
+    protected function loadViewsFrom($path, $namespace)
+    {
+        if (empty($namespace)) {
+            $this->callAfterResolving('view', static function ($view) use ($path) {
+                $view->getFinder()->prependLocation($path);
+            });
+        }
+
+        parent::loadViewsFrom($path, $namespace);
+    }
+
+    /**
+     * Register the given view components with a custom prefix.
+     */
+    protected function loadAnonymousComponentsFrom(string $path, ?string $prefix = null): void
+    {
+        $this->callAfterResolving(BladeCompiler::class, static function ($blade) use ($path, $prefix) {
+            $blade->anonymousComponentPath($path, $prefix);
+        });
     }
 }

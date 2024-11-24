@@ -8,6 +8,7 @@ use Orchestra\Workbench\BuildParser;
 use Orchestra\Workbench\Workbench;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
+use Workbench\Database\Seeders\DatabaseSeeder;
 
 class BuildParserTest extends TestCase
 {
@@ -32,7 +33,7 @@ class BuildParserTest extends TestCase
                 'create-sqlite-db' => [],
                 'migrate:refresh' => [
                     '--seed' => true,
-                    '--drop-views' => false,
+                    '--seeder' => DatabaseSeeder::class,
                 ],
             ],
         ];
@@ -41,13 +42,13 @@ class BuildParserTest extends TestCase
             [
                 'asset-publish',
                 'create-sqlite-db',
-                ['migrate:refresh' => ['--seed' => true, '--drop-views' => false]],
+                ['migrate:refresh' => ['--seed' => true, '--seeder' => DatabaseSeeder::class]],
             ], [
                 'asset-publish' => [],
                 'create-sqlite-db' => [],
                 'migrate:refresh' => [
                     '--seed' => true,
-                    '--drop-views' => false,
+                    '--seeder' => DatabaseSeeder::class,
                 ],
             ],
         ];

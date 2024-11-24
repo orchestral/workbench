@@ -2,7 +2,14 @@
 /composer.lock
 /vendor/*
 
+# NPM
+/node_modules/*
+
 # PHPUnit
 /coverage/*
 /.phpunit.cache/*
 /.phpunit.result.cache
+
+# Stubs
+/skeleton/*
+/breeze-skeleton/*

@@ -33,7 +33,7 @@
         "laravel/tinker": "^2.9",
         "nunomaduro/collision": "^8.0",
         "orchestra/canvas": "^9.1",
-        "orchestra/testbench-core": "^9.6",
+        "orchestra/testbench-core": "^9.7",
         "symfony/polyfill-php83": "^1.31",
         "symfony/polyfill-php84": "^1.31",
         "symfony/yaml": "^7.0.3"
@@ -66,6 +66,12 @@
             "@php vendor/bin/phpstan analyse --verbose"
         ],
         "test": "@php vendor/bin/phpunit --no-coverage --no-configuration --dont-report-useless-tests --bootstrap vendor/autoload.php --color tests",
+        "sync": [
+            "@php bin/sync",
+            "@php vendor/bin/pint --ansi",
+            "npm ci",
+            "npm run build"
+        ],
         "ci": [
             "@composer audit",
             "@prepare",
