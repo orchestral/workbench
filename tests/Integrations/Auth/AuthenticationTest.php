@@ -2,9 +2,9 @@
 
 namespace Orchestra\Workbench\Tests\Integrations\Auth;
 
+use Workbench\Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Workbench\Tests\Integrations\TestCase;
-use Workbench\Database\Factories\UserFactory;
 
 class AuthenticationTest extends TestCase
 {

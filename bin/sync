@@ -51,14 +51,6 @@ transform([
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/database/seeders/DatabaseSeeder.php"));
 
 transform([
-    'Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
-    return $request->user();
-});'.PHP_EOL => '// Route::middleware(\'auth:sanctum\')->get(\'/user\', function (Request $request) {
-//     return $request->user();
-// });'.PHP_EOL,
-], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/api.php"));
-
-transform([
     'Artisan::command(\'inspire\', function () {
     $this->comment(Inspiring::quote());
 })->purpose(\'Display an inspiring quote\');'.PHP_EOL => '// Artisan::command(\'inspire\', function () {

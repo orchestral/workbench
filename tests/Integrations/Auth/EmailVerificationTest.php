@@ -2,12 +2,12 @@
 
 namespace Orchestra\Workbench\Tests\Integrations\Auth;
 
+use Workbench\Database\Factories\UserFactory;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Orchestra\Workbench\Tests\Integrations\TestCase;
-use Workbench\Database\Factories\UserFactory;
 
 class EmailVerificationTest extends TestCase
 {

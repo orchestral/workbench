@@ -2,11 +2,11 @@
 
 namespace Orchestra\Workbench\Tests\Integrations\Auth;
 
+use Workbench\Database\Factories\UserFactory;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Orchestra\Workbench\Tests\Integrations\TestCase;
-use Workbench\Database\Factories\UserFactory;
 
 class PasswordResetTest extends TestCase
 {

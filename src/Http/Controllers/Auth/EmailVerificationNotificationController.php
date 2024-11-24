@@ -2,9 +2,9 @@
 
 namespace Orchestra\Workbench\Http\Controllers\Auth;
 
+use Orchestra\Workbench\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Orchestra\Workbench\Http\Controllers\Controller;
 
 class EmailVerificationNotificationController extends Controller
 {

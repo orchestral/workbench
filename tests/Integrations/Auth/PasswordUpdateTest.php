@@ -2,10 +2,10 @@
 
 namespace Orchestra\Workbench\Tests\Integrations\Auth;
 
+use Workbench\Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Orchestra\Workbench\Tests\Integrations\TestCase;
-use Workbench\Database\Factories\UserFactory;
 
 class PasswordUpdateTest extends TestCase
 {

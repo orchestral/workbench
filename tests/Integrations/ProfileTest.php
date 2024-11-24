@@ -2,8 +2,9 @@
 
 namespace Orchestra\Workbench\Tests\Integrations;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Workbench\Database\Factories\UserFactory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Orchestra\Workbench\Tests\Integrations\TestCase;
 
 class ProfileTest extends TestCase
 {

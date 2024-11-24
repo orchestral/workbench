@@ -2,10 +2,10 @@
 
 namespace Orchestra\Workbench\Http\Controllers\Auth;
 
+use Orchestra\Workbench\Http\Controllers\Controller;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\RedirectResponse;
-use Orchestra\Workbench\Http\Controllers\Controller;
 
 class VerifyEmailController extends Controller
 {

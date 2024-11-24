@@ -2,6 +2,7 @@
 
 namespace Orchestra\Workbench\Http\Requests;
 
+use Workbench\App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
