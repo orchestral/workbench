@@ -19,14 +19,14 @@ class Workbench
      *
      * @var array<string, string|null>
      */
-    protected static $cachedNamespaces = [];
+    protected static array $cachedNamespaces = [];
 
     /**
      * The Stub Registrar instance.
      *
      * @var \Orchestra\Workbench\StubRegistrar|null
      */
-    protected static $stubRegistrar = null;
+    protected static ?StubRegistrar $stubRegistrar = null;
 
     /**
      * Get the path to the laravel folder.
