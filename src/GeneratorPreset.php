@@ -154,7 +154,7 @@ class GeneratorPreset extends Preset
      */
     public function seederNamespace()
     {
-        return Workbench::detectNamespace('workbench/database/seeders') ??  "Workbench\Database\Seeders\\";
+        return Workbench::detectNamespace('workbench/database/seeders') ?? "Workbench\Database\Seeders\\";
     }
 
     /**

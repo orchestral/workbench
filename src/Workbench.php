@@ -23,8 +23,6 @@ class Workbench
 
     /**
      * The Stub Registrar instance.
-     *
-     * @var \Orchestra\Workbench\StubRegistrar|null
      */
     protected static ?StubRegistrar $stubRegistrar = null;
 
@@ -74,9 +72,6 @@ class Workbench
 
     /**
      * Detect namespace by path.
-     *
-     * @param  string  $path
-     * @return string|null
      */
     public static function detectNamespace(string $path): ?string
     {
@@ -85,9 +80,12 @@ class Workbench
         if (! isset(static::$cachedNamespaces[$path])) {
             static::$cachedNamespaces[$path] = null;
 
-            $composer = json_decode(file_get_contents(package_path('composer.json')), true);
+            /** @var array{'autoload-dev': array{'psr-4': array<string, array<int, string>|string>}} $composer */
+            $composer = json_decode((string) file_get_contents(package_path('composer.json')), true);
 
-            foreach ((array) data_get($composer, 'autoload-dev.psr-4') as $namespace => $paths) {
+            $collection = $composer['autoload-dev']['psr-4'] ?? [];
+
+            foreach ((array) $collection as $namespace => $paths) {
                 foreach ((array) $paths as $pathChoice) {
                     if (trim($pathChoice, '/') === $path) {
                         static::$cachedNamespaces[$path] = $namespace;
