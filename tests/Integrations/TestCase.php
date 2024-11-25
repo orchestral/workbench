@@ -23,19 +23,4 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
         $this->withoutVite();
     }
-
-    /** {@inheritDoc} */
-    #[\Override]
-    protected function defineEnvironment($app)
-    {
-        Workbench::start($app, static::cachedConfigurationForWorkbench());
-    }
-
-    /** {@inheritDoc} */
-    protected function getPackageProviders($app)
-    {
-        return array_merge(parent::getPackageProviders($app), [
-            WorkbenchServiceProvider::class,
-        ]);
-    }
 }
