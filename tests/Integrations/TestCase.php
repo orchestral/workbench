@@ -5,8 +5,6 @@ namespace Orchestra\Workbench\Tests\Integrations;
 use Orchestra\Testbench\Attributes\WithConfig;
 use Orchestra\Testbench\Attributes\WithMigration;
 use Orchestra\Testbench\Concerns\WithWorkbench;
-use Orchestra\Testbench\Workbench\Workbench;
-use Orchestra\Workbench\WorkbenchServiceProvider;
 
 #[WithConfig('app.key', 'AckfSECXIvnK5r28GVIWUAxmbBSjTsmF')]
 #[WithConfig('database.default', 'testing')]
