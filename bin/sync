@@ -84,6 +84,10 @@ collect([
 });
 
 transform([
+    line("return redirect()->intended(route('dashboard', absolute: false));", 2) => line('return redirect()->intended($this->redirectToAfterLoggedIn());', 2),
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Controllers/Auth/AuthenticatedSessionController.php"));
+
+transform([
     'Rule::unique(User::class)->ignore($this->user()->id),' => 'Rule::unique(\'users\')->ignore($this->user()->id),',
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Requests/ProfileUpdateRequest.php"));
 
