@@ -17,7 +17,6 @@ class RemoveAssetSymlinkFolders
      * Construct a new event listener.
      */
     public function __construct(
-        public ConfigContract $config,
         public Filesystem $files
     ) {}
 
