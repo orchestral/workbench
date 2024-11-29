@@ -5,6 +5,9 @@ namespace Orchestra\Workbench\Console;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[AsCommand(name: 'workbench:purge-skeleton', description: 'Purge skeleton folder to original state')]
 class PurgeSkeletonCommand extends Command
 {

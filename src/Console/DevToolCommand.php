@@ -213,9 +213,12 @@ class DevToolCommand extends Command
             || $filesystem->exists(Workbench::packagePath('phpunit.xml.dist'))
         ) {
             if (! \array_key_exists('test', $content['scripts'])) {
-                $content['scripts']['test'][] = InstalledVersions::isInstalled('pestphp/pest')
-                    ? '@php vendor/bin/pest'
-                    : '@php vendor/bin/phpunit';
+                $content['scripts']['test'] = [
+                    '@clear',
+                    InstalledVersions::isInstalled('pestphp/pest')
+                        ? '@php vendor/bin/pest'
+                        : '@php vendor/bin/phpunit',
+                ];
             }
         }
 

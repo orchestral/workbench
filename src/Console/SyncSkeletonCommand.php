@@ -5,6 +5,9 @@ namespace Orchestra\Workbench\Console;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Attribute\AsCommand;
 
+/**
+ * @codeCoverageIgnore
+ */
 #[AsCommand(name: 'workbench:sync-skeleton', description: 'Sync skeleton folder to be served externally')]
 class SyncSkeletonCommand extends Command
 {
