@@ -32,7 +32,7 @@
         "laravel/tinker": "^2.8.2",
         "nunomaduro/collision": "^6.2",
         "orchestra/canvas": "^7.11.1",
-        "orchestra/testbench-core": "dev-7/setup-skeleton-command as 7.99.99",
+        "orchestra/testbench-core": "^7.49",
         "symfony/polyfill-php83": "^1.31",
         "symfony/yaml": "^6.0.9"
     },
