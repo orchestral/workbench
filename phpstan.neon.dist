@@ -13,5 +13,11 @@ parameters:
     # - '#Unsafe usage of new static#'
 
   excludePaths:
+    - src/Http/Controllers/Auth/*.php
+    - src/Http/Controllers/ProfileController.php
+    - src/Http/Requests/Auth/*.php
+    - src/Http/Requests/ProfileUpdateRequest.php
+    - src/View/Components/AppLayout.php
+    - src/View/Components/GuestLayout.php
 
   treatPhpDocTypesAsCertain: false

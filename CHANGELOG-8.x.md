@@ -2,6 +2,26 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.13.0
+
+Released: 2024-12-01
+
+### Added
+
+* Default authentication & dashboard using Laravel Breeze. This can be enabled by adding `workbench.auth` configuration to `true`.
+* Add `workbench:purge-skeleton` as alias to `package:purge-skeleton` command.
+* Add `workbench:sync-skeleton` as alias to `package:sync-skeleton` command.
+* Add `applicationPath()` to `Orchestra\Workbench\Workbench` class.
+
+### Changes
+
+* Allows to customise the generated namespace instead of default to `Workbench\App` and `Workbench\Database`.
+* Allows to override the default redirect after logged-in.
+
+### Fixes
+
+* Fixes the default `DatabaseSeeder` stub.
+
 ## 8.12.0
 
 Released: 2024-11-19

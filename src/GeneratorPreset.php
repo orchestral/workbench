@@ -104,7 +104,7 @@ class GeneratorPreset extends Preset
      */
     public function rootNamespace()
     {
-        return "Workbench\App\\";
+        return Workbench::detectNamespace('app') ?? "Workbench\App\\";
     }
 
     /**
@@ -144,7 +144,7 @@ class GeneratorPreset extends Preset
      */
     public function factoryNamespace()
     {
-        return "Workbench\Database\Factories\\";
+        return Workbench::detectNamespace('database/factories') ?? "Workbench\Database\Factories\\";
     }
 
     /**
@@ -154,7 +154,7 @@ class GeneratorPreset extends Preset
      */
     public function seederNamespace()
     {
-        return "Workbench\Database\Seeders\\";
+        return Workbench::detectNamespace('database/seeders') ?? "Workbench\Database\Seeders\\";
     }
 
     /**

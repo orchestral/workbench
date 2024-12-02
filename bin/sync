@@ -11,22 +11,35 @@ $files = new Illuminate\Filesystem\Filesystem();
 // $version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '11.x-dev' : '^11.0';
 $version = 'dev-master';
 
-$files->deleteDirectory("{$workingPath}/skeleton");
+$purgeSkeletonDirectories = static function () use ($files, $workingPath) {
+    $files->deleteDirectory("{$workingPath}/skeleton");
+    $files->deleteDirectory("{$workingPath}/breeze-skeleton");
+};
+
+function line(string $code, int $tab = 0): string {
+    return implode('', [PHP_EOL, str_repeat(' ', ($tab * 4)), $code]);
+}
+
+$purgeSkeletonDirectories();
 
 Symfony\Component\Process\Process::fromShellCommandline(
     'composer create-project "laravel/laravel:'.$version.'" skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
-Illuminate\Support\Collection::make([
+Symfony\Component\Process\Process::fromShellCommandline(
+    'composer create-project "laravel/breeze" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
+)->mustRun();
+
+collect([
     'bootstrap/app.php',
     'database/seeders/DatabaseSeeder.php',
     // 'routes/api.php',
     'routes/console.php',
     'routes/web.php',
-])->transform(fn ($file) => "{$workingPath}/skeleton/{$file}")
-->map(fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+])->transform(static fn ($file) => "{$workingPath}/skeleton/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
 ->flatten()
-->each(function ($file) use ($files, $workingPath) {
+->each(static function ($file) use ($files, $workingPath) {
     $files->copy($file, "{$workingPath}/src/Console/stubs".Illuminate\Support\Str::after($file, "{$workingPath}/skeleton"));
 });
 
@@ -38,16 +51,117 @@ transform([
 transform([
     'namespace Database\Seeders;' => 'namespace Workbench\Database\Seeders;',
     'use App\Models\User;' => 'use Orchestra\Testbench\Factories\UserFactory;',
-    'User::factory(10)->create' => 'UserFactory::new(10)->create',
+    'User::factory(10)->create' => 'UserFactory::new->times(10)->create',
     'User::factory()->create' => 'UserFactory::new()->create',
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/database/seeders/DatabaseSeeder.php"));
 
 transform([
-    'Artisan::command(\'inspire\', function () {
+    line('Artisan::command(\'inspire\', function () {
     $this->comment(Inspiring::quote());
-})->purpose(\'Display an inspiring quote\');'.PHP_EOL => '// Artisan::command(\'inspire\', function () {
+})->purpose(\'Display an inspiring quote\');') => line('// Artisan::command(\'inspire\', function () {
 //     $this->comment(Inspiring::quote());
-// })->purpose(\'Display an inspiring quote\');'.PHP_EOL,
-], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/console.php"));
+// })->purpose(\'Display an inspiring quote\');'),
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/routes/console.php"));
 
-$files->deleteDirectory("{$workingPath}/skeleton");
+collect([
+    'Http/Controllers/ProfileController.php',
+    'Http/Controllers/Auth/*.php',
+    'Http/Requests/ProfileUpdateRequest.php',
+    'Http/Requests/Auth/*.php',
+    'View/Components/*.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/app/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+        'namespace App\\' => 'namespace Orchestra\Workbench\\',
+        'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
+        'use App\\Models\\User;' => 'use Workbench\\App\\Models\\User;',
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/app"));
+});
+
+transform([
+    line("return redirect()->intended(route('dashboard', absolute: false));", 2) => line('return redirect()->intended($this->redirectToAfterLoggedIn());', 2),
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Controllers/Auth/AuthenticatedSessionController.php"));
+
+transform([
+    line("return redirect(route('dashboard', absolute: false));", 2) => line('return redirect($this->redirectToAfterLoggedIn());', 2),
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Controllers/Auth/RegisteredUserController.php"));
+
+transform([
+    'Rule::unique(User::class)->ignore($this->user()->id),' => 'Rule::unique(\'users\')->ignore($this->user()->id),',
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Requests/ProfileUpdateRequest.php"));
+
+collect([
+    'routes/auth.php',
+    'routes/web.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+        'use App\\Http\\' => 'use Orchestra\\Workbench\\Http\\',
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
+});
+
+transform([
+    'Route::get(\'/\', function () {
+    return view(\'welcome\');
+});'.PHP_EOL => '// Route::get(\'/\', function () {
+//     return view(\'welcome\');
+// });'.PHP_EOL,
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/routes/web.php"));
+
+collect([
+    'auth/*.blade.php',
+    'components/*.blade.php',
+    'layouts/*.blade.php',
+    'profile/partials/*.blade.php',
+    'profile/*.blade.php',
+    'dashboard.blade.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/resources/views/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
+});
+
+collect([
+    'postcss.config.js',
+    'tailwind.config.js',
+    'vite.config.js',
+    'resources/css/*.css',
+    'resources/js/*.js',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    $files->copy($file, "{$workingPath}".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default"));
+});
+
+transform([
+    line("'./storage/framework/views/*.php',", 2) => line("'./vendor/orchestra/testbench-core/laravel/resources/views/**/*.blade.php',", 2),
+], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/tailwind.config.js"));
+
+collect([
+    'Auth/*Test.php',
+    '*Test.php',
+])->transform(static fn ($file) => "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature/{$file}")
+->map(static fn ($file) => str_contains($file, '*') ? [...$files->glob($file)] : $file)
+->flatten()
+->each(static function ($file) use ($files, $workingPath) {
+    transform([
+        'namespace Tests\Feature' => 'namespace Orchestra\Workbench\Tests\Integrations',
+        'use App\Models\User;' => 'use Workbench\Database\Factories\UserFactory;',
+        'use Tests\TestCase;' => 'use Orchestra\Workbench\Tests\Integrations\TestCase;',
+        'User::factory()' => 'UserFactory::new()',
+    ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), $file));
+
+    $files->copy($file, "{$workingPath}/tests/Integrations".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature"));
+});
+
+$purgeSkeletonDirectories();

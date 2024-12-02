@@ -12,23 +12,29 @@ use function Orchestra\Testbench\workbench_path;
 /**
  * @phpstan-import-type TWorkbenchConfig from \Orchestra\Testbench\Foundation\Config
  */
-class Workbench
+class Workbench extends \Orchestra\Testbench\Workbench\Workbench
 {
     /**
      * The Stub Registrar instance.
-     *
-     * @var \Orchestra\Workbench\StubRegistrar|null
      */
-    protected static $stubRegistrar = null;
+    protected static ?StubRegistrar $stubRegistrar = null;
+
+    /**
+     * Get the path to the application (Laravel) folder.
+     */
+    public static function applicationPath(array|string $path = ''): string
+    {
+        return app()->basePath(
+            join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
+        );
+    }
 
     /**
      * Get the path to the laravel folder.
      */
     public static function laravelPath(array|string $path = ''): string
     {
-        return app()->basePath(
-            join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
-        );
+        return static::applicationPath($path);
     }
 
     /**

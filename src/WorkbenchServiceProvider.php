@@ -39,9 +39,7 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadRoutesFrom(
-            (string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php'))
-        );
+        $this->loadRoutesFrom((string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php')));
 
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
@@ -52,6 +50,8 @@ class WorkbenchServiceProvider extends ServiceProvider
                 Console\DropSqliteDbCommand::class,
                 Console\InstallCommand::class,
                 Console\DevToolCommand::class,
+                Console\PurgeSkeletonCommand::class,
+                Console\SyncSkeletonCommand::class,
             ]);
 
             tap($this->app->make('events'), static function (EventDispatcher $event) {

@@ -29,6 +29,7 @@
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^12.0",
+        "laravel/tinker": "dev-develop",
         "orchestra/canvas": "^10.0",
         "orchestra/testbench-core": "^10.0",
         "symfony/polyfill-php83": "^1.31",
@@ -63,6 +64,12 @@
             "@php vendor/bin/phpstan analyse --verbose"
         ],
         "test": "@php vendor/bin/phpunit --no-coverage --no-configuration --dont-report-useless-tests --bootstrap vendor/autoload.php --color tests",
+        "sync": [
+            "@php bin/sync",
+            "@php vendor/bin/pint --ansi",
+            "npm ci",
+            "npm run build"
+        ],
         "ci": [
             "@composer audit",
             "@prepare",
