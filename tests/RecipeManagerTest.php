@@ -23,7 +23,10 @@ class RecipeManagerTest extends TestCase
         ]);
     }
 
-    /** @test */
+    /** 
+     * @test
+     * @depends('it_can_check_for_valid_commands') 
+     */
     public function it_can_be_resolved()
     {
         tap($this->app->make(RecipeManagerContract::class), function ($manager) {
@@ -42,6 +45,18 @@ class RecipeManagerTest extends TestCase
             tap($manager->command('drop-sqlite-db'), function ($recipe) {
                 $this->assertInstanceOf(Command::class, $recipe);
                 $this->assertSame('workbench:drop-sqlite-db', $recipe->command);
+                $this->assertSame([], $recipe->options);
+            });
+
+            tap($manager->command('sync-skeleton'), function ($recipe) {
+                $this->assertInstanceOf(Command::class, $recipe);
+                $this->assertSame('workbench:sync-skeleton', $recipe->command);
+                $this->assertSame([], $recipe->options);
+            });
+
+            tap($manager->command('purge-skeleton'), function ($recipe) {
+                $this->assertInstanceOf(Command::class, $recipe);
+                $this->assertSame('workbench:purge-skeleton', $recipe->command);
                 $this->assertSame([], $recipe->options);
             });
         });
