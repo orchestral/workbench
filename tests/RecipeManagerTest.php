@@ -107,6 +107,8 @@ class RecipeManagerTest extends TestCase
         yield ['asset-publish'];
         yield ['create-sqlite-db'];
         yield ['drop-sqlite-db'];
+        yield ['sync-skeleton'];
+        yield ['purge-skeleton'];
     }
 
     public static function invalidCommands()
