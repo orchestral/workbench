@@ -42,7 +42,7 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
     /**
      * Create "purge-skeleton" driver.
      */
-    protected function createPurgeSkeletonDriver(): Contracts\Recipe 
+    protected function createPurgeSkeletonDriver(): Contracts\Recipe
     {
         return $this->commandUsing('workbench:purge-skeleton');
     }
@@ -50,7 +50,7 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
     /**
      * Create "sync-skeleton" driver.
      */
-    protected function createSyncSkeletonDriver(): Contracts\Recipe 
+    protected function createSyncSkeletonDriver(): Contracts\Recipe
     {
         return $this->commandUsing('workbench:sync-skeleton');
     }
@@ -62,7 +62,11 @@ class RecipeManager extends Manager implements Contracts\RecipeManager
      */
     public function commandUsing(string $command, array $options = [], ?callable $callback = null): Contracts\Recipe
     {
-        return new Recipes\Command($command, $options);
+        return new Recipes\Command(
+            command: $command,
+            options: $options,
+            callback: $callback,
+        );
     }
 
     /**
