@@ -25,6 +25,8 @@ use function Orchestra\Testbench\package_path;
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
 class DevToolCommand extends Command
 {
+    use Concerns\InteractsWithFiles;
+
     /**
      * Execute the console command.
      *
@@ -262,15 +264,6 @@ class DevToolCommand extends Command
         }
 
         return $content;
-    }
-
-    /**
-     * Replace a given string within a given file.
-     */
-    protected function replaceInFile(Filesystem $filesystem, array|string $search, array|string $replace, string $path): void
-    {
-        /** @phpstan-ignore argument.type */
-        file_put_contents($path, str_replace($search, $replace, file_get_contents($path)));
     }
 
     /**
