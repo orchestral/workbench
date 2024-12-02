@@ -23,9 +23,10 @@ class RecipeManagerTest extends TestCase
         ]);
     }
 
-    /** 
+    /**
      * @test
-     * @depends('it_can_check_for_valid_commands') 
+     *
+     * @depends('it_can_check_for_valid_commands')
      */
     public function it_can_be_resolved()
     {
