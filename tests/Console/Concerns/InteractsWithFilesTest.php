@@ -36,7 +36,7 @@ class InteractsWithFilesTest extends TestCase
         };
 
         $filesystem->shouldReceive('get')->with('testbench.yaml')->once()->andReturn("laravel: '@testbench'")
-            ->shouldReceive('put')->with("laravel: '@testbench'", "laravel: '@testbench-dusk'", 'testbench.yaml');
+            ->shouldReceive('put')->with('testbench.yaml', "laravel: '@testbench-dusk'");
 
         $fixture->replace("laravel: '@testbench'", "laravel: '@testbench-dusk'", 'testbench.yaml');
     }
