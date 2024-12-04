@@ -26,11 +26,14 @@ class InteractsWithFilesTest extends TestCase
     {
         $filesystem = m::mock(Filesystem::class);
 
-        $fixture = new class($filesystem) {
+        $fixture = new class($filesystem)
+        {
             use InteractsWithFiles;
 
             public function __construct(public Filesystem $filesystem) {}
-            public function replace(array|string $search, array|string $replace, string $path) {
+
+            public function replace(array|string $search, array|string $replace, string $path)
+            {
                 $this->replaceInFile($this->filesystem, $search, $replace, $path);
             }
         };
