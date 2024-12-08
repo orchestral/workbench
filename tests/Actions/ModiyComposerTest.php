@@ -53,7 +53,7 @@ class ModifyComposerTest extends TestCase
         $workingPath = __DIR__;
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage(sprintf('Unable to locate `composer.json` file at [%s]', $workingPath));
+        $this->expectExceptionMessage(\sprintf('Unable to locate `composer.json` file at [%s]', $workingPath));
 
         $action = new ModifyComposer($workingPath);
         $action->handle(static fn (array $content) => $content);
