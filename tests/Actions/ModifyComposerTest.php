@@ -10,7 +10,7 @@ use function Orchestra\Testbench\join_paths;
 
 /**
  * @requires OS Linux|DAR
- * 
+ *
  * @group composer
  */
 class ModifyComposerTest extends TestCase
