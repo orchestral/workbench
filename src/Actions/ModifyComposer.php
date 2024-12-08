@@ -12,7 +12,7 @@ class ModifyComposer
      */
     public function __construct(
         protected Filesystem $files,
-        public readonly string $workingPath
+        protected string $workingPath
     ) {}
 
     /**
