@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Composer;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\Actions\DumpComposerAutoloads;
 use Orchestra\Workbench\Actions\ModifyComposer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
@@ -50,12 +51,10 @@ class DevToolCommand extends Command
             ]);
         }
 
-        return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
+        return tap(Command::SUCCESS, function ($exitCode) use ($workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
 
-            (new Composer($filesystem))
-                ->setWorkingPath($workingPath)
-                ->dumpAutoloads();
+            (new DumpComposerAutoloads($workingPath))->handle();
         });
     }
 
@@ -108,7 +107,7 @@ class DevToolCommand extends Command
      */
     protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
-        $action = new ModifyComposer($filesystem, $workingPath);
+        $action = new ModifyComposer($workingPath);
 
         $action->handle(function (array $content) use ($filesystem) {
             return $this->appendScriptsToComposer(
