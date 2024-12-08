@@ -7,7 +7,6 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Composer;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Orchestra\Workbench\Actions\DumpComposerAutoloads;
