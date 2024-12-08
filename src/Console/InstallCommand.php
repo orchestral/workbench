@@ -9,7 +9,9 @@ use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
@@ -26,6 +28,20 @@ class InstallCommand extends Command
      * The `testbench.yaml` default configuration file.
      */
     public static ?string $configurationBaseFile = null;
+
+    /**
+     * Determine if Package also uses Testbench Dusk.
+     */
+    protected ?bool $hasTestbenchDusk = null;
+
+    /** {@inheritDoc} */
+    #[\Override]
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->hasTestbenchDusk = InstalledVersions::isInstalled('orchestra/testbench-dusk');
+
+        parent::initialize($input, $output);
+    }
 
     /**
      * Execute the console command.
@@ -54,9 +70,7 @@ class InstallCommand extends Command
         $this->copyTestbenchConfigurationFile($filesystem, $workingPath);
         $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
 
-        $hasTestbenchDusk = InstalledVersions::isInstalled('orchestra/testbench-dusk');
-
-        if ($hasTestbenchDusk) {
+        if ($this->hasTestbenchDusk) {
             $this->replaceInFile($filesystem, ["laravel: '@testbench'"], ["laravel: '@testbench-dusk'"], join_paths($workingPath, 'testbench.yaml'));
         }
 
@@ -116,13 +130,27 @@ class InstallCommand extends Command
             return;
         }
 
-        $to = join_paths($workbenchWorkingPath, $choice);
+        if ($this->hasTestbenchDusk === true) {
+            if ($this->components->confirm('Create separate environment file for Testbench Dusk?', false)) {
+                (new GeneratesFile(
+                    filesystem: $filesystem,
+                    components: $this->components,
+                    force: (bool) $this->option('force'),
+                ))->handle(
+                    $from, 
+                    join_paths($workbenchWorkingPath, str_replace('.env', '.env.dusk', $choice))
+                );
+            }
+        }
 
         (new GeneratesFile(
             filesystem: $filesystem,
             components: $this->components,
             force: (bool) $this->option('force'),
-        ))->handle($from, $to);
+        ))->handle(
+            $from, 
+            join_paths($workbenchWorkingPath, $choice)
+        );
 
         (new GeneratesFile(
             filesystem: $filesystem,
@@ -140,14 +168,10 @@ class InstallCommand extends Command
      */
     protected function environmentFiles(): array
     {
-        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
-            ? '.env.dusk'
-            : '.env';
-
         return [
-            $environmentFile,
-            "{$environmentFile}.example",
-            "{$environmentFile}.dist",
+            '.env',
+            '.env.example',
+            '.env.dist',
         ];
     }
 
