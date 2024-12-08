@@ -2,7 +2,9 @@ name: audits
 
 on:
   push:
-    - *.x
+    branches:
+      - '*.x'
+      - '*/issue-*'
   pull_request:
   workflow_dispatch:
 
