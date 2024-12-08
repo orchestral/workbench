@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - '*.x'
-      - '*/issue-*'
   pull_request:
 
 jobs:
