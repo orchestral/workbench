@@ -4,6 +4,7 @@ namespace Orchestra\Workbench\Tests\Actions;
 
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Actions\ModifyComposer;
+use RuntimeException;
 
 use function Orchestra\Testbench\join_paths;
 
@@ -44,5 +45,17 @@ class ModifyComposerTest extends TestCase
         $this->assertSame('{
     "$schema": "https://getcomposer.org/schema.json"
 }', file_get_contents(join_paths($workingPath, 'composer.json')));
+    }
+
+    /** @test */
+    public function it_throws_exception_when_composer_file_does_not_exists()
+    {
+        $workingPath = __DIR__;
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage(sprintf('Unable to locate `composer.json` file at [%s]', $workingPath));
+
+        $action = new ModifyComposer($workingPath);
+        $action->handle(static fn (array $content) => $content);
     }
 }
