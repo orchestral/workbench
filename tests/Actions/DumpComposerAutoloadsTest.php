@@ -10,6 +10,9 @@ use Orchestra\Workbench\Actions\DumpComposerAutoloads;
 
 use function Orchestra\Testbench\join_paths;
 
+/**
+ * @group composer
+ */
 class DumpComposerAutoloadsTest extends TestCase
 {
     /** @test */
