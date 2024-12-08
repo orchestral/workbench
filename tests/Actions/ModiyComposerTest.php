@@ -12,7 +12,7 @@ class ModifyComposerTest extends TestCase
 {
     /** {@inheritDoc} */
     #[\Override]
-    protected function setUp(): void 
+    protected function setUp(): void
     {
         $this->afterApplicationCreated(function () {
             copy(join_paths(__DIR__, 'stubs', 'composer.json'), join_paths(__DIR__, 'tmp', 'composer.json'));
