@@ -137,7 +137,7 @@ class InstallCommand extends Command
                     components: $this->components,
                     force: (bool) $this->option('force'),
                 ))->handle(
-                    $from, 
+                    $from,
                     join_paths($workbenchWorkingPath, str_replace('.env', '.env.dusk', $choice))
                 );
             }
@@ -148,7 +148,7 @@ class InstallCommand extends Command
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle(
-            $from, 
+            $from,
             join_paths($workbenchWorkingPath, $choice)
         );
 
