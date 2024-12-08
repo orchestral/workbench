@@ -6,7 +6,9 @@ use Composer\InstalledVersions;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Console\AboutCommand;
+use Illuminate\Support\Composer;
 use Illuminate\Support\ServiceProvider;
 use Orchestra\Canvas\Core\PresetManager;
 use Orchestra\Testbench\Foundation\Events\ServeCommandEnded;
@@ -21,6 +23,7 @@ class WorkbenchServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind('workbench.composer', static fn () => new Composer(new Filesystem));
         $this->app->singleton(Contracts\RecipeManager::class, static fn (Application $app) => new RecipeManager($app));
 
         $this->callAfterResolving(PresetManager::class, static function ($manager) {

@@ -2,7 +2,6 @@
 
 namespace Orchestra\Workbench\Tests\Actions;
 
-use Illuminate\Filesystem\Filesystem;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\Actions\ModifyComposer;
 
@@ -28,13 +27,12 @@ class ModifyComposerTest extends TestCase
     /** @test */
     public function it_can_modify_composer_file()
     {
-        $filesystem = new Filesystem;
         $workingPath = join_paths(__DIR__, 'tmp');
 
-        $action = new ModifyComposer($filesystem, $workingPath);
+        $action = new ModifyComposer($workingPath);
 
         $this->assertTrue(is_file(join_paths($workingPath, 'composer.json')));
-        $this->assertSame('{}'.PHP_EOL, $filesystem->get(join_paths($workingPath, 'composer.json')));
+        $this->assertSame('{}'.PHP_EOL, file_get_contents(join_paths($workingPath, 'composer.json')));
 
         $action->handle(function (array $content) {
             $content['$schema'] = 'https://getcomposer.org/schema.json';
@@ -45,6 +43,6 @@ class ModifyComposerTest extends TestCase
         $this->assertTrue(is_file(join_paths($workingPath, 'composer.json')));
         $this->assertSame('{
     "$schema": "https://getcomposer.org/schema.json"
-}', $filesystem->get(join_paths($workingPath, 'composer.json')));
+}', file_get_contents(join_paths($workingPath, 'composer.json')));
     }
 }
