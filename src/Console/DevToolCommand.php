@@ -7,15 +7,15 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Composer;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
-use Orchestra\Workbench\Composer;
+use Orchestra\Workbench\Actions\ModifyComposer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
-
 use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
@@ -107,9 +107,11 @@ class DevToolCommand extends Command
      */
     protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
-        $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
+        $action = new ModifyComposer(
+            new Composer($filesystem), $workingPath
+        );
 
-        $composer->modify(function (array $content) use ($filesystem) {
+        $action->handle(function (array $content) use ($filesystem) {
             return $this->appendScriptsToComposer(
                 $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
             );
