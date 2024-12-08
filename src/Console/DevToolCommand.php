@@ -16,6 +16,7 @@ use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputOption;
+
 use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
@@ -107,9 +108,7 @@ class DevToolCommand extends Command
      */
     protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
-        $action = new ModifyComposer(
-            new Composer($filesystem), $workingPath
-        );
+        $action = new ModifyComposer($filesystem, $workingPath);
 
         $action->handle(function (array $content) use ($filesystem) {
             return $this->appendScriptsToComposer(

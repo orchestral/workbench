@@ -3,16 +3,12 @@
 namespace Orchestra\Workbench\Actions;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Composer;
 use RuntimeException;
 
 class ModifyComposer
 {
     /**
      * Construct a new action.
-     *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  string  $workingPath
      */
     public function __construct(
         protected Filesystem $files,
@@ -23,7 +19,6 @@ class ModifyComposer
      * Handle the action.
      *
      * @param  callable(array):array  $callback
-     * @return void
      */
     public function handle(callable $callback): void
     {
