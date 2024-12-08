@@ -2,6 +2,7 @@ name: coveralls
 
 on:
   push:
+    - *.x
   pull_request:
 
 jobs:

@@ -2,6 +2,7 @@ name: analyse
 
 on:
   push:
+    - *.x
   pull_request:
   workflow_dispatch:
 
