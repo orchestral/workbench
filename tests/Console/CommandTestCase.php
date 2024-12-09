@@ -43,10 +43,10 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         ];
     }
 
-     /**
+    /**
      * Assert `workbench:install` command executed with `--devtool`
      */
-    protected function assertExecuteInstallWithDevTool(): void 
+    protected function assertExecuteInstallWithDevTool(): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -59,7 +59,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert `workbench:install` command executed with `--no-devtool`
      */
-    protected function assertExecuteInstallWithoutDevTool(): void 
+    protected function assertExecuteInstallWithoutDevTool(): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -70,7 +70,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert `workbench:devtool` command executed with `--install`
      */
-    protected function assertExecuteDevToolWithInstall(): void 
+    protected function assertExecuteDevToolWithInstall(): void
     {
         $this->markTestIncomplete('Implements '.__METHOD__);
     }
@@ -78,7 +78,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert `workbench:devtool` command executed with `--no-install`
      */
-    protected function assertExecuteDevToolWithoutInstall(): void 
+    protected function assertExecuteDevToolWithoutInstall(): void
     {
         $this->markTestIncomplete('Implements '.__METHOD__);
     }

@@ -66,7 +66,7 @@ class InstallCommandTest extends CommandTestCase
                 '.env.dist',
             ])->assertSuccessful();
 
-            $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
+        $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
 
         $config = Config::loadFromYaml($workingPath);
 
