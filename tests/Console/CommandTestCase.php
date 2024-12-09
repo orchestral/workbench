@@ -121,7 +121,14 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
      */
     protected function assertCommandExecutedWithoutInstall(): void
     {
-        $this->markTestIncomplete('Implements '.__METHOD__);
+        $workingPath = static::stubWorkingPath();
+        $environmentFiles = collect(['.env', '.env.example', '.env.dist']);
+
+        $this->assertFileDoesNotExist(join_paths($workingPath, 'testbench.yaml'));
+
+        $environmentFiles->each(function ($env) use ($workingPath) {
+            $this->assertFileDoesNotExist(join_paths($workingPath, 'workbench', $env));
+        });
     }
 
     /**

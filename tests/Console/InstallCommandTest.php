@@ -17,8 +17,6 @@ class InstallCommandTest extends CommandTestCase
      */
     public function it_can_run_installation_command_with_devtool(?string $answer, bool $createEnvironmentFile)
     {
-        $workingPath = static::stubWorkingPath();
-
         $this->artisan('workbench:install', ['--devtool' => true])
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
@@ -27,25 +25,7 @@ class InstallCommandTest extends CommandTestCase
                 '.env.dist',
             ])->assertSuccessful();
 
-        $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
-
-        $config = Config::loadFromYaml($workingPath);
-
-        $this->assertSame(default_skeleton_path(), $config['laravel']);
-        $this->assertFalse($config->seeders);
-        $this->assertSame([
-            'asset-publish',
-            'create-sqlite-db',
-            'db-wipe',
-            ['migrate-fresh' => [
-                '--seed' => true,
-                '--seeder' => \Workbench\Database\Seeders\DatabaseSeeder::class,
-            ]],
-        ], $config->getWorkbenchAttributes()['build']);
-        $this->assertSame([
-            'laravel-assets',
-        ], $config->getWorkbenchAttributes()['assets']);
-
+        $this->assertCommandExecutedWithInstall();
         $this->assertCommandExecutedWithDevTool();
         $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
