@@ -46,13 +46,17 @@ class InstallCommandTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function it_can_run_installation_command_without_devtool()
+    /**
+     * @test
+     *
+     * @dataProvider environmentFileDataProviders
+     */
+    public function it_can_run_installation_command_without_devtool(?string $env, bool $createEnvironmentFile)
     {
         $workingPath = static::stubWorkingPath();
 
         $this->artisan('workbench:install', ['--no-devtool' => true, '--no-interaction' => true])
-            ->expectsChoice("Export '.env' file as?", 'Skip exporting .env', [
+            ->expectsChoice("Export '.env' file as?", $env, [
                 'Skip exporting .env',
                 '.env',
                 '.env.example',
@@ -77,10 +81,20 @@ class InstallCommandTest extends TestCase
         $this->assertSame([
             'laravel-assets',
         ], $config->getWorkbenchAttributes()['assets']);
+
+        if ($createEnvironmentFile === false) {
+            collect(['.env', '.env.example', '.env.dist'])
+                ->each(function ($file) use ($workingPath) {
+                    $this->assertFalse(is_file(join_paths($workingPath, 'workbench', $file)));
+                });
+        } else {
+            $this->assertTrue(is_file(join_paths($workingPath, 'workbench', $env)));
+        }
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
+     *
      * @dataProvider environmentFileDataProviders
      */
     public function it_can_run_basic_installation_command_without_devtool(?string $env, bool $createEnvironmentFile)
