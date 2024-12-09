@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Orchestra\Workbench\Tests\Console;
 
@@ -21,7 +21,7 @@ class InstallCommandTest extends TestCase
 
     /** {@inheritDoc} */
     #[\Override]
-    protected function setUp(): void 
+    protected function setUp(): void
     {
         $filesystem = new Filesystem;
         $workingPath = static::stubWorkingPath();
@@ -65,7 +65,7 @@ class InstallCommandTest extends TestCase
         $this->assertSame([
             'asset-publish',
             'create-sqlite-db',
-            'db-wipe', 
+            'db-wipe',
             ['migrate-fresh' => [
                 '--seed' => true,
                 '--seeder' => \Workbench\Database\Seeders\DatabaseSeeder::class,
@@ -97,8 +97,8 @@ class InstallCommandTest extends TestCase
         $this->assertSame([], $config->getWorkbenchAttributes()['assets']);
     }
 
-    protected static function stubWorkingPath(): string 
+    protected static function stubWorkingPath(): string
     {
-        return join_paths(__DIR__, sprintf('%s_stubs', class_basename(static::class)));
+        return join_paths(__DIR__, \sprintf('%s_stubs', class_basename(static::class)));
     }
 }
