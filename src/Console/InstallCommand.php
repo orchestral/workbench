@@ -67,9 +67,7 @@ class InstallCommand extends Command
         $this->copyTestbenchConfigurationFile($filesystem, $workingPath);
         $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
 
-        if ($this->hasTestbenchDusk) {
-            $this->replaceInFile($filesystem, ["laravel: '@testbench'"], ["laravel: '@testbench-dusk'"], join_paths($workingPath, 'testbench.yaml'));
-        }
+        $this->replaceDefaultLaravelSkeletonInTestbenchConfigurationFile($filesystem, $workingPath);
 
         $this->call('workbench:create-sqlite-db', ['--force' => true]);
 
@@ -149,6 +147,20 @@ class InstallCommand extends Command
             (string) Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
         );
+    }
+
+    /**
+     * Replace the default `laravel` skeleton for Testbench Dusk.
+     * 
+     * @codeCoverageIgnore
+     */
+    protected function replaceDefaultLaravelSkeletonInTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void 
+    {
+        if ($this->hasTestbenchDusk === false) {
+            return;
+        }
+
+        $this->replaceInFile($filesystem, ["laravel: '@testbench'"], ["laravel: '@testbench-dusk'"], join_paths($workingPath, 'testbench.yaml'));
     }
 
     /**
