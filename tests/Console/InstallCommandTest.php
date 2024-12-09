@@ -3,7 +3,6 @@
 namespace Orchestra\Workbench\Tests\Console;
 
 use Illuminate\Filesystem\Filesystem;
-use Orchestra\Testbench\Foundation\Config;
 
 use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\join_paths;

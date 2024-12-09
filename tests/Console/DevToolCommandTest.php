@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 namespace Orchestra\Workbench\Tests\Console;
 
-class DevToolCommandTest extends CommandTestCase 
+class DevToolCommandTest extends CommandTestCase
 {
     /**
      * @test
