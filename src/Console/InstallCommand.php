@@ -109,11 +109,9 @@ class InstallCommand extends Command
 
         $choices = Collection::make($this->environmentFiles())
             ->reject(static fn ($file) => $filesystem->isFile(join_paths($workbenchWorkingPath, $file)))
-            ->values()
-            ->prepend('Skip exporting .env')
-            ->all();
+            ->values();
 
-        if (! $this->option('force') && empty($choices)) {
+        if (! $this->option('force') && $choices->isEmpty()) {
             $this->components->twoColumnDetail(
                 'File [.env] already exists', '<fg=yellow;options=bold>SKIPPED</>'
             );
@@ -122,7 +120,10 @@ class InstallCommand extends Command
         }
 
         /** @var string|null $targetEnvironmentFile */
-        $targetEnvironmentFile = $this->components->choice("Export '.env' file as?", $choices);
+        $targetEnvironmentFile = $this->components->choice(
+            "Export '.env' file as?",
+            $choices->prepend('Skip exporting .env')->all()
+        );
 
         if (\is_null($targetEnvironmentFile) || $targetEnvironmentFile === 'Skip exporting .env') {
             return;
@@ -131,10 +132,6 @@ class InstallCommand extends Command
         $filesystem->ensureDirectoryExists($workbenchWorkingPath);
 
         $this->generateSeparateEnvironmentFileForTestbenchDusk($filesystem, $workbenchWorkingPath, $targetEnvironmentFile);
-
-        if ($this->hasTestbenchDusk === true) {
-            
-        }
 
         (new GeneratesFile(
             filesystem: $filesystem,

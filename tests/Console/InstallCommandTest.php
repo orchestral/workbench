@@ -2,6 +2,7 @@
 
 namespace Orchestra\Workbench\Tests\Console;
 
+use Illuminate\Filesystem\Filesystem;
 use Orchestra\Testbench\Foundation\Config;
 
 use function Orchestra\Testbench\default_skeleton_path;
@@ -18,7 +19,7 @@ class InstallCommandTest extends CommandTestCase
     {
         $workingPath = static::stubWorkingPath();
 
-        $this->artisan('workbench:install', ['--devtool' => true, '--no-interaction' => true])
+        $this->artisan('workbench:install', ['--devtool' => true])
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',
@@ -58,7 +59,7 @@ class InstallCommandTest extends CommandTestCase
     {
         $workingPath = static::stubWorkingPath();
 
-        $this->artisan('workbench:install', ['--no-devtool' => true, '--no-interaction' => true])
+        $this->artisan('workbench:install', ['--no-devtool' => true])
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',
@@ -98,7 +99,7 @@ class InstallCommandTest extends CommandTestCase
     {
         $workingPath = static::stubWorkingPath();
 
-        $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true, '--no-interaction' => true])
+        $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true])
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',
@@ -119,5 +120,24 @@ class InstallCommandTest extends CommandTestCase
 
         $this->assertExecuteInstallWithoutDevTool();
         $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_ignore_generating_environment_file_if_it_already_exists()
+    {
+        $filesystem = new Filesystem;
+        $workingPath = static::stubWorkingPath();
+
+        $filesystem->ensureDirectoryExists(join_paths($workingPath, 'workbench'));
+        collect(['.env', '.env.example', '.env.dist'])
+            ->each(function ($env) use ($filesystem, $workingPath) {
+                $filesystem->put(join_paths($workingPath, 'workbench', $env), '');
+            });
+
+        $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true])
+            ->expectsOutputToContain('File [.env] already exists')
+            ->assertSuccessful();
     }
 }

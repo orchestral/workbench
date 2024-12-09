@@ -105,6 +105,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
      */
     public static function environmentFileDataProviders()
     {
+        yield [null, false];
         yield ['Skip exporting .env', false];
         yield ['.env', true];
         yield ['.env.example', true];
