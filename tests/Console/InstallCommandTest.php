@@ -2,61 +2,24 @@
 
 namespace Orchestra\Workbench\Tests\Console;
 
-use Illuminate\Filesystem\Filesystem;
 use Orchestra\Testbench\Foundation\Config;
-use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
-use Orchestra\Testbench\TestCase;
-use Orchestra\Workbench\WorkbenchServiceProvider;
 
 use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\join_paths;
 
-class InstallCommandTest extends TestCase
+class InstallCommandTest extends CommandTestCase
 {
-    /**
-     * Stub
-     */
-    protected ?string $directory = null;
-
-    /** {@inheritDoc} */
-    #[\Override]
-    protected function setUp(): void
-    {
-        $filesystem = new Filesystem;
-        $workingPath = static::stubWorkingPath();
-
-        $this->beforeApplicationDestroyed(function () use ($filesystem, $workingPath) {
-            $filesystem->deleteDirectory($workingPath);
-            unset($_ENV['TESTBENCH_WORKING_PATH']);
-        });
-
-        $_ENV['TESTBENCH_WORKING_PATH'] = $workingPath;
-        $filesystem->ensureDirectoryExists($workingPath);
-
-        parent::setUp();
-    }
-
-    /** {@inheritDoc} */
-    #[\Override]
-    protected function getPackageProviders($app)
-    {
-        return [
-            TestbenchServiceProvider::class,
-            WorkbenchServiceProvider::class,
-        ];
-    }
-
     /**
      * @test
      *
      * @dataProvider environmentFileDataProviders
      */
-    public function it_can_run_installation_command_without_devtool(?string $env, bool $createEnvironmentFile)
+    public function it_can_run_installation_command_without_devtool(?string $answer, bool $createEnvironmentFile)
     {
         $workingPath = static::stubWorkingPath();
 
         $this->artisan('workbench:install', ['--no-devtool' => true, '--no-interaction' => true])
-            ->expectsChoice("Export '.env' file as?", $env, [
+            ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',
                 '.env.example',
@@ -82,14 +45,7 @@ class InstallCommandTest extends TestCase
             'laravel-assets',
         ], $config->getWorkbenchAttributes()['assets']);
 
-        if ($createEnvironmentFile === false) {
-            collect(['.env', '.env.example', '.env.dist'])
-                ->each(function ($file) use ($workingPath) {
-                    $this->assertFalse(is_file(join_paths($workingPath, 'workbench', $file)));
-                });
-        } else {
-            $this->assertTrue(is_file(join_paths($workingPath, 'workbench', $env)));
-        }
+        $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
 
     /**
@@ -97,12 +53,12 @@ class InstallCommandTest extends TestCase
      *
      * @dataProvider environmentFileDataProviders
      */
-    public function it_can_run_basic_installation_command_without_devtool(?string $env, bool $createEnvironmentFile)
+    public function it_can_run_basic_installation_command_without_devtool(?string $answer, bool $createEnvironmentFile)
     {
         $workingPath = static::stubWorkingPath();
 
         $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true, '--no-interaction' => true])
-            ->expectsChoice("Export '.env' file as?", $env, [
+            ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',
                 '.env.example',
@@ -120,28 +76,6 @@ class InstallCommandTest extends TestCase
         $this->assertSame([], $config->getWorkbenchAttributes()['build']);
         $this->assertSame([], $config->getWorkbenchAttributes()['assets']);
 
-        if ($createEnvironmentFile === false) {
-            collect(['.env', '.env.example', '.env.dist'])
-                ->each(function ($file) use ($workingPath) {
-                    $this->assertFalse(is_file(join_paths($workingPath, 'workbench', $file)));
-                });
-        } else {
-            $this->assertTrue(is_file(join_paths($workingPath, 'workbench', $env)));
-        }
-    }
-
-    public static function environmentFileDataProviders()
-    {
-        $workingPath = static::stubWorkingPath();
-
-        yield ['Skip exporting .env', false];
-        yield ['.env', true];
-        yield ['.env.example', true];
-        yield ['.env.dist', true];
-    }
-
-    protected static function stubWorkingPath(): string
-    {
-        return join_paths(__DIR__, \sprintf('%s_stubs', class_basename(static::class)));
+        $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
 }
