@@ -4,10 +4,13 @@ namespace Orchestra\Workbench\Tests\Console;
 
 use Illuminate\Filesystem\Filesystem;
 use Orchestra\Canvas\LaravelServiceProvider;
+use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Orchestra\Workbench\Workbench;
 use Orchestra\Workbench\WorkbenchServiceProvider;
+use Workbench\Database\Seeders\DatabaseSeeder;
 
+use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\join_paths;
 
 abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
@@ -44,9 +47,9 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     }
 
     /**
-     * Assert `workbench:install` command executed with `--devtool`
+     * Assert `workbench:devtool` or `workbench:install --devtool` command executed.
      */
-    protected function assertExecuteInstallWithDevTool(): void
+    protected function assertCommandExecutedWithDevTool(): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -57,9 +60,9 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     }
 
     /**
-     * Assert `workbench:install` command executed with `--no-devtool`
+     * Assert `workbench:install` command executed with `--no-devtool`.
      */
-    protected function assertExecuteInstallWithoutDevTool(): void
+    protected function assertCommandExecutedWithoutDevTool(): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -68,17 +71,55 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     }
 
     /**
-     * Assert `workbench:devtool` command executed with `--install`
+     * Assert command executed with `workbench:install` or `workbench:devtool --install`.
      */
-    protected function assertExecuteDevToolWithInstall(): void
+    protected function assertCommandExecutedWithInstall(): void
     {
-        $this->markTestIncomplete('Implements '.__METHOD__);
+        $workingPath = static::stubWorkingPath();
+
+        $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
+
+        $config = Config::loadFromYaml($workingPath);
+
+        $this->assertSame(default_skeleton_path(), $config['laravel']);
+        $this->assertFalse($config->seeders);
+        $this->assertSame([
+            'asset-publish',
+            'create-sqlite-db',
+            'db-wipe',
+            ['migrate-fresh' => [
+                '--seed' => true,
+                '--seeder' => DatabaseSeeder::class,
+            ]],
+        ], $config->getWorkbenchAttributes()['build']);
+        $this->assertSame([
+            'laravel-assets',
+        ], $config->getWorkbenchAttributes()['assets']);
+    }
+
+    /**
+     * Assert `workbench:install --basic` or `workbench:devtool --basic --install` command executed.
+     */
+    protected function assertCommandExecutedWithBasicInstall(): void
+    {
+        $workingPath = static::stubWorkingPath();
+
+        $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
+
+        $config = Config::loadFromYaml($workingPath);
+
+        $this->assertSame(default_skeleton_path(), $config['laravel']);
+        $this->assertSame([
+            DatabaseSeeder::class,
+        ], $config->seeders);
+        $this->assertSame([], $config->getWorkbenchAttributes()['build']);
+        $this->assertSame([], $config->getWorkbenchAttributes()['assets']);
     }
 
     /**
      * Assert `workbench:devtool` command executed with `--no-install`
      */
-    protected function assertExecuteDevToolWithoutInstall(): void
+    protected function assertCommandExecutedWithoutInstall(): void
     {
         $this->markTestIncomplete('Implements '.__METHOD__);
     }

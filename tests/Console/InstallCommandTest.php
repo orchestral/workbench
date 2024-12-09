@@ -46,7 +46,7 @@ class InstallCommandTest extends CommandTestCase
             'laravel-assets',
         ], $config->getWorkbenchAttributes()['assets']);
 
-        $this->assertExecuteInstallWithDevTool();
+        $this->assertCommandExecutedWithDevTool();
         $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
 
@@ -57,8 +57,6 @@ class InstallCommandTest extends CommandTestCase
      */
     public function it_can_run_installation_command_without_devtool(?string $answer, bool $createEnvironmentFile)
     {
-        $workingPath = static::stubWorkingPath();
-
         $this->artisan('workbench:install', ['--no-devtool' => true])
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
@@ -67,26 +65,8 @@ class InstallCommandTest extends CommandTestCase
                 '.env.dist',
             ])->assertSuccessful();
 
-        $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
-
-        $config = Config::loadFromYaml($workingPath);
-
-        $this->assertSame(default_skeleton_path(), $config['laravel']);
-        $this->assertFalse($config->seeders);
-        $this->assertSame([
-            'asset-publish',
-            'create-sqlite-db',
-            'db-wipe',
-            ['migrate-fresh' => [
-                '--seed' => true,
-                '--seeder' => \Workbench\Database\Seeders\DatabaseSeeder::class,
-            ]],
-        ], $config->getWorkbenchAttributes()['build']);
-        $this->assertSame([
-            'laravel-assets',
-        ], $config->getWorkbenchAttributes()['assets']);
-
-        $this->assertExecuteInstallWithoutDevTool();
+        $this->assertCommandExecutedWithInstall();
+        $this->assertCommandExecutedWithoutDevTool();
         $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
 
@@ -97,8 +77,6 @@ class InstallCommandTest extends CommandTestCase
      */
     public function it_can_run_basic_installation_command_without_devtool(?string $answer, bool $createEnvironmentFile)
     {
-        $workingPath = static::stubWorkingPath();
-
         $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true])
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
@@ -107,18 +85,8 @@ class InstallCommandTest extends CommandTestCase
                 '.env.dist',
             ])->assertSuccessful();
 
-        $this->assertFileExists(join_paths($workingPath, 'testbench.yaml'));
-
-        $config = Config::loadFromYaml($workingPath);
-
-        $this->assertSame(default_skeleton_path(), $config['laravel']);
-        $this->assertSame([
-            \Workbench\Database\Seeders\DatabaseSeeder::class,
-        ], $config->seeders);
-        $this->assertSame([], $config->getWorkbenchAttributes()['build']);
-        $this->assertSame([], $config->getWorkbenchAttributes()['assets']);
-
-        $this->assertExecuteInstallWithoutDevTool();
+        $this->assertCommandExecutedWithBasicInstall();
+        $this->assertCommandExecutedWithoutDevTool();
         $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
 
@@ -129,15 +97,23 @@ class InstallCommandTest extends CommandTestCase
     {
         $filesystem = new Filesystem;
         $workingPath = static::stubWorkingPath();
+        $environmentFiles = collect(['.env', '.env.example', '.env.dist']);
 
         $filesystem->ensureDirectoryExists(join_paths($workingPath, 'workbench'));
-        collect(['.env', '.env.example', '.env.dist'])
-            ->each(function ($env) use ($filesystem, $workingPath) {
-                $filesystem->put(join_paths($workingPath, 'workbench', $env), '');
-            });
+
+        $environmentFiles->each(function ($env) use ($filesystem, $workingPath) {
+            $filesystem->put(join_paths($workingPath, 'workbench', $env), '');
+        });
 
         $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true])
             ->expectsOutputToContain('File [.env] already exists')
             ->assertSuccessful();
+
+        $environmentFiles->each(function ($env) use ($workingPath) {
+            $this->assertFileNotEquals(join_paths($workingPath, 'workbench', $env), default_skeleton_path('.env.example'));
+        });
+
+        $this->assertCommandExecutedWithBasicInstall();
+        $this->assertCommandExecutedWithoutDevTool();
     }
 }

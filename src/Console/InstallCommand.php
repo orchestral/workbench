@@ -151,10 +151,10 @@ class InstallCommand extends Command
 
     /**
      * Replace the default `laravel` skeleton for Testbench Dusk.
-     * 
+     *
      * @codeCoverageIgnore
      */
-    protected function replaceDefaultLaravelSkeletonInTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void 
+    protected function replaceDefaultLaravelSkeletonInTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
     {
         if ($this->hasTestbenchDusk === false) {
             return;
@@ -165,10 +165,10 @@ class InstallCommand extends Command
 
     /**
      * Generate separate `.env.dusk` equivalent for Testbench Dusk.
-     * 
+     *
      * @codeCoverageIgnore
      */
-    protected function generateSeparateEnvironmentFileForTestbenchDusk(Filesystem $filesystem, string $workbenchWorkingPath, string $targetEnvironmentFile): void 
+    protected function generateSeparateEnvironmentFileForTestbenchDusk(Filesystem $filesystem, string $workbenchWorkingPath, string $targetEnvironmentFile): void
     {
         if ($this->hasTestbenchDusk === false) {
             return;
