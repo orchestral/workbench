@@ -103,12 +103,12 @@ class InstallCommand extends Command
 
         $from = $this->laravel->basePath('.env.example');
 
-        if (! $filesystem->exists($from)) {
+        if (! $filesystem->isFile($this->laravel->basePath('.env.example'))) {
             return;
         }
 
         $choices = Collection::make($this->environmentFiles())
-            ->reject(static fn ($file) => $filesystem->exists(join_paths($workbenchWorkingPath, $file)))
+            ->reject(static fn ($file) => $filesystem->isFile(join_paths($workbenchWorkingPath, $file)))
             ->values()
             ->prepend('Skip exporting .env')
             ->all();
@@ -121,26 +121,19 @@ class InstallCommand extends Command
             return;
         }
 
-        /** @var string|null $choice */
-        $choice = $this->components->choice("Export '.env' file as?", $choices);
+        /** @var string|null $targetEnvironmentFile */
+        $targetEnvironmentFile = $this->components->choice("Export '.env' file as?", $choices);
 
-        if (\is_null($choice) || $choice === 'Skip exporting .env') {
+        if (\is_null($targetEnvironmentFile) || $targetEnvironmentFile === 'Skip exporting .env') {
             return;
         }
 
         $filesystem->ensureDirectoryExists($workbenchWorkingPath);
 
+        $this->generateSeparateEnvironmentFileForTestbenchDusk($filesystem, $workbenchWorkingPath, $targetEnvironmentFile);
+
         if ($this->hasTestbenchDusk === true) {
-            if ($this->components->confirm('Create separate environment file for Testbench Dusk?', false)) {
-                (new GeneratesFile(
-                    filesystem: $filesystem,
-                    components: $this->components,
-                    force: (bool) $this->option('force'),
-                ))->handle(
-                    $from,
-                    join_paths($workbenchWorkingPath, str_replace('.env', '.env.dusk', $choice))
-                );
-            }
+            
         }
 
         (new GeneratesFile(
@@ -149,7 +142,7 @@ class InstallCommand extends Command
             force: (bool) $this->option('force'),
         ))->handle(
             $from,
-            join_paths($workbenchWorkingPath, $choice)
+            join_paths($workbenchWorkingPath, $targetEnvironmentFile)
         );
 
         (new GeneratesFile(
@@ -159,6 +152,29 @@ class InstallCommand extends Command
             (string) Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
         );
+    }
+
+    /**
+     * Generate separate `.env.dusk` equivalent for Testbench Dusk.
+     * 
+     * @codeCoverageIgnore
+     */
+    protected function generateSeparateEnvironmentFileForTestbenchDusk(Filesystem $filesystem, string $workbenchWorkingPath, string $targetEnvironmentFile): void 
+    {
+        if ($this->hasTestbenchDusk === false) {
+            return;
+        }
+
+        if ($this->components->confirm('Create separate environment file for Testbench Dusk?', false)) {
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                $this->laravel->basePath('.env.example'),
+                join_paths($workbenchWorkingPath, str_replace('.env', '.env.dusk', $targetEnvironmentFile))
+            );
+        }
     }
 
     /**
