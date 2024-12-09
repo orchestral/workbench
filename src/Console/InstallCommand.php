@@ -128,6 +128,8 @@ class InstallCommand extends Command
             return;
         }
 
+        $filesystem->ensureDirectoryExists($workbenchWorkingPath);
+
         if ($this->hasTestbenchDusk === true) {
             if ($this->components->confirm('Create separate environment file for Testbench Dusk?', false)) {
                 (new GeneratesFile(

@@ -8,7 +8,6 @@ use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Orchestra\Testbench\TestCase;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 
-use function Orchestra\Testbench\artisan;
 use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\join_paths;
 
@@ -52,9 +51,13 @@ class InstallCommandTest extends TestCase
     {
         $workingPath = static::stubWorkingPath();
 
-        $this->withoutMockingConsoleOutput();
-
-        artisan($this, 'workbench:install', ['--no-devtool' => true, '--no-interaction' => true]);
+        $this->artisan('workbench:install', ['--no-devtool' => true, '--no-interaction' => true])
+            ->expectsChoice("Export '.env' file as?", 'Skip exporting .env', [
+                'Skip exporting .env',
+                '.env',
+                '.env.example',
+                '.env.dist',
+            ])->assertSuccessful();
 
         $this->assertTrue(is_file(join_paths($workingPath, 'testbench.yaml')));
 
@@ -76,14 +79,21 @@ class InstallCommandTest extends TestCase
         ], $config->getWorkbenchAttributes()['assets']);
     }
 
-    /** @test */
-    public function it_can_run_basic_installation_command_without_devtool()
+    /** 
+     * @test 
+     * @dataProvider environmentFileDataProviders
+     */
+    public function it_can_run_basic_installation_command_without_devtool(?string $env, bool $createEnvironmentFile)
     {
         $workingPath = static::stubWorkingPath();
 
-        $this->withoutMockingConsoleOutput();
-
-        artisan($this, 'workbench:install', ['--basic' => true, '--no-devtool' => true, '--no-interaction' => true]);
+        $this->artisan('workbench:install', ['--basic' => true, '--no-devtool' => true, '--no-interaction' => true])
+            ->expectsChoice("Export '.env' file as?", $env, [
+                'Skip exporting .env',
+                '.env',
+                '.env.example',
+                '.env.dist',
+            ])->assertSuccessful();
 
         $this->assertTrue(is_file(join_paths($workingPath, 'testbench.yaml')));
 
@@ -95,6 +105,25 @@ class InstallCommandTest extends TestCase
         ], $config->seeders);
         $this->assertSame([], $config->getWorkbenchAttributes()['build']);
         $this->assertSame([], $config->getWorkbenchAttributes()['assets']);
+
+        if ($createEnvironmentFile === false) {
+            collect(['.env', '.env.example', '.env.dist'])
+                ->each(function ($file) use ($workingPath) {
+                    $this->assertFalse(is_file(join_paths($workingPath, 'workbench', $file)));
+                });
+        } else {
+            $this->assertTrue(is_file(join_paths($workingPath, 'workbench', $env)));
+        }
+    }
+
+    public static function environmentFileDataProviders()
+    {
+        $workingPath = static::stubWorkingPath();
+
+        yield ['Skip exporting .env', false];
+        yield ['.env', true];
+        yield ['.env.example', true];
+        yield ['.env.dist', true];
     }
 
     protected static function stubWorkingPath(): string
