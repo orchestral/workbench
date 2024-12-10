@@ -124,9 +124,8 @@ class InstallCommand extends Command implements PromptsForMissingInput
         /** @var string|null $targetEnvironmentFile */
         $targetEnvironmentFile = $this->input->isInteractive()
             ? select(
-                label: "Export '.env' file as?",
-                options: $choices->prepend('Skip exporting .env'), // @phpstan-ignore argument.type
-                default: 'Skip exporting .env'
+                "Export '.env' file as?",
+                $choices->prepend('Skip exporting .env'), // @phpstan-ignore argument.type
             ) : null;
 
         if (\in_array($targetEnvironmentFile, [null, 'Skip exporting .env'])) {

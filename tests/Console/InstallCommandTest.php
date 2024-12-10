@@ -5,7 +5,6 @@ namespace Orchestra\Workbench\Tests\Console;
 use Illuminate\Filesystem\Filesystem;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\TestWith;
 
 use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\join_paths;
@@ -99,11 +98,10 @@ class InstallCommandTest extends CommandTestCase
     }
 
     #[Test]
-    #[TestWith([false])]
-    public function it_can_be_installed_with_prompt_for_missing_arguments(bool $devtool)
+    public function it_can_be_installed_with_prompt_for_missing_arguments()
     {
         $this->artisan('workbench:install')
-            ->expectsConfirmation('Run Workbench DevTool installation?', $devtool)
+            ->expectsConfirmation('Run Workbench DevTool installation?', false)
             ->expectsChoice("Export '.env' file as?", 'Skip exporting .env', [
                 'Skip exporting .env',
                 '.env',
@@ -112,6 +110,7 @@ class InstallCommandTest extends CommandTestCase
             ])
             ->assertSuccessful();
 
+        $this->assertCommandExecutedWithInstall();
         $this->assertCommandExecutedWithoutDevTool();
     }
 }

@@ -60,4 +60,15 @@ class DevToolCommandTest extends CommandTestCase
         $this->assertCommandExecutedWithDevTool();
         $this->assertCommandExecutedWithoutInstall();
     }
+
+    #[Test]
+    public function it_can_be_installed_with_prompt_for_missing_arguments()
+    {
+        $this->artisan('workbench:devtool')
+            ->expectsConfirmation('Run Workbench installation?', false)
+            ->assertSuccessful();
+
+        $this->assertCommandExecutedWithDevTool();
+        $this->assertCommandExecutedWithoutInstall();
+    }
 }
