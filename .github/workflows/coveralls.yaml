@@ -2,6 +2,8 @@ name: coveralls
 
 on:
   push:
+    branches:
+      - '*.x'
   pull_request:
 
 jobs:

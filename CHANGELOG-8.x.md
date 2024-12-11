@@ -2,6 +2,27 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.14.0
+
+Released: 2024-12-10
+
+### Added
+
+* Add `sync-skeleton` and `purge-skeleton` recipe for `workbench:build` command.
+* Set default `laravel` configuration to either `@testbench` or `@testbench-dusk`
+* Added following classes to interacts with Composer:
+    - `Orchestra\Workbench\Actions\DumpComposerAutoloads`
+    - `Orchestra\Workbench\Actions\ModifyComposer`
+
+### Changes
+
+* `workbench:install` should suggest creating `.env.dusk` equivalent file when `orchestra/testbench-dusk` is installed.
+* Refactor `workbench:install` and add feature tests.
+
+### Removed
+
+* Remove `Orchestra\Workbench\Composer`.
+
 ## 8.13.0
 
 Released: 2024-12-01

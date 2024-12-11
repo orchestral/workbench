@@ -2,6 +2,7 @@
 
 namespace Orchestra\Workbench\Console;
 
+use Composer\InstalledVersions;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
@@ -18,9 +19,6 @@ use function Laravel\Prompts\select;
 use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
-/**
- * @codeCoverageIgnore
- */
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
 class InstallCommand extends Command implements PromptsForMissingInput
 {
@@ -28,6 +26,20 @@ class InstallCommand extends Command implements PromptsForMissingInput
      * The `testbench.yaml` default configuration file.
      */
     public static ?string $configurationBaseFile = null;
+
+    /**
+     * Determine if Package also uses Testbench Dusk.
+     */
+    protected ?bool $hasTestbenchDusk = null;
+
+    /** {@inheritDoc} */
+    #[\Override]
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->hasTestbenchDusk = InstalledVersions::isInstalled('orchestra/testbench-dusk');
+
+        parent::initialize($input, $output);
+    }
 
     /**
      * Execute the console command.
@@ -57,6 +69,8 @@ class InstallCommand extends Command implements PromptsForMissingInput
         $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
         $this->prepareWorkbenchDirectories($filesystem, $workingPath);
 
+        $this->replaceDefaultLaravelSkeletonInTestbenchConfigurationFile($filesystem, $workingPath);
+
         $this->call('workbench:create-sqlite-db', ['--force' => true]);
 
         return Command::SUCCESS;
@@ -67,6 +81,10 @@ class InstallCommand extends Command implements PromptsForMissingInput
      */
     protected function prepareWorkbenchDirectories(Filesystem $filesystem, string $workingPath): void
     {
+        if (! $this->input->isInteractive()) {
+            return;
+        }
+
         $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
         foreach (['app' => true, 'providers' => false] as $bootstrap => $default) {
@@ -112,18 +130,16 @@ class InstallCommand extends Command implements PromptsForMissingInput
 
         $from = $this->laravel->basePath('.env.example');
 
-        if (! $filesystem->exists($from)) {
+        if (! $filesystem->isFile($this->laravel->basePath('.env.example'))) {
             return;
         }
 
-        /** @var array<int, string> $choices */
+        /** @var \Illuminate\Support\Collection<int, string> $choices */
         $choices = Collection::make($this->environmentFiles())
-            ->reject(static fn ($file) => $filesystem->exists(join_paths($workbenchWorkingPath, $file)))
-            ->values()
-            ->prepend('Skip exporting .env')
-            ->all();
+            ->reject(static fn ($file) => $filesystem->isFile(join_paths($workbenchWorkingPath, $file)))
+            ->values();
 
-        if (! $this->option('force') && empty($choices)) {
+        if (! $this->option('force') && $choices->isEmpty()) {
             $this->components->twoColumnDetail(
                 'File [.env] already exists', '<fg=yellow;options=bold>SKIPPED</>'
             );
@@ -131,20 +147,29 @@ class InstallCommand extends Command implements PromptsForMissingInput
             return;
         }
 
-        /** @var string $choice */
-        $choice = select("Export '.env' file as?", $choices);
+        /** @var string|null $targetEnvironmentFile */
+        $targetEnvironmentFile = $this->input->isInteractive()
+            ? select(
+                "Export '.env' file as?",
+                $choices->prepend('Skip exporting .env'), // @phpstan-ignore argument.type
+            ) : null;
 
-        if ($choice === 'Skip exporting .env') {
+        if (\in_array($targetEnvironmentFile, [null, 'Skip exporting .env'])) {
             return;
         }
 
-        $to = join_paths($workbenchWorkingPath, $choice);
+        $filesystem->ensureDirectoryExists($workbenchWorkingPath);
+
+        $this->generateSeparateEnvironmentFileForTestbenchDusk($filesystem, $workbenchWorkingPath, $targetEnvironmentFile);
 
         (new GeneratesFile(
             filesystem: $filesystem,
             components: $this->components,
             force: (bool) $this->option('force'),
-        ))->handle($from, $to);
+        ))->handle(
+            $from,
+            join_paths($workbenchWorkingPath, $targetEnvironmentFile)
+        );
 
         (new GeneratesFile(
             filesystem: $filesystem,
@@ -156,20 +181,53 @@ class InstallCommand extends Command implements PromptsForMissingInput
     }
 
     /**
+     * Replace the default `laravel` skeleton for Testbench Dusk.
+     *
+     * @codeCoverageIgnore
+     */
+    protected function replaceDefaultLaravelSkeletonInTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
+    {
+        if ($this->hasTestbenchDusk === false) {
+            return;
+        }
+
+        $filesystem->replaceInFile(["laravel: '@testbench'"], ["laravel: '@testbench-dusk'"], join_paths($workingPath, 'testbench.yaml'));
+    }
+
+    /**
+     * Generate separate `.env.dusk` equivalent for Testbench Dusk.
+     *
+     * @codeCoverageIgnore
+     */
+    protected function generateSeparateEnvironmentFileForTestbenchDusk(Filesystem $filesystem, string $workbenchWorkingPath, string $targetEnvironmentFile): void
+    {
+        if ($this->hasTestbenchDusk === false) {
+            return;
+        }
+
+        if ($this->components->confirm('Create separate environment file for Testbench Dusk?', false)) {
+            (new GeneratesFile(
+                filesystem: $filesystem,
+                components: $this->components,
+                force: (bool) $this->option('force'),
+            ))->handle(
+                $this->laravel->basePath('.env.example'),
+                join_paths($workbenchWorkingPath, str_replace('.env', '.env.dusk', $targetEnvironmentFile))
+            );
+        }
+    }
+
+    /**
      * Get possible environment files.
      *
      * @return array<int, string>
      */
     protected function environmentFiles(): array
     {
-        $environmentFile = \defined('TESTBENCH_DUSK') && TESTBENCH_DUSK === true
-            ? '.env.dusk'
-            : '.env';
-
         return [
-            $environmentFile,
-            "{$environmentFile}.example",
-            "{$environmentFile}.dist",
+            '.env',
+            '.env.example',
+            '.env.dist',
         ];
     }
 

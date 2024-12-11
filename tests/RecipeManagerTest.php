@@ -10,6 +10,7 @@ use Orchestra\Workbench\Recipes\AssetPublishCommand;
 use Orchestra\Workbench\Recipes\Command;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Test;
 
 class RecipeManagerTest extends TestCase
@@ -26,6 +27,7 @@ class RecipeManagerTest extends TestCase
     }
 
     #[Test]
+    #[Depends('it_can_check_for_valid_commands')]
     public function it_can_be_resolved()
     {
         tap($this->app->make(RecipeManagerContract::class), function ($manager) {
@@ -44,6 +46,18 @@ class RecipeManagerTest extends TestCase
             tap($manager->command('drop-sqlite-db'), function ($recipe) {
                 $this->assertInstanceOf(Command::class, $recipe);
                 $this->assertSame('workbench:drop-sqlite-db', $recipe->command);
+                $this->assertSame([], $recipe->options);
+            });
+
+            tap($manager->command('sync-skeleton'), function ($recipe) {
+                $this->assertInstanceOf(Command::class, $recipe);
+                $this->assertSame('workbench:sync-skeleton', $recipe->command);
+                $this->assertSame([], $recipe->options);
+            });
+
+            tap($manager->command('purge-skeleton'), function ($recipe) {
+                $this->assertInstanceOf(Command::class, $recipe);
+                $this->assertSame('workbench:purge-skeleton', $recipe->command);
                 $this->assertSame([], $recipe->options);
             });
         });
@@ -103,6 +117,8 @@ class RecipeManagerTest extends TestCase
         yield ['asset-publish'];
         yield ['create-sqlite-db'];
         yield ['drop-sqlite-db'];
+        yield ['sync-skeleton'];
+        yield ['purge-skeleton'];
     }
 
     public static function invalidCommands()

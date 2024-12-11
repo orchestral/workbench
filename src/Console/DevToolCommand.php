@@ -8,9 +8,10 @@ use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Composer;
 use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\Actions\DumpComposerAutoloads;
+use Orchestra\Workbench\Actions\ModifyComposer;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
@@ -23,9 +24,6 @@ use function Laravel\Prompts\confirm;
 use function Orchestra\Testbench\join_paths;
 use function Orchestra\Testbench\package_path;
 
-/**
- * @codeCoverageIgnore
- */
 #[AsCommand(name: 'workbench:devtool', description: 'Configure Workbench for package development')]
 class DevToolCommand extends Command implements PromptsForMissingInput
 {
@@ -51,12 +49,10 @@ class DevToolCommand extends Command implements PromptsForMissingInput
             ]);
         }
 
-        return tap(Command::SUCCESS, function ($exitCode) use ($filesystem, $workingPath) {
+        return tap(Command::SUCCESS, function ($exitCode) use ($workingPath) {
             event(new InstallEnded($this->input, $this->output, $this->components, $exitCode));
 
-            (new Composer($filesystem))
-                ->setWorkingPath($workingPath)
-                ->dumpAutoloads();
+            (new DumpComposerAutoloads($workingPath))->handle();
         });
     }
 
@@ -110,11 +106,10 @@ class DevToolCommand extends Command implements PromptsForMissingInput
      */
     protected function prepareWorkbenchNamespaces(Filesystem $filesystem, string $workingPath): void
     {
-        $composer = (new Composer($filesystem))->setWorkingPath($workingPath);
-
-        $composer->modify(fn (array $content) => $this->appendScriptsToComposer(
-            $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
-        ));
+        (new ModifyComposer($workingPath))
+            ->handle(fn (array $content) => $this->appendScriptsToComposer(
+                $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
+            ));
     }
 
     /**
@@ -198,7 +193,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
 
             if (InstalledVersions::isInstalled('laravel/pint')) {
                 $lintScripts[] = '@php vendor/bin/pint --ansi';
-            } elseif ($filesystem->exists(Workbench::packagePath('pint.json'))) {
+            } elseif ($filesystem->isFile(Workbench::packagePath('pint.json'))) {
                 $lintScripts[] = 'pint';
             }
 
@@ -212,8 +207,8 @@ class DevToolCommand extends Command implements PromptsForMissingInput
         }
 
         if (
-            $filesystem->exists(Workbench::packagePath('phpunit.xml'))
-            || $filesystem->exists(Workbench::packagePath('phpunit.xml.dist'))
+            $filesystem->isFile(Workbench::packagePath('phpunit.xml'))
+            || $filesystem->isFile(Workbench::packagePath('phpunit.xml.dist'))
         ) {
             if (! \array_key_exists('test', $content['scripts'])) {
                 $content['scripts']['test'] = [
