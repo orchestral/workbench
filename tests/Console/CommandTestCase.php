@@ -82,14 +82,13 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         $config = Config::loadFromYaml($workingPath);
 
         $this->assertSame(default_skeleton_path(), $config['laravel']);
-        $this->assertFalse($config->seeders);
+        $this->assertSame([DatabaseSeeder::class], $config->seeders);
         $this->assertSame([
             'asset-publish',
             'create-sqlite-db',
             'db-wipe',
             ['migrate-fresh' => [
                 '--seed' => true,
-                '--seeder' => DatabaseSeeder::class,
             ]],
         ], $config->getWorkbenchAttributes()['build']);
         $this->assertSame([
