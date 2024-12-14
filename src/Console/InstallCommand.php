@@ -98,8 +98,8 @@ class InstallCommand extends Command
                 'Workbench\Database\Seeders\DatabaseSeeder',
             ],
             [
-                sprintf('%sProviders\WorkbenchServiceProvider', Workbench::detectNamespace('app') ?? 'Workbench\App\\'),
-                sprintf('%sDatabaseSeeder', Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\'),
+                \sprintf('%sProviders\WorkbenchServiceProvider', Workbench::detectNamespace('app') ?? 'Workbench\App\\'),
+                \sprintf('%sDatabaseSeeder', Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\'),
             ],
             $to
         );

@@ -27,8 +27,6 @@ class DevToolCommand extends Command
 
     /**
      * Namespace prefix for Workbench environment.
-     *
-     * @var string
      */
     protected string $workbenchNamespacePrefix = 'Workbench\\';
 
