@@ -17,7 +17,7 @@ class InstallCommandTest extends CommandTestCase
     public function it_can_run_installation_command_with_devtool(?string $answer, bool $createEnvironmentFile)
     {
         $this->artisan('workbench:install', ['--devtool' => true])
-            ->expectsConfirmation('Prefix with `Workbench` namespace?', true)
+            ->expectsConfirmation('Prefix with `Workbench` namespace?', 'yes')
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',

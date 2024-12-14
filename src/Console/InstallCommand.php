@@ -90,6 +90,19 @@ class InstallCommand extends Command
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle($from, $to);
+
+        $this->replaceInFile(
+            $filesystem,
+            [
+                'Workbench\App\Providers\WorkbenchServiceProvider',
+                'Workbench\Database\Seeders\DatabaseSeeder',
+            ],
+            [
+                sprintf('%sProviders\WorkbenchServiceProvider', Workbench::detectNamespace('app') ?? 'Workbench\App\\'),
+                sprintf('%sDatabaseSeeder', Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\'),
+            ],
+            $to
+        );
     }
 
     /**

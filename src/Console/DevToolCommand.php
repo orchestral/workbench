@@ -26,6 +26,13 @@ class DevToolCommand extends Command
     use Concerns\InteractsWithFiles;
 
     /**
+     * Namespace prefix for Workbench environment.
+     *
+     * @var string
+     */
+    protected string $workbenchNamespacePrefix = 'Workbench\\';
+
+    /**
      * Execute the console command.
      *
      * @return int
@@ -235,16 +242,14 @@ class DevToolCommand extends Command
             $content['autoload-dev']['psr-4'] = [];
         }
 
-        $namespacePrefix = '';
-
-        if ($this->components->confirm('Prefix with `Workbench` namespace?', default: true)) {
-            $namespacePrefix = 'Workbench\\';
+        if ($this->components->confirm('Prefix with `Workbench` namespace?', default: false) === false) {
+            $this->workbenchNamespacePrefix = '';
         }
 
         $namespaces = [
-            'workbench/app/' => $namespacePrefix.'App\\',
-            'workbench/database/factories/' => $namespacePrefix.'Database\\Factories\\',
-            'workbench/database/seeders/' => $namespacePrefix.'Database\\Seeders\\',
+            'workbench/app/' => $this->workbenchNamespacePrefix.'App\\',
+            'workbench/database/factories/' => $this->workbenchNamespacePrefix.'Database\\Factories\\',
+            'workbench/database/seeders/' => $this->workbenchNamespacePrefix.'Database\\Seeders\\',
         ];
 
         $autoloads = array_flip($content['autoload-dev']['psr-4']);
