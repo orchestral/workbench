@@ -6,6 +6,9 @@ providers:
 migrations:
   - workbench/database/migrations
 
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
+
 workbench:
   start: '/'
   install: true
@@ -20,8 +23,8 @@ workbench:
     - create-sqlite-db
     - db-wipe
     - migrate-fresh:
-        --seed: true
-        --seeder: Workbench\Database\Seeders\DatabaseSeeder
+      --seed: true
+      --seeder: Workbench\Database\Seeders\DatabaseSeeder
   assets:
     - laravel-assets
   sync: []
