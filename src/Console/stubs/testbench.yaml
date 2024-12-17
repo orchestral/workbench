@@ -22,8 +22,7 @@ workbench:
     - asset-publish
     - create-sqlite-db
     - db-wipe
-    - migrate-fresh:
-        --seed: true
+    - migrate-fresh
   assets:
     - laravel-assets
   sync: []
