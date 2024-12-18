@@ -12,9 +12,7 @@ class AssetPublishCommand extends Command
      */
     public function __construct()
     {
-        parent::__construct('vendor:publish', [
-            '--force' => true,
-        ]);
+        parent::__construct('vendor:publish', []);
     }
 
     /**
@@ -32,8 +30,9 @@ class AssetPublishCommand extends Command
             ->unique()
             ->all();
 
-        return array_merge([
+        return array_merge($this->options, [
             '--tag' => $tags,
-        ], $this->options);
+            '--force' => true,
+        ]);
     }
 }
