@@ -87,9 +87,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
             'asset-publish',
             'create-sqlite-db',
             'db-wipe',
-            ['migrate-fresh' => [
-                '--seed' => true,
-            ]],
+            'migrate-fresh',
         ], $config->getWorkbenchAttributes()['build']);
         $this->assertSame([
             'laravel-assets',
