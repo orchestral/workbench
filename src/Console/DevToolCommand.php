@@ -41,8 +41,8 @@ class DevToolCommand extends Command
 
         event(new InstallStarted($this->input, $this->output, $this->components));
 
-        $this->prepareWorkbenchDirectories($filesystem, $workingPath);
         $this->prepareWorkbenchNamespaces($filesystem, $workingPath);
+        $this->prepareWorkbenchDirectories($filesystem, $workingPath);
 
         if ($this->option('install') === true && $this->option('skip-install') === false) {
             $this->call('workbench:install', [
@@ -81,12 +81,6 @@ class DevToolCommand extends Command
             )->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
         );
 
-        $this->callSilently('make:provider', [
-            'name' => 'WorkbenchServiceProvider',
-            '--preset' => 'workbench',
-            '--force' => (bool) $this->option('force'),
-        ]);
-
         $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
         if ($this->option('basic') === false) {
@@ -112,6 +106,8 @@ class DevToolCommand extends Command
             ->handle(fn (array $content) => $this->appendScriptsToComposer(
                 $this->appendAutoloadDevToComposer($content, $filesystem), $filesystem
             ));
+
+        Workbench::flushCachedClassAndNamespaces();
     }
 
     /**
