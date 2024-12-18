@@ -144,7 +144,7 @@ class DevToolCommand extends Command
             $this->replaceInFile($filesystem, [
                 'use Orchestra\Testbench\Factories\UserFactory;',
             ], [
-                sprintf('use %sUserFactory;', Workbench::detectNamespace('database/factories') ?? 'Workbench\Database\Factories\\'),
+                \sprintf('use %sUserFactory;', Workbench::detectNamespace('database/factories') ?? 'Workbench\Database\Factories\\'),
             ], join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php'));
         }
     }

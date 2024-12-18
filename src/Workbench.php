@@ -100,7 +100,6 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
     /**
      * Flush the cached namespace configuration.
      *
-     * @return void
      *
      * @codeCoverageIgnore
      */
