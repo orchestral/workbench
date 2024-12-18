@@ -140,6 +140,18 @@ class DevToolCommand extends Command
             join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php')
         );
 
+        $workbenchSeederNamespacePrefix = rtrim(Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\', '\\');
+
+        $this->replaceInFile($filesystem, [
+            '{{WorkbenchSeederNamespace}}',
+            '{{ WorkbenchSeederNamespace }}',
+            'Workbench\Database\Seeders',
+        ], [
+            $workbenchSeederNamespacePrefix,
+            $workbenchSeederNamespacePrefix,
+            $workbenchSeederNamespacePrefix,
+        ], join_paths($workingPath, 'database', 'seeders', 'DatabaseSeeder.php'));
+
         if ($filesystem->isFile(join_paths($workingPath, 'database', 'factories', 'UserFactory.php'))) {
             $this->replaceInFile($filesystem, [
                 'use Orchestra\Testbench\Factories\UserFactory;',

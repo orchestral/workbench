@@ -91,11 +91,11 @@ class InstallCommand extends Command
             force: (bool) $this->option('force'),
         ))->handle($from, $to);
 
-        $workbenchAppNamespacePrefix = Workbench::detectNamespace('app') ?? 'Workbench\App\\';
-        $workbenchSeederNamespacePrefix = Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\';
+        $workbenchAppNamespacePrefix = rtrim(Workbench::detectNamespace('app') ?? 'Workbench\App\\', '\\');
+        $workbenchSeederNamespacePrefix = rtrim(Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\', '\\');
 
-        $serviceProvider = \sprintf('%sProviders\WorkbenchServiceProvider', $workbenchAppNamespacePrefix);
-        $databaseSeeder = \sprintf('%sDatabaseSeeder', $workbenchSeederNamespacePrefix);
+        $serviceProvider = \sprintf('%s\Providers\WorkbenchServiceProvider', $workbenchAppNamespacePrefix);
+        $databaseSeeder = \sprintf('%s\DatabaseSeeder', $workbenchSeederNamespacePrefix);
 
         $this->replaceInFile(
             $filesystem,
@@ -112,8 +112,6 @@ class InstallCommand extends Command
                 '{{WorkbenchDatabaseSeeder}}',
                 '{{ WorkbenchDatabaseSeeder }}',
                 'Workbench\Database\Seeders\DatabaseSeeder',
-
-                '    - migrate-fresh',
             ],
             [
                 $workbenchAppNamespacePrefix,
@@ -128,10 +126,6 @@ class InstallCommand extends Command
                 $databaseSeeder,
                 $databaseSeeder,
                 $databaseSeeder,
-
-                $databaseSeeder === 'Database\Seeders\DatabaseSeeder'
-                    ? '    - migrate-fresh'
-                    : '    - migrate-fresh:'.PHP_EOL.'        --seed: true',
             ],
             $to
         );

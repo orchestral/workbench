@@ -2,13 +2,14 @@
 
 namespace Orchestra\Workbench\Tests\Console;
 
+use Database\Seeders\DatabaseSeeder;
 use Illuminate\Filesystem\Filesystem;
 use Orchestra\Canvas\LaravelServiceProvider;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Orchestra\Workbench\Workbench;
 use Orchestra\Workbench\WorkbenchServiceProvider;
-use Workbench\Database\Seeders\DatabaseSeeder;
+use Workbench\Database\Seeders\DatabaseSeeder as WorkbenchDatabaseSeeder;
 
 use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Testbench\join_paths;
@@ -49,7 +50,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert `workbench:devtool` or `workbench:install --devtool` command executed.
      */
-    protected function assertCommandExecutedWithDevTool(): void
+    protected function assertCommandExecutedWithDevTool(bool $prefix = true): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -57,12 +58,36 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         $this->assertDirectoryExists(join_paths($workingPath, 'workbench', 'app', 'Providers'));
         $this->assertDirectoryExists(join_paths($workingPath, 'workbench', 'database', 'factories'));
         $this->assertDirectoryExists(join_paths($workingPath, 'workbench', 'database', 'seeders'));
+
+        $this->assertFileContains([
+            \sprintf('namespace %sModels;', $prefix ? 'Workbench\App\\' : 'App\\'),
+            'class User extends Authenticatable',
+        ], join_paths($workingPath, 'workbench', 'app', 'Models', 'User.php'));
+
+        $this->assertFileContains([
+            \sprintf('namespace %sProviders;', $prefix ? 'Workbench\App\\' : 'App\\'),
+            'class WorkbenchServiceProvider extends ServiceProvider',
+        ], join_paths($workingPath, 'workbench', 'app', 'Providers', 'WorkbenchServiceProvider.php'));
+
+        $this->assertFileContains([
+            \sprintf('namespace %sFactories;', $prefix ? 'Workbench\Database\\' : 'Database\\'),
+            \sprintf('use %sModels\User;', $prefix ? 'Workbench\App\\' : 'App\\'),
+            'class UserFactory extends Factory',
+        ], join_paths($workingPath, 'workbench', 'database', 'factories', 'UserFactory.php'));
+
+        $this->assertFileContains([
+            \sprintf('namespace %sSeeders;', $prefix ? 'Workbench\Database\\' : 'Database\\'),
+            \sprintf('use %sFactories\UserFactory;', $prefix ? 'Workbench\Database\\' : 'Database\\'),
+            'class DatabaseSeeder extends Seeder',
+            '// UserFactory::new()->times(10)->create();',
+            '// UserFactory::new()->create([',
+        ], join_paths($workingPath, 'workbench', 'database', 'seeders', 'DatabaseSeeder.php'));
     }
 
     /**
      * Assert `workbench:install` command executed with `--no-devtool`.
      */
-    protected function assertCommandExecutedWithoutDevTool(): void
+    protected function assertCommandExecutedWithoutDevTool(bool $prefix = true): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -73,7 +98,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert command executed with `workbench:install` or `workbench:devtool --install`.
      */
-    protected function assertCommandExecutedWithInstall(): void
+    protected function assertCommandExecutedWithInstall(bool $prefix = true): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -82,14 +107,14 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         $config = Config::loadFromYaml($workingPath);
 
         $this->assertSame(default_skeleton_path(), $config['laravel']);
-        $this->assertSame([DatabaseSeeder::class], $config->seeders);
+        $this->assertSame([
+            $prefix ? WorkbenchDatabaseSeeder::class : DatabaseSeeder::class,
+        ], $config->seeders);
         $this->assertSame([
             'asset-publish',
             'create-sqlite-db',
             'db-wipe',
-            ['migrate-fresh' => [
-                '--seed' => true,
-            ]],
+            'migrate-fresh',
         ], $config->getWorkbenchAttributes()['build']);
         $this->assertSame([
             'laravel-assets',
@@ -99,7 +124,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert `workbench:install --basic` or `workbench:devtool --basic --install` command executed.
      */
-    protected function assertCommandExecutedWithBasicInstall(): void
+    protected function assertCommandExecutedWithBasicInstall(bool $prefix = true): void
     {
         $workingPath = static::stubWorkingPath();
 
@@ -109,7 +134,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
 
         $this->assertSame(default_skeleton_path(), $config['laravel']);
         $this->assertSame([
-            DatabaseSeeder::class,
+            $prefix ? WorkbenchDatabaseSeeder::class : DatabaseSeeder::class,
         ], $config->seeders);
         $this->assertSame([], $config->getWorkbenchAttributes()['build']);
         $this->assertSame([], $config->getWorkbenchAttributes()['assets']);
@@ -118,7 +143,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
     /**
      * Assert `workbench:devtool` command executed with `--no-install`
      */
-    protected function assertCommandExecutedWithoutInstall(): void
+    protected function assertCommandExecutedWithoutInstall(bool $prefix = true): void
     {
         $workingPath = static::stubWorkingPath();
         $environmentFiles = collect(['.env', '.env.example', '.env.dist']);
@@ -144,6 +169,22 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
                 });
         } else {
             $this->assertTrue(is_file(join_paths($workingPath, 'workbench', $answer)));
+        }
+    }
+
+    /**
+     * Assert file does contains data.
+     *
+     * @param  array<int, string>  $contains
+     */
+    protected function assertFileContains(array $contains, string $file, string $message = ''): void
+    {
+        $this->assertFileExists($file);
+
+        $haystack = file_get_contents($file);
+
+        foreach ($contains as $needle) {
+            $this->assertStringContainsString($needle, $haystack, $message);
         }
     }
 
