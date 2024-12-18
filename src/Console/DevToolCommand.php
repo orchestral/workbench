@@ -81,6 +81,12 @@ class DevToolCommand extends Command
             )->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))
         );
 
+        $this->callSilently('make:provider', [
+            'name' => 'WorkbenchServiceProvider',
+            '--preset' => 'workbench',
+            '--force' => (bool) $this->option('force'),
+        ]);
+
         $this->prepareWorkbenchDatabaseSchema($filesystem, $workbenchWorkingPath);
 
         if ($this->option('basic') === false) {

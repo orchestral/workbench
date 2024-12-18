@@ -96,4 +96,22 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
     {
         return static::stub()->file($name);
     }
+
+    /**
+     * Flush the cached namespace configuration.
+     *
+     * @return void
+     *
+     * @codeCoverageIgnore
+     */
+    public static function flushCachedClassAndNamespaces(): void
+    {
+        static::$cachedUserModel = null;
+        static::$cachedNamespaces = [];
+
+        static::$cachedCoreBindings = [
+            'kernel' => [],
+            'handler' => [],
+        ];
+    }
 }
