@@ -91,8 +91,8 @@ class InstallCommand extends Command
             force: (bool) $this->option('force'),
         ))->handle($from, $to);
 
-        $workbenchAppNamespacePrefix = Workbench::detectNamespace('app', force: true) ?? 'Workbench\App\\';
-        $workbenchSeederNamespacePrefix = Workbench::detectNamespace('database/seeders', force: true) ?? 'Workbench\Database\Seeders\\';
+        $workbenchAppNamespacePrefix = Workbench::detectNamespace('app') ?? 'Workbench\App\\';
+        $workbenchSeederNamespacePrefix = Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\';
 
         $serviceProvider = \sprintf('%sProviders\WorkbenchServiceProvider', $workbenchAppNamespacePrefix);
         $databaseSeeder = \sprintf('%sDatabaseSeeder', $workbenchSeederNamespacePrefix);
