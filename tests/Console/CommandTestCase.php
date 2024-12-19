@@ -32,6 +32,7 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         $_ENV['TESTBENCH_WORKING_PATH'] = $workingPath;
         $filesystem->ensureDirectoryExists($workingPath);
         $filesystem->copy(join_paths(__DIR__, 'stubs', 'composer.json'), join_paths($workingPath, 'composer.json'));
+        $filesystem->copy(join_paths(__DIR__, 'stubs', 'phpunit.xml.dist'), join_paths($workingPath, 'phpunit.xml.dist'));
 
         parent::setUp();
     }
