@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\StubRegistrar;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -91,44 +92,7 @@ class InstallCommand extends Command
             force: (bool) $this->option('force'),
         ))->handle($from, $to);
 
-        $workbenchAppNamespacePrefix = rtrim(Workbench::detectNamespace('app') ?? 'Workbench\App\\', '\\');
-        $workbenchSeederNamespacePrefix = rtrim(Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\', '\\');
-
-        $serviceProvider = \sprintf('%s\Providers\WorkbenchServiceProvider', $workbenchAppNamespacePrefix);
-        $databaseSeeder = \sprintf('%s\DatabaseSeeder', $workbenchSeederNamespacePrefix);
-
-        $this->replaceInFile(
-            $filesystem,
-            [
-                '{{WorkbenchAppNamespace}}',
-                '{{ WorkbenchAppNamespace }}',
-                '{{WorkbenchSeederNamespace}}',
-                '{{ WorkbenchSeederNamespace }}',
-
-                '{{WorkbenchServiceProvider}}',
-                '{{ WorkbenchServiceProvider }}',
-                'Workbench\App\Providers\WorkbenchServiceProvider',
-
-                '{{WorkbenchDatabaseSeeder}}',
-                '{{ WorkbenchDatabaseSeeder }}',
-                'Workbench\Database\Seeders\DatabaseSeeder',
-            ],
-            [
-                $workbenchAppNamespacePrefix,
-                $workbenchAppNamespacePrefix,
-                $workbenchSeederNamespacePrefix,
-                $workbenchSeederNamespacePrefix,
-
-                $serviceProvider,
-                $serviceProvider,
-                $serviceProvider,
-
-                $databaseSeeder,
-                $databaseSeeder,
-                $databaseSeeder,
-            ],
-            $to
-        );
+        StubRegistrar::replaceInFile($filesystem, $to);
     }
 
     /**

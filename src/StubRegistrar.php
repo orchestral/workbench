@@ -2,6 +2,7 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 
 use function Orchestra\Testbench\join_paths;
@@ -71,5 +72,52 @@ class StubRegistrar
                 return $realpath !== false ? $realpath : null;
             }
         );
+    }
+
+    /**
+     * Replace stub namespaces.
+     */
+    public static function replaceInFile(Filesystem $filesystem, string $filename): void
+    {
+        if (! $filesystem->isFile($filename)) {
+            return;
+        }
+
+        $workbenchAppNamespacePrefix = rtrim(Workbench::detectNamespace('app') ?? 'Workbench\App\\', '\\');
+        $workbenchFactoriesNamespacePrefix = rtrim(Workbench::detectNamespace('database/factories') ?? 'Workbench\Database\Factories\\', '\\');
+        $workbenchSeederNamespacePrefix = rtrim(Workbench::detectNamespace('database/seeders') ?? 'Workbench\Database\Seeders\\', '\\');
+
+        $serviceProvider = \sprintf('%s\Providers\WorkbenchServiceProvider', $workbenchAppNamespacePrefix);
+        $databaseSeeder = \sprintf('%s\DatabaseSeeder', $workbenchSeederNamespacePrefix);
+        $userModel = \sprintf('%s\Models\User', $workbenchAppNamespacePrefix);
+        $userFactory = \sprintf('%s\UserFactory', $workbenchFactoriesNamespacePrefix);
+
+        $keywords = [
+            'Workbench\App' => $workbenchAppNamespacePrefix,
+            'Workbench\Database\Factories' => $workbenchFactoriesNamespacePrefix,
+            'Workbench\Database\Seeders' => $workbenchSeederNamespacePrefix,
+
+            '{{WorkbenchAppNamespace}}' => $workbenchAppNamespacePrefix,
+            '{{ WorkbenchAppNamespace }}' => $workbenchAppNamespacePrefix,
+            '{{WorkbenchFactoryNamespace}}' => $workbenchFactoriesNamespacePrefix,
+            '{{ WorkbenchFactoryNamespace }}' => $workbenchFactoriesNamespacePrefix,
+            '{{WorkbenchSeederNamespace}}' => $workbenchSeederNamespacePrefix,
+            '{{ WorkbenchSeederNamespace }}' => $workbenchSeederNamespacePrefix,
+
+            '{{WorkbenchServiceProvider}}' => $serviceProvider,
+            '{{ WorkbenchServiceProvider }}' => $serviceProvider,
+
+            '{{WorkbenchDatabaseSeeder}}' => $databaseSeeder,
+            '{{ WorkbenchDatabaseSeeder }}' => $databaseSeeder,
+
+            '{{WorkbenchUserModel}}' => $userModel,
+            '{{ WorkbenchUserModel }}' => $userModel,
+
+            '{{WorkbenchUserFactory}}' => $userFactory,
+            '{{ WorkbenchUserFactory }}' => $userFactory,
+            'Orchestra\Testbench\Factories\UserFactory' => $userFactory,
+        ];
+
+        $filesystem->put($filename, str_replace(array_keys($keywords), array_values($keywords), $filesystem->get($filename)));
     }
 }
