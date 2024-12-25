@@ -15,6 +15,9 @@ workbench:
   sync:
     - from: workbench/dist
       to: public/vendor/workbench
+    - from: storage
+      to: workbench/storage
+      reverse: true
   assets:
     - workbench-assets
   discovers:

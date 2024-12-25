@@ -2,6 +2,9 @@
 
 namespace Orchestra\Workbench\Actions;
 
+/**
+ * @api
+ */
 class ModifyComposer
 {
     /**

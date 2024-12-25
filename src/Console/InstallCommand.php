@@ -8,6 +8,7 @@ use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Workbench\StubRegistrar;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -119,6 +120,8 @@ class InstallCommand extends Command implements PromptsForMissingInput
             components: $this->components,
             force: (bool) $this->option('force'),
         ))->handle($from, $to);
+
+        StubRegistrar::replaceInFile($filesystem, $to);
     }
 
     /**

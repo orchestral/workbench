@@ -2,6 +2,55 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.17.0
+
+Released: 2024-12-24
+
+### Added
+
+* Add `Orchestra\Workbench\Actions\ReplaceNamespaces` action class.
+* Utilise `@no-named-arguments` PHP docblock.
+
+### Changes
+
+* Update `testbench.yaml` stub file.
+
+## 8.16.0
+
+Released: 2024-12-24
+
+### Added
+
+* Add `Orchestra\Workbench\StubRegistrar::replaceInFile()` method.
+
+### Changes
+
+* Allow to send options to `Orchestra\Workbench\Recipes\Command`.
+
+## 8.15.2
+
+Released: 2024-12-19
+
+### Fixes
+
+* Fix generated namespace via `workbench:install`.
+
+## 8.15.1
+
+Released: 2024-12-18
+
+### Fixes
+
+* Fix `workbench:install` generating migrate-fresh command with incorrect options.
+
+## 8.15.0
+
+Released: 2024-12-16
+
+### Changes
+
+* Allow to configure Workbench default namespace prefix via `workbench:devtool` command.
+
 ## 8.14.0
 
 Released: 2024-12-10

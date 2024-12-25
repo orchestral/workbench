@@ -13,3 +13,6 @@
 # Stubs
 /skeleton/*
 /breeze-skeleton/*
+
+# Symlink
+/workbench/storage

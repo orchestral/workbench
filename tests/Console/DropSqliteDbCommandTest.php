@@ -37,7 +37,7 @@ class DropSqliteDbCommandTest extends TestCase
             $this->assertTrue(file_exists(database_path('database.sqlite')));
 
             $this->artisan('workbench:drop-sqlite-db')
-                ->expectsOutputToContain('File [database/database.sqlite] has been deleted')
+                ->expectsOutputToContain('File [@laravel/database/database.sqlite] has been deleted')
                 ->assertOk();
 
             $this->assertFalse(file_exists(database_path('database.sqlite')));
@@ -51,7 +51,7 @@ class DropSqliteDbCommandTest extends TestCase
             $this->assertFalse(file_exists(database_path('database.sqlite')));
 
             $this->artisan('workbench:drop-sqlite-db')
-                ->expectsOutputToContain('File [database/database.sqlite] doesn\'t exists')
+                ->expectsOutputToContain('File [@laravel/database/database.sqlite] doesn\'t exists')
                 ->assertOk();
         });
     }

@@ -2,11 +2,14 @@
 
 namespace Orchestra\Workbench;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 
 use function Orchestra\Testbench\join_paths;
 
 /**
+ * @internal
+ *
  * @phpstan-type TStubFiles array{
  *   config: ?string,
  *   'config.basic': ?string,
@@ -69,5 +72,13 @@ class StubRegistrar
                 return $realpath !== false ? $realpath : null;
             }
         );
+    }
+
+    /**
+     * Replace stub namespaces.
+     */
+    public static function replaceInFile(Filesystem $filesystem, string $filename): void
+    {
+        (new Actions\ReplaceNamespaces($filesystem))->handle($filename);
     }
 }

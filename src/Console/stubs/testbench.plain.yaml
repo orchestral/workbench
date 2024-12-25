@@ -1,13 +1,13 @@
 laravel: '@testbench'
 
 providers:
-  # - Workbench\App\Providers\WorkbenchServiceProvider
+  # - {{ WorkbenchServiceProvider }}
 
 migrations:
   - workbench/database/migrations
 
 seeders:
-  - Workbench\Database\Seeders\DatabaseSeeder
+  - {{ WorkbenchDatabaseSeeder }}
 
 workbench:
   install: true

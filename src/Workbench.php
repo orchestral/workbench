@@ -21,16 +21,22 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
 
     /**
      * Get the path to the application (Laravel) folder.
+     *
+     * @no-named-arguments
      */
     public static function applicationPath(array|string $path = ''): string
     {
-        return app()->basePath(
+        return base_path(
             join_paths(...Arr::wrap(\func_num_args() > 1 ? \func_get_args() : $path))
         );
     }
 
     /**
-     * Get the path to the laravel folder.
+     * Get the path to the Laravel application skeleton.
+     *
+     * @no-named-arguments
+     *
+     * @see \Orchestra\Workbench\Workbench::applicationPath()
      */
     public static function laravelPath(array|string $path = ''): string
     {
@@ -39,6 +45,8 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
 
     /**
      * Get the path to the package folder.
+     *
+     * @no-named-arguments
      */
     public static function packagePath(array|string $path = ''): string
     {
@@ -49,6 +57,8 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
 
     /**
      * Get the path to the workbench folder.
+     *
+     * @no-named-arguments
      */
     public static function path(array|string $path = ''): string
     {

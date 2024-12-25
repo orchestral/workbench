@@ -51,7 +51,7 @@ transform([
 transform([
     'namespace Database\Seeders;' => 'namespace Workbench\Database\Seeders;',
     'use App\Models\User;' => 'use Orchestra\Testbench\Factories\UserFactory;',
-    'User::factory(10)->create' => 'UserFactory::new->times(10)->create',
+    'User::factory(10)->create' => 'UserFactory::new()->times(10)->create',
     'User::factory()->create' => 'UserFactory::new()->create',
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/stubs/database/seeders/DatabaseSeeder.php"));
 

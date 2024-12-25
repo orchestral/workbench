@@ -16,6 +16,7 @@ class InstallCommandTest extends CommandTestCase
     public function it_can_run_installation_command_with_devtool(?string $answer, bool $createEnvironmentFile)
     {
         $this->artisan('workbench:install', ['--devtool' => true])
+            ->expectsConfirmation('Prefix with `Workbench` namespace?', answer: 'yes')
             ->expectsChoice("Export '.env' file as?", $answer, [
                 'Skip exporting .env',
                 '.env',
@@ -28,6 +29,27 @@ class InstallCommandTest extends CommandTestCase
 
         $this->assertCommandExecutedWithInstall();
         $this->assertCommandExecutedWithDevTool();
+        $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
+    }
+
+    #[Test]
+    #[DataProvider('environmentFileDataProviders')]
+    public function it_can_run_installation_command_with_devtool_without_workbench_prefix(?string $answer, bool $createEnvironmentFile)
+    {
+        $this->artisan('workbench:install', ['--devtool' => true])
+            ->expectsConfirmation('Prefix with `Workbench` namespace?', answer: 'no')
+            ->expectsChoice("Export '.env' file as?", $answer, [
+                'Skip exporting .env',
+                '.env',
+                '.env.example',
+                '.env.dist',
+            ])
+            ->expectsConfirmation('Generate `workbench/bootstrap/app.php` file?', answer: 'no')
+            ->expectsConfirmation('Generate `workbench/bootstrap/providers.php` file?', answer: 'no')
+            ->assertSuccessful();
+
+        $this->assertCommandExecutedWithInstall(prefix: false);
+        $this->assertCommandExecutedWithDevTool(prefix: false);
         $this->assertFromEnvironmentFileDataProviders($answer, $createEnvironmentFile);
     }
 
