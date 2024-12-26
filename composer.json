@@ -34,14 +34,14 @@
         "orchestra/testbench-core": "^10.0",
         "symfony/polyfill-php83": "^1.31",
         "symfony/polyfill-php84": "^1.31",
-        "symfony/process": "^7.0.3",
-        "symfony/yaml": "^7.0.3"
+        "symfony/process": "^7.2",
+        "symfony/yaml": "^7.2"
     },
     "require-dev": {
         "laravel/pint": "^1.17",
         "mockery/mockery": "^1.6.10",
         "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^10.5.35 || ^11.3.6"
+        "phpunit/phpunit": "^11.3.6"
     },
     "suggest": {
         "ext-pcntl": "Required to use all features of the console signal trapping."
