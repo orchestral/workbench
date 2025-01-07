@@ -15,11 +15,7 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->booted(function () {
-            $hasAuthentication = Workbench::config('auth') ?? false;
-
-            if ($hasAuthentication === true) {
-                $this->loadRoutesFrom((string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench-auth.php')));
-            }
+            $this->loadRoutesFrom((string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench-auth.php')));
         });
 
         $this->loadViewsFrom((string) realpath(join_paths(__DIR__, '..', 'resources', 'views')), '');
