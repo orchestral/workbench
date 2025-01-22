@@ -57,6 +57,14 @@
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "build:assets": [
+            "npm ci",
+            "npm run build"
+        ],
+        "build:dev-assets": [
+            "npm ci",
+            "npm run dev"
+        ],
         "serve": [
             "Composer\\Config::disableProcessTimeout",
             "@build",
