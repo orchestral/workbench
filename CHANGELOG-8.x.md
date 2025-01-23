@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.17.1
+
+Released: 2025-01-23
+
+### Changes
+
+* Register routes via `ServiceProvider::booted()`.
+
 ## 8.17.0
 
 Released: 2024-12-24
