@@ -1,9 +1,9 @@
 Workbench Companion for Laravel Packages Development 
 ==============
 
-Workbench Component is a simple package that has been designed to help you previews and interacts with your Laravel package.
+Workbench Component is a simple package designed to help you preview and interact with your Laravel package.
 
-[![tests](https://github.com/orchestral/workbench/workflows/tests/badge.svg?branch=master)](https://github.com/orchestral/workbench/actions?query=workflow%3Atests+branch%3Amaster)
+[![tests](https://github.com/orchestral/workbench/actions/workflows/tests.yaml/badge.svg?branch=9.x)](https://github.com/orchestral/workbench/actions/workflows/tests.yaml)
 [![Latest Stable Version](https://poser.pugx.org/orchestra/workbench/v/stable)](https://packagist.org/packages/orchestra/workbench)
 [![Total Downloads](https://poser.pugx.org/orchestra/workbench/downloads)](https://packagist.org/packages/orchestra/workbench)
 [![Latest Unstable Version](https://poser.pugx.org/orchestra/workbench/v/unstable)](https://packagist.org/packages/orchestra/workbench)
