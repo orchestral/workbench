@@ -27,7 +27,7 @@ Symfony\Component\Process\Process::fromShellCommandline(
 )->mustRun();
 
 Symfony\Component\Process\Process::fromShellCommandline(
-    'composer create-project "laravel/breeze" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
+    'composer create-project "laravel/breeze:dev-develop" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
 collect([
