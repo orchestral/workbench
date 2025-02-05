@@ -33,6 +33,7 @@
         "laravel/tinker": "^2.10.1",
         "orchestra/canvas": "^10.0",
         "orchestra/testbench-core": "^10.0",
+        "spatie/laravel-ray": "^1.39.1",
         "symfony/polyfill-php83": "^1.31",
         "symfony/polyfill-php84": "^1.31",
         "symfony/process": "^7.2",
