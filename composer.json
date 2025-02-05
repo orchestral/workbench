@@ -33,7 +33,6 @@
         "laravel/tinker": "^2.10.1",
         "orchestra/canvas": "^10.0",
         "orchestra/testbench-core": "^10.0",
-        "spatie/laravel-ray": "^1.39.1",
         "symfony/polyfill-php83": "^1.31",
         "symfony/polyfill-php84": "^1.31",
         "symfony/process": "^7.2",
@@ -44,7 +43,8 @@
         "laravel/pint": "^1.17",
         "mockery/mockery": "^1.6.10",
         "phpstan/phpstan": "^2.0",
-        "phpunit/phpunit": "^11.5.3"
+        "phpunit/phpunit": "^11.5.3",
+        "spatie/laravel-ray": "^1.39.1"
     },
     "suggest": {
         "ext-pcntl": "Required to use all features of the console signal trapping."
