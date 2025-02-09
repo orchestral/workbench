@@ -11,30 +11,24 @@ class GeneratorPreset extends Preset
 {
     /**
      * Preset name.
-     *
-     * @return string
      */
-    public function name()
+    public function name(): string
     {
         return 'workbench';
     }
 
     /**
      * Get the path to the base working directory.
-     *
-     * @return string
      */
-    public function basePath()
+    public function basePath(): string
     {
         return rtrim(Workbench::path(), DIRECTORY_SEPARATOR);
     }
 
     /**
      * Get the path to the source directory.
-     *
-     * @return string
      */
-    public function sourcePath()
+    public function sourcePath(): string
     {
         return rtrim(Workbench::path('app'), DIRECTORY_SEPARATOR);
     }
@@ -44,47 +38,39 @@ class GeneratorPreset extends Preset
      *
      * @throws \BadMethodCallException
      */
-    public function testingPath()
+    public function testingPath(): never
     {
         throw new BadMethodCallException('Generating test is not supported for [workbench] preset');
     }
 
     /**
      * Get the path to the resource directory.
-     *
-     * @return string
      */
-    public function resourcePath()
+    public function resourcePath(): string
     {
         return rtrim(Workbench::path('resources'), DIRECTORY_SEPARATOR);
     }
 
     /**
      * Get the path to the view directory.
-     *
-     * @return string
      */
-    public function viewPath()
+    public function viewPath(): string
     {
         return rtrim(Workbench::path(join_paths('resources', 'views')), DIRECTORY_SEPARATOR);
     }
 
     /**
      * Get the path to the factory directory.
-     *
-     * @return string
      */
-    public function factoryPath()
+    public function factoryPath(): string
     {
         return rtrim(Workbench::path(join_paths('database', 'factories')), DIRECTORY_SEPARATOR);
     }
 
     /**
      * Get the path to the migration directory.
-     *
-     * @return string
      */
-    public function migrationPath()
+    public function migrationPath(): string
     {
         return rtrim(Workbench::path(join_paths('database', 'migrations')), DIRECTORY_SEPARATOR);
     }
@@ -99,60 +85,48 @@ class GeneratorPreset extends Preset
 
     /**
      * Preset namespace.
-     *
-     * @return string
      */
-    public function rootNamespace()
+    public function rootNamespace(): string
     {
         return Workbench::detectNamespace('app') ?? "Workbench\App\\";
     }
 
     /**
      * Command namespace.
-     *
-     * @return string
      */
-    public function commandNamespace()
+    public function commandNamespace(): string
     {
         return "{$this->rootNamespace()}Console\\";
     }
 
     /**
      * Model namespace.
-     *
-     * @return string
      */
-    public function modelNamespace()
+    public function modelNamespace(): string
     {
         return "{$this->rootNamespace()}Models\\";
     }
 
     /**
      * Provider namespace.
-     *
-     * @return string
      */
-    public function providerNamespace()
+    public function providerNamespace(): string
     {
         return "{$this->rootNamespace()}Providers\\";
     }
 
     /**
      * Database factory namespace.
-     *
-     * @return string
      */
-    public function factoryNamespace()
+    public function factoryNamespace(): string
     {
         return Workbench::detectNamespace('database/factories') ?? "Workbench\Database\Factories\\";
     }
 
     /**
      * Database seeder namespace.
-     *
-     * @return string
      */
-    public function seederNamespace()
+    public function seederNamespace(): string
     {
         return Workbench::detectNamespace('database/seeders') ?? "Workbench\Database\Seeders\\";
     }
@@ -162,17 +136,15 @@ class GeneratorPreset extends Preset
      *
      * @throws \BadMethodCallException
      */
-    public function testingNamespace()
+    public function testingNamespace(): never
     {
         throw new BadMethodCallException('Generating test is not supported for [workbench] preset');
     }
 
     /**
      * Preset has custom stub path.
-     *
-     * @return bool
      */
-    public function hasCustomStubPath()
+    public function hasCustomStubPath(): bool
     {
         return false;
     }
