@@ -4,6 +4,8 @@ namespace Orchestra\Workbench\Actions;
 
 use RuntimeException;
 
+use function Orchestra\Testbench\join_paths;
+
 /**
  * @api
  */
@@ -23,7 +25,7 @@ class ModifyComposer
      */
     public function handle(callable $callback): void
     {
-        $composerFile = "{$this->workingPath}/composer.json";
+        $composerFile = join_paths($this->workingPath, 'composer.json');
 
         if (! file_exists($composerFile)) {
             throw new RuntimeException("Unable to locate `composer.json` file at [{$this->workingPath}].");
