@@ -34,13 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register a view file namespace.
-     *
-     * @param  string|array  $path
-     * @param  string  $namespace
-     * @return void
-     */
+    /** {@inheritDoc} */
     #[\Override]
     protected function loadViewsFrom($path, $namespace)
     {

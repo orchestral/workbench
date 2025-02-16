@@ -38,7 +38,7 @@ class BuildCommand extends Command
             ->each(function (array $options, string $name) use ($kernel, $recipes, $commands) {
                 /** @var array<string, mixed> $options */
                 if ($recipes->hasCommand($name)) {
-                    tap($recipes->command($name), function ($recipe) use ($options) {
+                    tap($recipes->command($name), static function ($recipe) use ($options) {
                         if ($recipe instanceof CommandRecipe) {
                             $recipe->options = $options;
                         }
