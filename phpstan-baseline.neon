@@ -1,6 +1,7 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Undefined variable\\: \\$this$#"
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Http\\Kernel\:\:pushMiddleware\(\)\.$#'
+			identifier: method.notFound
 			count: 1
-			path: src/Console/stubs/routes/console.php
+			path: src/WorkbenchServiceProvider.php

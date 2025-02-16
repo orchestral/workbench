@@ -31,9 +31,9 @@
         "laravel/framework": "^12.0",
         "laravel/pail": "^1.2.2",
         "laravel/tinker": "^2.10.1",
-        "orchestra/canvas": "^10.0",
-        "orchestra/canvas-core": "^10.0",
-        "orchestra/testbench-core": "^10.0",
+        "orchestra/canvas": "^10.0.0",
+        "orchestra/canvas-core": "^10.0.0",
+        "orchestra/testbench-core": "^10.0.0",
         "symfony/polyfill-php83": "^1.31",
         "symfony/polyfill-php84": "^1.31",
         "symfony/process": "^7.2",
@@ -41,9 +41,9 @@
         "nunomaduro/collision": "^8.6"
     },
     "require-dev": {
-        "laravel/pint": "^1.17",
+        "laravel/pint": "^1.20",
         "mockery/mockery": "^1.6.10",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^11.5.3",
         "spatie/laravel-ray": "^1.39.1"
     },
