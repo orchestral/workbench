@@ -12,19 +12,22 @@ workbench:
     - migrate:refresh:
         --seed: true
         --seeder: Workbench\Database\Seeders\DatabaseSeeder
-  sync:
-    - from: workbench/dist
-      to: public/vendor/workbench
-    - from: storage
-      to: workbench/storage
-      reverse: true
   assets:
     - workbench-assets
   discovers:
     web: true
     api: true
     commands: true
+  sync:
+    - from: workbench/dist
+      to: public/vendor/workbench
+    - from: storage
+      to: workbench/storage
+      reverse: true
 
 purge:
+  files:
+    - .env
   directories:
-    - public/vendor/workbench
+    - public/build
+    - public/vendor/*
