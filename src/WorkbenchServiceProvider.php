@@ -46,6 +46,7 @@ class WorkbenchServiceProvider extends ServiceProvider
             $this->loadRoutesFrom((string) realpath(join_paths(__DIR__, '..', 'routes', 'workbench.php')));
         });
 
+        /** @phpstan-ignore method.notFound */
         $this->app->make(HttpKernel::class)->pushMiddleware(Http\Middleware\CatchDefaultRoute::class);
 
         if ($this->app->runningInConsole()) {

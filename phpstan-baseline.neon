@@ -1,7 +1,2 @@
 parameters:
-	ignoreErrors:
-		-
-			message: '#^Call to an undefined method Illuminate\\Contracts\\Http\\Kernel\:\:pushMiddleware\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/WorkbenchServiceProvider.php
+	ignoreErrors: []
