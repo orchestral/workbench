@@ -7,7 +7,7 @@ use Illuminate\Support\Composer;
 use Mockery as m;
 use Orchestra\Workbench\Actions\DumpComposerAutoloads;
 
-use function Orchestra\Testbench\join_paths;
+use function Orchestra\Sidekick\join_paths;
 
 /**
  * @group composer

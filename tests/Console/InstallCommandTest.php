@@ -5,7 +5,7 @@ namespace Orchestra\Workbench\Tests\Console;
 use Illuminate\Filesystem\Filesystem;
 
 use function Orchestra\Testbench\default_skeleton_path;
-use function Orchestra\Testbench\join_paths;
+use function Orchestra\Sidekick\join_paths;
 
 class InstallCommandTest extends CommandTestCase
 {

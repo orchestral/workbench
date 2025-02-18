@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\Concerns\InteractsWithPublishedFiles;
 use Workbench\Database\Factories\UserFactory;
 
-use function Orchestra\Testbench\join_paths;
+use function Orchestra\Sidekick\join_paths;
 
 class WorkbenchTest extends TestCase
 {

@@ -5,7 +5,7 @@ namespace Orchestra\Workbench\Tests;
 use Orchestra\Workbench\StubRegistrar;
 use PHPUnit\Framework\TestCase;
 
-use function Orchestra\Testbench\join_paths;
+use function Orchestra\Sidekick\join_paths;
 
 class StubRegistrarTest extends TestCase
 {
