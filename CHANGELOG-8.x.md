@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 8.17.2
+
+Released: 2025-02-19
+
+### Changes
+
+* Use `orchestra/sidekick`.
+
 ## 8.17.1
 
 Released: 2025-01-23
