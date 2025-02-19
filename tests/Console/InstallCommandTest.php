@@ -6,8 +6,8 @@ use Illuminate\Filesystem\Filesystem;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 
-use function Orchestra\Testbench\default_skeleton_path;
 use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Testbench\default_skeleton_path;
 
 class InstallCommandTest extends CommandTestCase
 {
