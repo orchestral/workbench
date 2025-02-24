@@ -8,8 +8,7 @@ require __DIR__.'/../vendor/autoload.php';
 $input = new Symfony\Component\Console\Input\ArgvInput();
 $files = new Illuminate\Filesystem\Filesystem();
 
-// $version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '11.x-dev' : '^11.0';
-$version = 'dev-master';
+$version = ($input->hasParameterOption('--dev') && $input->hasParameterOption('--stable') === false) ? '12.x-dev' : '^12.0';
 
 $purgeSkeletonDirectories = static function () use ($files, $workingPath) {
     $files->deleteDirectory("{$workingPath}/skeleton");
@@ -27,7 +26,7 @@ Symfony\Component\Process\Process::fromShellCommandline(
 )->mustRun();
 
 Symfony\Component\Process\Process::fromShellCommandline(
-    'composer create-project "laravel/breeze:dev-develop" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
+    'composer create-project "laravel/breeze:^2.3.5" breeze-skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
 )->mustRun();
 
 collect([
