@@ -1,6 +1,2 @@
 parameters:
-	ignoreErrors:
-		-
-			message: "#^Undefined variable\\: \\$this$#"
-			count: 1
-			path: src/Console/stubs/routes/console.php
+	ignoreErrors: []

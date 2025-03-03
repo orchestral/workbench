@@ -5,7 +5,7 @@ namespace Orchestra\Workbench;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 
-use function Orchestra\Testbench\join_paths;
+use function Orchestra\Sidekick\join_paths;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -34,13 +34,7 @@ class AuthServiceProvider extends ServiceProvider
         }
     }
 
-    /**
-     * Register a view file namespace.
-     *
-     * @param  string|array  $path
-     * @param  string  $namespace
-     * @return void
-     */
+    /** {@inheritDoc} */
     #[\Override]
     protected function loadViewsFrom($path, $namespace)
     {
