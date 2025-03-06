@@ -30,7 +30,7 @@
         "fakerphp/faker": "^1.21",
         "laravel/framework": "^10.48.25",
         "laravel/tinker": "^2.8.2",
-        "nunomaduro/collision": "^6.4 || ^7.10",
+        "nunomaduro/collision": "^6.4|^7.10",
         "orchestra/canvas": "^8.12.0",
         "orchestra/sidekick": "^1.0.5",
         "orchestra/testbench-core": "^8.35.0",
