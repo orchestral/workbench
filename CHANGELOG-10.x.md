@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 10.0.1
+
+Released: 2025-03-06
+
+### Changes
+
+* Update dependencies and assets.
+
 ## 10.0.0
 
 Released: 2025-02-24
