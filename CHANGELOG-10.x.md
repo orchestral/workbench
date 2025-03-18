@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 10.0.2
+
+Released: 2025-03-18
+
+### Changes
+
+* Update `routes/console.stub`.
+
 ## 10.0.1
 
 Released: 2025-03-06
