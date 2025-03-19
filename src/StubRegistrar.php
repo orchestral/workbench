@@ -41,12 +41,16 @@ class StubRegistrar
 
     /**
      * Swap stub file by name.
+     *
+     * @return $this
      */
-    public function swap(string $name, ?string $file): void
+    public function swap(string $name, ?string $file)
     {
         if (\array_key_exists($name, static::$files)) {
             static::$files[$name] = $file;
         }
+
+        return $this;
     }
 
     /**
