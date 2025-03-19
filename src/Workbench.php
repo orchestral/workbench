@@ -98,7 +98,6 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
         return static::$stubRegistrar ??= new StubRegistrar;
     }
 
-
     /**
      * Swap stub file by name.
      */
