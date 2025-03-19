@@ -100,6 +100,8 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
 
     /**
      * Swap stub file by name.
+     *
+     * @codeCoverageIgnore
      */
     public static function swapFile(string $name, ?string $file): StubRegistrar
     {
@@ -108,6 +110,8 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
 
     /**
      * Retrieve the stub file from name.
+     *
+     * @codeCoverageIgnore
      */
     public static function stubFile(string $name): ?string
     {
