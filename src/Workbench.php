@@ -98,22 +98,13 @@ class Workbench extends \Orchestra\Testbench\Workbench\Workbench
         return static::$stubRegistrar ??= new StubRegistrar;
     }
 
-    /**
-     * Swap stub file by name.
-     */
-    public static function useStubFile(string $name, ?string $file): void
-    {
-        static::stub()->swap($name, $file);
-    }
 
     /**
      * Swap stub file by name.
-     *
-     * @see \Orchestra\Workbench\Workbench::useStubFile()
      */
-    public static function swapFile(string $name, ?string $file): void
+    public static function swapFile(string $name, ?string $file): StubRegistrar
     {
-        static::useStubFile($name, $file);
+        return static::stub()->swap($name, $file);
     }
 
     /**
