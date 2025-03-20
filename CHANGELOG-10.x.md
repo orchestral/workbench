@@ -2,6 +2,15 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 10.0.3
+
+Released: 2025-03-20
+
+### Changes
+
+* Change `Orchestra\Workbench\StubRegistrar::swap()` method return type.
+* Update dependencies and assets.
+
 ## 10.0.2
 
 Released: 2025-03-18
