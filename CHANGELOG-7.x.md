@@ -2,6 +2,15 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 7.17.4
+
+Released: 2025-03-20
+
+### Changes
+
+* Change `Orchestra\Workbench\StubRegistrar::swap()` method return type.
+* Bump `orchestra/sidekick` dependency.
+
 ## 7.17.3
 
 Released: 2025-03-06
