@@ -2,15 +2,6 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
-## 9.13.5
-
-Released: 2025-03-20
-
-### Changes
-
-* Change `Orchestra\Workbench\StubRegistrar::swap()` method return type.
-* Update dependencies and assets.
-
 ## 9.13.4
 
 Released: 2025-03-20
@@ -18,7 +9,7 @@ Released: 2025-03-20
 ### Changes
 
 * Change `Orchestra\Workbench\StubRegistrar::swap()` method return type.
-* Bump `orchestra/sidekick` dependency.
+* Update dependencies and assets.
 
 ## 9.13.3
 
