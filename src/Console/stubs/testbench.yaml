@@ -14,9 +14,10 @@ workbench:
   install: true
   discovers:
     web: true
-    api: false
-    commands: false
+    api: true
+    commands: true
     components: false
+    factories: true
     views: false
   build:
     - asset-publish
