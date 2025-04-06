@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 7.17.5
+
+Released: 2025-04-06
+
+### Fixes
+
+* Fix defaut installation should match Laravel application.
+
 ## 7.17.4
 
 Released: 2025-03-20
