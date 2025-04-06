@@ -8,7 +8,7 @@ Released: 2025-04-06
 
 ### Fixes
 
-* Fix default installation should match Laravel application.
+* Fix the default installation to match Laravel application.
 
 ## 7.17.4
 
