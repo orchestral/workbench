@@ -2,6 +2,8 @@ name: 'update assets'
 
 on:
   push:
+    branches:
+      - '*.x'
     paths:
       - 'package-lock.json'
   pull_request:

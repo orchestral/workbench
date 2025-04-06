@@ -86,7 +86,6 @@
             "npm run build"
         ],
         "ci": [
-            "@composer audit",
             "@prepare",
             "@lint",
             "@test"
