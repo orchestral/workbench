@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 9.13.5
+
+Released: 2025-04-06
+
+### Fixes
+
+* Fix the default installation to match Laravel application.
+
 ## 9.13.4
 
 Released: 2025-03-20
