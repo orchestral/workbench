@@ -30,17 +30,18 @@
         "fakerphp/faker": "^1.23",
         "laravel/framework": "^13.0.0",
         "orchestra/canvas": "^11.0.0",
-        "orchestra/sidekick": "^1.0.5",
+        "orchestra/sidekick": "^1.1.0",
         "orchestra/testbench-core": "^11.0.0",
         "symfony/polyfill-php84": "^1.31",
         "symfony/process": "^7.2",
         "symfony/yaml": "^7.2"
     },
     "require-dev": {
-        "laravel/pint": "^1.21",
-        "mockery/mockery": "^1.6.10",
-        "phpstan/phpstan": "^2.1",
-        "phpunit/phpunit": "^11.5.3"
+        "laravel/pint": "^1.21.2",
+        "mockery/mockery": "^1.6.12",
+        "phpstan/phpstan": "^2.1.8",
+        "phpunit/phpunit": "^11.5.3|^12.0.1",
+        "spatie/laravel-ray": "^1.40.1"
     },
     "config": {
         "sort-packages": true
@@ -81,7 +82,6 @@
             "npm run build"
         ],
         "ci": [
-            "@composer audit",
             "@prepare",
             "@lint",
             "@test"

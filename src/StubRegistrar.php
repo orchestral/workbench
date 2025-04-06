@@ -20,7 +20,7 @@ use function Orchestra\Sidekick\join_paths;
  *   'seeders.database': ?string
  * }
  */
-class StubRegistrar
+final class StubRegistrar
 {
     /**
      * Files of stub files overrides.
@@ -41,12 +41,16 @@ class StubRegistrar
 
     /**
      * Swap stub file by name.
+     *
+     * @return $this
      */
-    public function swap(string $name, ?string $file): void
+    public function swap(string $name, ?string $file)
     {
-        if (\array_key_exists($name, static::$files)) {
-            static::$files[$name] = $file;
+        if (\array_key_exists($name, self::$files)) {
+            self::$files[$name] = $file;
         }
+
+        return $this;
     }
 
     /**
@@ -65,8 +69,8 @@ class StubRegistrar
                 'routes.console' => join_paths($defaultStub, 'routes', 'console.php'),
                 'routes.web' => join_paths($defaultStub, 'routes', 'web.php'),
                 'seeders.database' => join_paths($defaultStub, 'database', 'seeders', 'DatabaseSeeder.php'),
-            ], array_filter(static::$files)), $name),
-            function ($file) {
+            ], array_filter(self::$files)), $name),
+            static function ($file) {
                 $realpath = realpath($file);
 
                 return $realpath !== false ? $realpath : null;

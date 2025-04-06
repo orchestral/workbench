@@ -1,0 +1,33 @@
+name: 'update assets'
+
+on:
+  push:
+    branches:
+      - '*.x'
+    paths:
+      - 'package-lock.json'
+  pull_request:
+    paths:
+      - 'package-lock.json'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Update Assets
+        run: |
+          composer run build:assets
+
+      - name: Commit compiled files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update Assets
