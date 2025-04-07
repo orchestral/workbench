@@ -64,8 +64,15 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
 
         $this->assertFileContains([
             \sprintf('namespace %sModels;', $prefix ? 'Workbench\App\\' : 'App\\'),
+            \sprintf('@use HasFactory<\%sUserFactory>', $prefix ? 'Workbench\Database\Factories\\' : 'Database\Factories\\'),
             'class User extends Authenticatable',
         ], join_paths($workingPath, 'workbench', 'app', 'Models', 'User.php'));
+
+        if ($prefix === true) {
+            $this->assertFileDoesNotContains([
+                '@use HasFactory<\Database\Factories\UserFactory>',
+            ], join_paths($workingPath, 'workbench', 'app', 'Models', 'User.php'));
+        }
 
         $this->assertFileContains([
             \sprintf('namespace %sProviders;', $prefix ? 'Workbench\App\\' : 'App\\'),
@@ -192,6 +199,25 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
 
         foreach ($contains as $needle) {
             $this->assertStringContainsString($needle, $haystack, $message);
+        }
+    }
+
+    /**
+     * Assert file doesn't contains data.
+     *
+     * @api
+     *
+     * @param  array<int, string>  $contains
+     * @return void
+     */
+    protected function assertFileDoesNotContains(array $contains, string $file, string $message = ''): void
+    {
+        $this->assertFileExists($file);
+
+        $haystack = file_get_contents($file);
+
+        foreach ($contains as $needle) {
+            $this->assertStringNotContainsString($needle, $haystack, $message);
         }
     }
 
