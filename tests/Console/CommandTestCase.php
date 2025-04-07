@@ -208,7 +208,6 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
      * @api
      *
      * @param  array<int, string>  $contains
-     * @return void
      */
     protected function assertFileDoesNotContains(array $contains, string $file, string $message = ''): void
     {
