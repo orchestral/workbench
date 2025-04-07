@@ -58,6 +58,7 @@ class ReplaceNamespaces
 
             '{{WorkbenchUserFactory}}' => $userFactory,
             '{{ WorkbenchUserFactory }}' => $userFactory,
+            'Database\Factories\UserFactory' => $userFactory,
             'Orchestra\Testbench\Factories\UserFactory' => $userFactory,
         ];
 
