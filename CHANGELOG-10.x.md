@@ -2,6 +2,14 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 10.0.6
+
+Released: 2025-04-13
+
+### Changes
+
+* Remove `symfony/polyfill-php84`.
+
 ## 10.0.5
 
 Released: 2025-04-08
