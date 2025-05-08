@@ -33,15 +33,15 @@
         "nunomaduro/collision": "^6.2",
         "orchestra/canvas": "^7.12.0",
         "orchestra/sidekick": "^1.1.5",
-        "orchestra/testbench-core": "^7.54.0",
-        "symfony/polyfill-php83": "^1.31",
+        "orchestra/testbench-core": "^7.55.0",
+        "symfony/polyfill-php83": "^1.32",
         "symfony/process": "^6.0.9",
         "symfony/yaml": "^6.0.9"
     },
     "require-dev": {
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1.14",
         "phpunit/phpunit": "^9.6",
         "spatie/laravel-ray": "^1.39"
     },

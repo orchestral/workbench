@@ -22,6 +22,8 @@ class ModifyComposer
      * Handle the action.
      *
      * @param  callable(array):array  $callback
+     *
+     * @throws \RuntimeException
      */
     public function handle(callable $callback): void
     {
