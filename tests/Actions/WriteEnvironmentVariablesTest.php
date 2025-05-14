@@ -10,6 +10,7 @@ class WriteEnvironmentVariablesTest extends TestCase
 {
     /**
      * @test
+     *
      * @testWith [false]
      *           [null]
      */
