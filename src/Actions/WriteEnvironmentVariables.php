@@ -4,7 +4,7 @@ namespace Orchestra\Workbench\Actions;
 
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use RuntimeException;
+use Orchestra\Testbench\Foundation\Env;
 
 /**
  * @api
@@ -43,13 +43,12 @@ class WriteEnvironmentVariables
      *
      * @param  array<string, mixed>  $variables
      *
-     * @throws \RuntimeException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function writeVariables(array $variables, string $filename, bool $overwrite = false): void
     {
         if ($this->filesystem->missing($filename)) {
-            throw new RuntimeException("The file [{$filename}] does not exist.");
+            throw new FileNotFoundException("The file [{$filename}] does not exist.");
         }
 
         $lines = explode(PHP_EOL, $this->filesystem->get($filename));
@@ -71,12 +70,12 @@ class WriteEnvironmentVariables
         $prefix = explode('_', $key)[0].'_';
         $lastPrefixIndex = -1;
 
-        $shouldQuote = preg_match('/^[a-zA-z0-9]+$/', $value) === 0;
+        $shouldQuote = \is_string($value) && preg_match('/^[a-zA-z0-9]+$/', $value) === 0;
 
         $lineToAddVariations = [
-            $key.'='.(\is_string($value) ? '"'.addslashes($value).'"' : $value),
-            $key.'='.(\is_string($value) ? "'".addslashes($value)."'" : $value),
-            $key.'='.$value,
+            $key.'='.(\is_string($value) ? '"'.addslashes($value).'"' : Env::encode($value)),
+            $key.'='.(\is_string($value) ? "'".addslashes($value)."'" : Env::encode($value)),
+            $key.'='.Env::encode($value),
         ];
 
         $lineToAdd = $shouldQuote ? $lineToAddVariations[0] : $lineToAddVariations[2];
