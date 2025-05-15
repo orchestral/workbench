@@ -38,6 +38,7 @@ class WriteEnvironmentVariablesTest extends TestCase
             'APP_DEBUG' => true,
             'TELESCOPE_ENABLED' => false,
             'NOVA_DOMAIN' => null,
+            'DB_PASSWORD' => '',
         ]);
 
         $this->assertSame(
@@ -49,6 +50,8 @@ class WriteEnvironmentVariablesTest extends TestCase
                 'TELESCOPE_ENABLED=(false)',
                 '',
                 'NOVA_DOMAIN=(null)',
+                '',
+                'DB_PASSWORD=',
             ]),
             file_get_contents(join_paths(__DIR__, 'tmp', '.env'))
         );
