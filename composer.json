@@ -35,14 +35,14 @@
         "orchestra/canvas": "^10.0.2",
         "orchestra/sidekick": "^1.1.5",
         "orchestra/testbench-core": "^10.2.1",
-        "symfony/polyfill-php83": "^1.31",
+        "symfony/polyfill-php83": "^1.32",
         "symfony/process": "^7.2",
         "symfony/yaml": "^7.2"
     },
     "require-dev": {
         "laravel/pint": "^1.22.0",
         "mockery/mockery": "^1.6.12",
-        "phpstan/phpstan": "^2.1.12",
+        "phpstan/phpstan": "^2.1.14",
         "phpunit/phpunit": "^11.5.3|^12.0.1",
         "spatie/laravel-ray": "^1.40.2"
     },
