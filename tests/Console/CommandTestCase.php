@@ -4,7 +4,8 @@ namespace Orchestra\Workbench\Tests\Console;
 
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Filesystem\Filesystem;
-use Orchestra\Canvas\LaravelServiceProvider;
+use Orchestra\Canvas\Core\LaravelServiceProvider as CanvasCoreServiceProvider;
+use Orchestra\Canvas\LaravelServiceProvider as CanvasServiceProvider;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Orchestra\Workbench\Workbench;
@@ -44,7 +45,8 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         return [
             TestbenchServiceProvider::class,
             WorkbenchServiceProvider::class,
-            LaravelServiceProvider::class,
+            CanvasServiceProvider::class,
+            CanvasCoreServiceProvider::class,
         ];
     }
 
