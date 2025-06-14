@@ -71,12 +71,12 @@ class DevToolCommand extends Command
             filesystem: $filesystem,
             components: $this->components,
         ))->handle(
-            Collection::make([
+            (new Collection([
                 join_paths('app', 'Models'),
                 join_paths('database', 'factories'),
                 join_paths('database', 'migrations'),
                 join_paths('database', 'seeders'),
-            ])->when(
+            ]))->when(
                 $this->option('basic') === false,
                 fn ($directories) => $directories->push(...['routes', join_paths('resources', 'views')])
             )->map(static fn ($directory) => join_paths($workbenchWorkingPath, $directory))

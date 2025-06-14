@@ -108,7 +108,7 @@ class InstallCommand extends Command
             return;
         }
 
-        $choices = Collection::make($this->environmentFiles())
+        $choices = (new Collection($this->environmentFiles()))
             ->reject(static fn ($file) => $filesystem->isFile(join_paths($workbenchWorkingPath, $file)))
             ->values();
 

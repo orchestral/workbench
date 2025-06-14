@@ -25,7 +25,7 @@ class AssetPublishCommand extends Command
         /** @var array<int, string> $assets */
         $assets = Workbench::config('assets');
 
-        $tags = Collection::make($assets)
+        $tags = (new Collection($assets))
             ->push('laravel-assets')
             ->unique()
             ->all();
