@@ -26,7 +26,7 @@ class BuildCommand extends Command
      */
     public function handle(ConsoleKernel $kernel, RecipeManager $recipes)
     {
-        $commands = Collection::make($kernel->all())
+        $commands = (new Collection($kernel->all()))
             ->keys()
             ->filter(static fn ($command) => \is_string($command))
             ->mapWithKeys(static fn (string $command) => [str_replace(':', '-', $command) => $command]);

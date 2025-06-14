@@ -28,7 +28,7 @@ class BuildParser
      */
     public static function make(array $config): Collection
     {
-        return Collection::make($config)
+        return (new Collection($config))
             ->map(static function (array|string $build) {
                 /** @var string $name */
                 $name = match (true) {
@@ -44,11 +44,11 @@ class BuildParser
 
                 return [
                     'name' => $name,
-                    'options' => Collection::make($options)->mapWithKeys(static fn ($value, $key) => [$key => $value])->all(),
+                    'options' => (new Collection($options))->mapWithKeys(static fn ($value, $key) => [$key => $value])->all(),
                 ];
             })->whereNotIn(
                 'name',
-                Collection::make(static::$disallowedCommands)
+                (new Collection(static::$disallowedCommands))
                     ->transform(static fn ($command) => [$command, str_replace(':', '-', $command)])
                     ->flatten(),
             )->mapWithKeys(static fn (array $build) => [

@@ -110,7 +110,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
         }
 
         /** @var \Illuminate\Support\Collection<int, string> $choices */
-        $choices = Collection::make($this->environmentFiles())
+        $choices = (new Collection($this->environmentFiles()))
             ->reject(static fn ($file) => $filesystem->isFile(join_paths($workbenchWorkingPath, $file)))
             ->values();
 
