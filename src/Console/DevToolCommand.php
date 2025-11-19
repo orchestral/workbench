@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function Laravel\Prompts\confirm;
+use function Orchestra\Sidekick\is_testbench_cli;
 use function Orchestra\Sidekick\join_paths;
 use function Orchestra\Testbench\package_path;
 
@@ -191,7 +192,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
         $content['scripts']['serve'] = [
             'Composer\\Config::disableProcessTimeout',
             '@build',
-            $hasTestbenchDusk && \defined('TESTBENCH_DUSK')
+            $hasTestbenchDusk && is_testbench_cli(dusk: true)
                 ? '@php vendor/bin/testbench-dusk serve --ansi'
                 : '@php vendor/bin/testbench serve --ansi',
         ];
