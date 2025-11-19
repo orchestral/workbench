@@ -32,7 +32,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/tinker": "^2.10.1",
         "nunomaduro/collision": "^8.6",
-        "orchestra/canvas": "^10.1.0",
+        "orchestra/canvas": "^10.0.2",
         "orchestra/sidekick": "^1.2.17",
         "orchestra/testbench-core": "^10.2.1",
         "symfony/polyfill-php83": "^1.32",
