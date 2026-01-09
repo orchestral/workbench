@@ -12,6 +12,9 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [8.2]
 
     steps:
       - name: Checkout code
