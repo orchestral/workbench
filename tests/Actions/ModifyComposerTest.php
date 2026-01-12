@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\RequiresOperatingSystem;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 #[RequiresOperatingSystem('Linux|DAR')]
 #[Group('composer')]
