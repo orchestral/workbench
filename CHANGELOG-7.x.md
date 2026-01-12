@@ -2,6 +2,20 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 7.18.0
+
+Released: 2026-01-12
+
+### Added
+
+* Add `Orchestra\Workbench\Actions\WriteEnvironmentVariables`.
+
+### Changes
+
+* Allows `Database\Factories\UserFactory` to be updated to Workbench namespace.
+* Convert `Collection::make()` to `new Collection()`.
+* Update dependencies and assets.
+
 ## 7.17.5
 
 Released: 2025-04-06
