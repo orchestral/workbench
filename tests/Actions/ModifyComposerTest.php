@@ -5,7 +5,7 @@ namespace Orchestra\Workbench\Tests\Actions;
 use Orchestra\Workbench\Actions\ModifyComposer;
 use RuntimeException;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 /**
  * @requires OS Linux|DAR

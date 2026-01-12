@@ -8,7 +8,7 @@ use Orchestra\Canvas\Core\Presets\Preset;
 use Orchestra\Testbench\Concerns\WithWorkbench;
 use Orchestra\Testbench\TestCase;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 class GeneratorPresetTest extends TestCase
 {

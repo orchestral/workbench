@@ -4,7 +4,7 @@ namespace Orchestra\Workbench;
 
 use Illuminate\Support\Arr;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 use function Orchestra\Testbench\package_path;
 use function Orchestra\Testbench\workbench;
 use function Orchestra\Testbench\workbench_path;
