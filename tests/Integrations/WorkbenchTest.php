@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\Attributes\Test;
 use Workbench\Database\Factories\UserFactory;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 class WorkbenchTest extends TestCase
 {

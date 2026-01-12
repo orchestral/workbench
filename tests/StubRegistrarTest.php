@@ -7,7 +7,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 class StubRegistrarTest extends TestCase
 {
