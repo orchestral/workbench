@@ -27,7 +27,7 @@ class WorkbenchServiceProvider extends ServiceProvider
         $this->app->singleton(Contracts\RecipeManager::class, static fn (Application $app) => new RecipeManager($app));
 
         $this->callAfterResolving(PresetManager::class, static function ($manager) {
-            $manager->extend('workbench', static fn (Application $app) => new GeneratorPreset($app));
+            $manager->extend('workbench', fn (Application $app) => new GeneratorPreset($app));
 
             $manager->setDefaultDriver('workbench');
         });
