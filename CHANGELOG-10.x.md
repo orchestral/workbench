@@ -2,6 +2,23 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 10.0.8
+
+Released: 2026-01-12
+
+### Changes
+
+* Update `DatabaseSeeder` stub file.
+* Update dependencies and assets.
+
+## 10.0.7
+
+Released: 2025-11-24
+
+### Changes
+
+* PHP 8.5 Compatibility.
+
 ## 10.0.6
 
 Released: 2025-04-13

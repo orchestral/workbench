@@ -5,7 +5,7 @@ namespace Orchestra\Workbench;
 use BadMethodCallException;
 use Orchestra\Canvas\Core\Presets\Preset;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 class GeneratorPreset extends Preset
 {

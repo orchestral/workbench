@@ -11,7 +11,7 @@ use Orchestra\Workbench\Workbench;
 use Orchestra\Workbench\WorkbenchServiceProvider;
 use Workbench\Database\Seeders\DatabaseSeeder as WorkbenchDatabaseSeeder;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 use function Orchestra\Testbench\default_skeleton_path;
 
 abstract class CommandTestCase extends \Orchestra\Testbench\TestCase

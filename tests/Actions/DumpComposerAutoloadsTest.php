@@ -9,7 +9,7 @@ use Orchestra\Workbench\Actions\DumpComposerAutoloads;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 #[Group('composer')]
 class DumpComposerAutoloadsTest extends TestCase
