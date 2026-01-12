@@ -33,7 +33,7 @@
         "laravel/tinker": "^2.9",
         "nunomaduro/collision": "^8.0",
         "orchestra/canvas": "^9.2.2",
-        "orchestra/sidekick": "^1.2.17",
+        "orchestra/sidekick": "~1.1.23|~1.2.20",
         "orchestra/testbench-core": "^9.12.0",
         "symfony/polyfill-php83": "^1.32",
         "symfony/process": "^7.0.3",
@@ -42,7 +42,7 @@
     "require-dev": {
         "laravel/pint": "^1.22",
         "mockery/mockery": "^1.6.10",
-        "phpstan/phpstan": "^2.1.14",
+        "phpstan/phpstan": "^2.1.33",
         "phpunit/phpunit": "^10.5.35|^11.3.6|^12.0.1",
         "spatie/laravel-ray": "^1.40.2"
     },

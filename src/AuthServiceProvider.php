@@ -5,7 +5,7 @@ namespace Orchestra\Workbench;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\View\Compilers\BladeCompiler;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 
 class AuthServiceProvider extends ServiceProvider
 {
