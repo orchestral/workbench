@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use function Orchestra\Sidekick\join_paths;
+use function Orchestra\Sidekick\Filesystem\join_paths;
 use function Orchestra\Testbench\package_path;
 
 #[AsCommand(name: 'workbench:install', description: 'Setup Workbench for package development')]
@@ -108,7 +108,7 @@ class InstallCommand extends Command
             return;
         }
 
-        $choices = Collection::make($this->environmentFiles())
+        $choices = (new Collection($this->environmentFiles()))
             ->reject(static fn ($file) => $filesystem->isFile(join_paths($workbenchWorkingPath, $file)))
             ->values();
 

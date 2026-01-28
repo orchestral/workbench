@@ -12,6 +12,9 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [8.2]
 
     steps:
       - name: Checkout code
@@ -19,7 +22,20 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 23
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, sqlite3, pdo_sqlite, bcmath, fileinfo
+          coverage: none
+
+      - name: Install dependencies
+        uses: "ramsey/composer-install@v3"
+        with:
+          dependency-versions: "highest"
+          composer-options: "--prefer-dist --no-cache"
 
       - name: Update Assets
         run: |

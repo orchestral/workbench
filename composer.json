@@ -28,25 +28,28 @@
         "php": "^8.0",
         "composer-runtime-api": "^2.2",
         "fakerphp/faker": "^1.21",
-        "laravel/framework": "^9.52.20",
+        "laravel/framework": "^9.52.21",
         "laravel/tinker": "^2.8.2",
         "nunomaduro/collision": "^6.2",
         "orchestra/canvas": "^7.12.0",
         "orchestra/canvas-core": "^7.8.0",
-        "orchestra/sidekick": "^1.1.5",
-        "orchestra/testbench-core": "^7.55.0",
-        "symfony/polyfill-php83": "^1.32",
+        "orchestra/sidekick": "~1.1.23|~1.2.20",
+        "orchestra/testbench-core": "^7.57.0",
+        "symfony/polyfill-php83": "^1.33",
         "symfony/process": "^6.0.9",
         "symfony/yaml": "^6.0.9"
     },
     "require-dev": {
         "laravel/pint": "^1.4",
         "mockery/mockery": "^1.5.1",
-        "phpstan/phpstan": "^2.1.14",
+        "phpstan/phpstan": "^2.1.33",
         "phpunit/phpunit": "^9.6",
         "spatie/laravel-ray": "^1.39"
     },
     "config": {
+        "audit": {
+            "block-insecure": false
+        },
         "sort-packages": true
     },
     "suggest": {
