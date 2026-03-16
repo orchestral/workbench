@@ -20,7 +20,7 @@ class DumpComposerAutoloadsTest extends TestCase
         $filesystem = new Filesystem;
         $workingPath = join_paths(__DIR__, 'stubs');
 
-        $this->instance('workbench.composer', $composer = m::mock(Composer::class, ['files' => $filesystem]));
+        $this->instance('canvas.composer', $composer = m::mock(Composer::class, ['files' => $filesystem]));
 
         $composer->shouldReceive('setWorkingPath')->once()->with($workingPath)->andReturnSelf();
         $composer->shouldReceive('dumpAutoloads')->once()->andReturnNull();
