@@ -33,6 +33,7 @@
         "laravel/tinker": "^2.10.1",
         "nunomaduro/collision": "^8.6",
         "orchestra/canvas": "^10.1.1",
+        "orchestra/canvas-core": "^10.2.0",
         "orchestra/sidekick": "~1.1.23|~1.2.20",
         "orchestra/testbench-core": "^10.8.0",
         "symfony/polyfill-php83": "^1.33",
