@@ -4,23 +4,10 @@ namespace Orchestra\Workbench\Actions;
 
 /**
  * @api
+ *
+ * @deprecated 7.18.0 Use `Orchestra\Canvas\Core\Actions\DumpComposerAutoloads` instead.
  */
-class DumpComposerAutoloads
+class DumpComposerAutoloads extends \Orchestra\Canvas\Core\Actions\DumpComposerAutoloads
 {
-    /**
-     * Construct a new action.
-     */
-    public function __construct(
-        protected string $workingPath
-    ) {}
-
-    /**
-     * Handle the action.
-     */
-    public function handle(): void
-    {
-        app('workbench.composer')
-            ->setWorkingPath($this->workingPath)
-            ->dumpAutoloads();
-    }
+    //
 }
