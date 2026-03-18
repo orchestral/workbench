@@ -32,7 +32,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/tinker": "^2.10.1",
         "nunomaduro/collision": "^8.6",
-        "orchestra/canvas": "^10.1.1",
+        "orchestra/canvas": "^10.2.0",
         "orchestra/canvas-core": "^10.2.0",
         "orchestra/sidekick": "~1.1.23|~1.2.20",
         "orchestra/testbench-core": "^10.8.0",
