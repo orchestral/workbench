@@ -66,8 +66,9 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
 
         $this->assertFileContains([
             \sprintf('namespace %sModels;', $prefix ? 'Workbench\App\\' : 'App\\'),
-            '@use HasFactory<UserFactory>',
+            \sprintf('use %sUserFactory', $prefix ? 'Workbench\Database\Factories\\' : 'Database\Factories\\'),
             'class User extends Authenticatable',
+            '@use HasFactory<UserFactory>',
         ], join_paths($workingPath, 'workbench', 'app', 'Models', 'User.php'));
 
         if ($prefix === true) {
