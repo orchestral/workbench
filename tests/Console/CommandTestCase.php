@@ -88,6 +88,10 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
             'class UserFactory extends Factory',
         ], join_paths($workingPath, 'workbench', 'database', 'factories', 'UserFactory.php'));
 
+        $this->assertFileDoesNotContains([
+            \sprintf('use %sModels\User;', $prefix === false ? 'Workbench\App\\' : 'App\\'),
+        ], join_paths($workingPath, 'workbench', 'database', 'factories', 'UserFactory.php'));
+
         $this->assertFileContains([
             \sprintf('namespace %sSeeders;', $prefix ? 'Workbench\Database\\' : 'Database\\'),
             \sprintf('use %sFactories\UserFactory;', $prefix ? 'Workbench\Database\\' : 'Database\\'),
