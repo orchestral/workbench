@@ -91,6 +91,9 @@ transform([
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Controllers/Auth/NewPasswordController.php"));
 
 transform([
+    line('use Workbench\\App\\Models\\User;') => line('use Orchestra\\Testbench\\Workbench\\Workbench;'.PHP_EOL.'use Illuminate\\Foundation\\Auth\\User;'),
+    line("\$request->validate([", 2) => line("\$userModel = Workbench::applicationUserModel() ?? User;", 2).PHP_EOL.PHP_EOL.line("\$request->validate([", 2),
+    line("\$user = User::create([", 2) => line("\$user = \$userModel::create([", 2),
     line("return redirect(route('dashboard', absolute: false));", 2) => line('return redirect($this->redirectToAfterLoggedIn());', 2),
 ], static fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Http/Controllers/Auth/RegisteredUserController.php"));
 
