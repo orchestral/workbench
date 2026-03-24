@@ -31,13 +31,13 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $userModel = Env::get('TESTBENCH_USER_MODEL', User::class);
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        $userModel = Env::get('TESTBENCH_USER_MODEL', User::class);
 
         $user = $userModel::create([
             'name' => $request->name,
