@@ -39,7 +39,7 @@ class RegisteredUserController extends Controller
 
         $userModel = Env::get('TESTBENCH_USER_MODEL', User::class);
 
-        $user = $userModel::create([
+        $user = $userModel::forceCreate([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
