@@ -2,6 +2,16 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 9.15.0
+
+Released: 2026-03-24
+
+### Changes
+
+* Utilise `Orchestra\Canvas\Core\Actions`.
+* Replace hardcoded Workbench\App\Models\User within `Orchestra\Workbench\Http\Controllers\Auth\RegisteredUserController` class
+* Resolves user model from `TESTBENCH_USER_MODEL` environment variable (if available).
+
 ## 9.14.0
 
 Released: 2026-01-12
