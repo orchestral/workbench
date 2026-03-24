@@ -3,14 +3,16 @@
 namespace Orchestra\Workbench\Http\Controllers\Auth;
 
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Orchestra\Sidekick\Env;
 use Orchestra\Workbench\Http\Controllers\Controller;
-use Workbench\App\Models\User;
 
 class RegisteredUserController extends Controller
 {
@@ -25,7 +27,7 @@ class RegisteredUserController extends Controller
     /**
      * Handle an incoming registration request.
      *
-     * @throws \Illuminate\Validation\ValidationException
+     * @throws ValidationException
      */
     public function store(Request $request): RedirectResponse
     {
@@ -35,7 +37,9 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $userModel = Env::get('TESTBENCH_USER_MODEL', User::class);
+
+        $user = $userModel::forceCreate([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),

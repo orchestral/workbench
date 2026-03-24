@@ -4,7 +4,8 @@ namespace Orchestra\Workbench\Tests\Console;
 
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Filesystem\Filesystem;
-use Orchestra\Canvas\LaravelServiceProvider;
+use Orchestra\Canvas\Core\LaravelServiceProvider as CanvasCoreServiceProvider;
+use Orchestra\Canvas\LaravelServiceProvider as CanvasServiceProvider;
 use Orchestra\Testbench\Foundation\Config;
 use Orchestra\Testbench\Foundation\TestbenchServiceProvider;
 use Orchestra\Workbench\Workbench;
@@ -44,7 +45,8 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
         return [
             TestbenchServiceProvider::class,
             WorkbenchServiceProvider::class,
-            LaravelServiceProvider::class,
+            CanvasServiceProvider::class,
+            CanvasCoreServiceProvider::class,
         ];
     }
 
@@ -64,8 +66,9 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
 
         $this->assertFileContains([
             \sprintf('namespace %sModels;', $prefix ? 'Workbench\App\\' : 'App\\'),
-            \sprintf('@use HasFactory<\%sUserFactory>', $prefix ? 'Workbench\Database\Factories\\' : 'Database\Factories\\'),
+            \sprintf('use %sUserFactory', $prefix ? 'Workbench\Database\Factories\\' : 'Database\Factories\\'),
             'class User extends Authenticatable',
+            '@use HasFactory<UserFactory>',
         ], join_paths($workingPath, 'workbench', 'app', 'Models', 'User.php'));
 
         if ($prefix === true) {
@@ -83,6 +86,10 @@ abstract class CommandTestCase extends \Orchestra\Testbench\TestCase
             \sprintf('namespace %sFactories;', $prefix ? 'Workbench\Database\\' : 'Database\\'),
             \sprintf('use %sModels\User;', $prefix ? 'Workbench\App\\' : 'App\\'),
             'class UserFactory extends Factory',
+        ], join_paths($workingPath, 'workbench', 'database', 'factories', 'UserFactory.php'));
+
+        $this->assertFileDoesNotContains([
+            \sprintf('use %sModels\User;', $prefix === false ? 'Workbench\App\\' : 'App\\'),
         ], join_paths($workingPath, 'workbench', 'database', 'factories', 'UserFactory.php'));
 
         $this->assertFileContains([
