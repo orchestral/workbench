@@ -48,7 +48,9 @@
     },
     "config": {
         "audit": {
-            "block-insecure": false
+            "ignore": [
+                "CVE-2025-27515"
+            ]
         },
         "sort-packages": true
     },
