@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
-use Orchestra\Testbench\Workbench\Workbench;
+use Orchestra\Sidekick\Env;
 use Orchestra\Workbench\Http\Controllers\Controller;
 
 class RegisteredUserController extends Controller
@@ -31,15 +31,15 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $userModel = Workbench::applicationUserModel() ?? User;
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = $userModel::create([
+        $userModel = Env::get('TESTBENCH_USER_MODEL', User::class);
+
+        $user = $userModel::forceCreate([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
