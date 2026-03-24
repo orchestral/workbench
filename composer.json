@@ -35,7 +35,7 @@
         "orchestra/canvas": "^10.2.0",
         "orchestra/canvas-core": "^10.2.0",
         "orchestra/sidekick": "~1.1.23|~1.2.20",
-        "orchestra/testbench-core": "^10.8.0",
+        "orchestra/testbench-core": "^10.12.0",
         "symfony/polyfill-php83": "^1.33",
         "symfony/process": "^7.2",
         "symfony/yaml": "^7.2"
@@ -49,7 +49,10 @@
     },
     "config": {
         "audit": {
-            "block-insecure": false
+            "ignore": [
+                "CVE-2025-64500",
+                "GHSA-vvj3-c3rp-c85p"
+            ]
         },
         "sort-packages": true
     },

@@ -3,6 +3,7 @@
 namespace Orchestra\Workbench\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,7 +24,7 @@ class ProfileUpdateRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->user()->id),
+                Rule::unique(User::class)->ignore($this->user()->id),
             ],
         ];
     }
