@@ -19,7 +19,19 @@ function line(string $code, int $tab = 0): string {
     return implode('', [PHP_EOL, str_repeat(' ', ($tab * 4)), $code]);
 }
 
+/**
+ * ----------------------------------------------------------------------
+ * Prepare skeleton folder
+ * ----------------------------------------------------------------------
+ */
+
 $purgeSkeletonDirectories();
+
+/**
+ * ----------------------------------------------------------------------
+ * Copy files from `laravel/laravel` and `laravel/breeze`
+ * ----------------------------------------------------------------------
+ */
 
 Symfony\Component\Process\Process::fromShellCommandline(
     'composer create-project "laravel/laravel:'.$version.'" skeleton --no-install --no-scripts --no-plugins --quiet', $workingPath
@@ -41,6 +53,13 @@ collect([
 ->each(static function ($file) use ($files, $workingPath) {
     $files->copy($file, "{$workingPath}/src/Console/stubs".Illuminate\Support\Str::after($file, "{$workingPath}/skeleton"));
 });
+
+
+/**
+ * ----------------------------------------------------------------------
+ * Copy stub files
+ * ----------------------------------------------------------------------
+ */
 
 transform([
     'return Application::configure(basePath: dirname(__DIR__))' => 'use function Orchestra\Testbench\default_skeleton_path;'.PHP_EOL.PHP_EOL.'return Application::configure(basePath: $APP_BASE_PATH ?? default_skeleton_path())',
@@ -79,6 +98,12 @@ collect([
 
     $files->copy($file, "{$workingPath}/src".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/app"));
 });
+
+/**
+ * ----------------------------------------------------------------------
+ * Copy authentication files
+ * ----------------------------------------------------------------------
+ */
 
 transform([
     line("return redirect()->intended(route('dashboard', absolute: false));", 2) => line('return redirect()->intended($this->redirectToAfterLoggedIn());', 2),
@@ -169,12 +194,24 @@ collect([
     $files->copy($file, "{$workingPath}/tests/Integrations".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature"));
 });
 
-$files->copy("{$workingPath}/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleWorkCommand.php", "{$workingPath}/src/Console/ScheduleWorkCommand.php");
+/**
+ * ----------------------------------------------------------------------
+ * Overrides `schedule:work` command
+ * ----------------------------------------------------------------------
+ */
+
+$files->copy("{$workingPath}/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleWorkCommand.php", "{$workingPath}/src/  Console/ScheduleWorkCommand.php");
 
 transform([
     'namespace Illuminate\Console\Scheduling;' => 'namespace Orchestra\Workbench\Console;',
     "#[AsCommand(name: 'schedule:work')]" => 'use function Orchestra\Sidekick\working_path;'.PHP_EOL.PHP_EOL."#[AsCommand(name: 'schedule:work')]",
     line('$executions[] = $execution = Process::fromShellCommandline($command, base_path());', 4) => line('$executions[] = $execution = Process::fromShellCommandline($command, working_path());', 4),
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/ScheduleWorkCommand.php"));
+
+/**
+ * ----------------------------------------------------------------------
+ * Cleanup
+ * ----------------------------------------------------------------------
+ */
 
 $purgeSkeletonDirectories();
