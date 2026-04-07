@@ -169,4 +169,12 @@ collect([
     $files->copy($file, "{$workingPath}/tests/Integrations".Illuminate\Support\Str::after($file, "{$workingPath}/breeze-skeleton/stubs/default/tests/Feature"));
 });
 
+$files->copy("{$workingPath}/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleWorkCommand.php", "{$workingPath}/src/Console/ScheduleWorkCommand.php");
+
+transform([
+    'namespace Illuminate\Console\Scheduling;' => 'namespace Orchestra\Workbench\Console;',
+    "#[AsCommand(name: 'schedule:work')]" => 'use function Orchestra\Sidekick\working_path;'.PHP_EOL.PHP_EOL."#[AsCommand(name: 'schedule:work')]",
+    line('$executions[] = $execution = Process::fromShellCommandline($command, base_path());', 4) => line('$executions[] = $execution = Process::fromShellCommandline($command, working_path());', 4),
+], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/ScheduleWorkCommand.php"));
+
 $purgeSkeletonDirectories();
