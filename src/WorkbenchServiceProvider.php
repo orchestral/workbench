@@ -57,6 +57,7 @@ class WorkbenchServiceProvider extends ServiceProvider
                 Console\InstallCommand::class,
                 Console\DevToolCommand::class,
                 Console\PurgeSkeletonCommand::class,
+                Console\ScheduleWorkCommand::class,
                 Console\SyncSkeletonCommand::class,
             ]);
 
