@@ -205,7 +205,7 @@ $files->copy("{$workingPath}/vendor/laravel/framework/src/Illuminate/Console/Sch
 transform([
     'namespace Illuminate\Console\Scheduling;' => 'namespace Orchestra\Workbench\Console;',
     'use Symfony\Component\Process\Process;'.PHP_EOL.PHP_EOL."#[AsCommand(name: 'schedule:work')]" => 'use Symfony\Component\Process\Process;'.PHP_EOL.PHP_EOL.'use function Orchestra\Sidekick\working_path;'.PHP_EOL.PHP_EOL."#[AsCommand(name: 'schedule:work')]",
-    line('$executions[] = $execution = Process::fromShellCommandline($command, base_path());', 4) => line('$executions[] = $execution = Process::fromShellCommandline($command, working_path());', 4),
+    '$execution = Process::fromShellCommandline($command, base_path());' => '$execution = Process::fromShellCommandline($command, working_path());',
 ], fn ($changes) => $files->replaceInFile(array_keys($changes), array_values($changes), "{$workingPath}/src/Console/ScheduleWorkCommand.php"));
 
 /**

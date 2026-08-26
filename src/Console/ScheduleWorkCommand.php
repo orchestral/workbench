@@ -10,6 +10,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
+use function Orchestra\Sidekick\working_path;
+
 #[AsCommand(name: 'schedule:work')]
 class ScheduleWorkCommand extends Command
 {
@@ -89,7 +91,7 @@ class ScheduleWorkCommand extends Command
             if (! $this->shouldQuit &&
                 Carbon::now()->second === 0 &&
                 ! Carbon::now()->startOfMinute()->equalTo($lastExecutionStartedAt)) {
-                $this->executions[] = $execution = Process::fromShellCommandline($command, base_path());
+                $this->executions[] = $execution = Process::fromShellCommandline($command, working_path());
 
                 $execution->start();
 
