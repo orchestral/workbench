@@ -35,8 +35,8 @@
         "orchestra/canvas": "^9.2.2",
         "orchestra/canvas-core": "^9.2.0",
         "orchestra/sidekick": "~1.1.23|~1.2.20",
-        "orchestra/testbench-core": "^9.21.0",
-        "symfony/polyfill-php83": "^1.32",
+        "orchestra/testbench-core": "^9.23.0",
+        "symfony/polyfill-php83": "^1.33",
         "symfony/process": "^7.0.3",
         "symfony/yaml": "^7.0.3"
     },
@@ -49,11 +49,11 @@
     },
     "config": {
         "audit": {
+            "block-insecure": false,
             "ignore": [
-                "CVE-2024-50345",
-                "CVE-2024-51736",
-                "CVE-2025-64500",
-                "GHSA-vvj3-c3rp-c85p"
+                "PKSA-m5cs-t1y6-qpcs",
+                "PKSA-3r5d-mb8f-1qw9",
+                "PKSA-mdq4-51ck-6kdq"
             ]
         },
         "sort-packages": true

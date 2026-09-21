@@ -15,7 +15,8 @@ class DropSqliteDbCommand extends Command
      */
     protected $signature = 'workbench:drop-sqlite-db
                                 {--database=database.sqlite : Set the database name}
-                                {--all : Delete all SQLite databases}';
+                                {--all : Delete all SQLite databases}
+                                {--pretend : Outputs the operations but will not execute anything}';
 
     /**
      * Execute the console command.
@@ -27,6 +28,7 @@ class DropSqliteDbCommand extends Command
         return $this->call('package:drop-sqlite-db', [
             '--database' => $this->option('database'),
             '--all' => $this->option('all'),
+            '--pretend' => $this->option('pretend'),
         ]);
     }
 }
