@@ -6,7 +6,9 @@ use Composer\InstalledVersions;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
+use Orchestra\Testbench\Foundation\Console\Actions\EnsureDirectoryExists;
 use Orchestra\Testbench\Foundation\Console\Actions\GeneratesFile;
+use Orchestra\Testbench\Foundation\Console\Actions\RunCommand;
 use Orchestra\Workbench\StubRegistrar;
 use Orchestra\Workbench\Workbench;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -48,6 +50,15 @@ class InstallCommand extends Command
      */
     public function handle(Filesystem $filesystem)
     {
+        /** @var bool $pretending */
+        $pretending = $this->option('pretend');
+
+        $runCommand = (new RunCommand(
+            console: $this,
+            components: $this->components,
+            pretending: $pretending,
+        ));
+
         if (! $this->option('skip-devtool')) {
             $devtool = match (true) {
                 \is_bool($this->option('devtool')) => $this->option('devtool'),
@@ -55,7 +66,7 @@ class InstallCommand extends Command
             };
 
             if ($devtool === true) {
-                $this->call('workbench:devtool', [
+                $runCommand->handle('workbench:devtool', [
                     '--force' => $this->option('force'),
                     '--no-install' => true,
                     '--basic' => $this->option('basic'),
@@ -65,12 +76,14 @@ class InstallCommand extends Command
 
         $workingPath = package_path();
 
-        $this->copyTestbenchConfigurationFile($filesystem, $workingPath);
-        $this->copyTestbenchDotEnvFile($filesystem, $workingPath);
+        $this->copyTestbenchConfigurationFile($filesystem, $workingPath, $pretending);
+        $this->copyTestbenchDotEnvFile($filesystem, $workingPath, $pretending);
 
-        $this->replaceDefaultLaravelSkeletonInTestbenchConfigurationFile($filesystem, $workingPath);
+        $this->replaceDefaultLaravelSkeletonInTestbenchConfigurationFile($filesystem, $workingPath, $pretending);
 
-        $this->call('workbench:create-sqlite-db', ['--force' => true]);
+        $runCommand->handle('workbench:create-sqlite-db', [
+            '--force' => true,
+        ]);
 
         return Command::SUCCESS;
     }
@@ -78,7 +91,7 @@ class InstallCommand extends Command
     /**
      * Copy the "testbench.yaml" file.
      */
-    protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
+    protected function copyTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath, bool $pretending): void
     {
         $from = ! \is_null(static::$configurationBaseFile)
             ? (string) realpath(static::$configurationBaseFile)
@@ -90,21 +103,24 @@ class InstallCommand extends Command
             filesystem: $filesystem,
             components: $this->components,
             force: (bool) $this->option('force'),
+            pretending: $pretending,
         ))->handle($from, $to);
 
-        StubRegistrar::replaceInFile($filesystem, $to);
+        if ($pretending === false) {
+            StubRegistrar::replaceInFile($filesystem, $to);
+        }
     }
 
     /**
      * Copy the ".env" file.
      */
-    protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath): void
+    protected function copyTestbenchDotEnvFile(Filesystem $filesystem, string $workingPath, bool $pretending): void
     {
         $workbenchWorkingPath = join_paths($workingPath, 'workbench');
 
         $from = $this->laravel->basePath('.env.example');
 
-        if (! $filesystem->isFile($this->laravel->basePath('.env.example'))) {
+        if (! $filesystem->isFile($from)) {
             return;
         }
 
@@ -131,7 +147,12 @@ class InstallCommand extends Command
             return;
         }
 
-        $filesystem->ensureDirectoryExists($workbenchWorkingPath);
+        (new EnsureDirectoryExists(
+            filesystem: $filesystem,
+            pretending: $pretending,
+        ))->handle([
+            $workbenchWorkingPath,
+        ]);
 
         $this->generateSeparateEnvironmentFileForTestbenchDusk($filesystem, $workbenchWorkingPath, $targetEnvironmentFile);
 
@@ -139,6 +160,7 @@ class InstallCommand extends Command
             filesystem: $filesystem,
             components: $this->components,
             force: (bool) $this->option('force'),
+            pretending: $pretending,
         ))->handle(
             $from,
             join_paths($workbenchWorkingPath, $targetEnvironmentFile)
@@ -147,6 +169,7 @@ class InstallCommand extends Command
         (new GeneratesFile(
             filesystem: $filesystem,
             force: (bool) $this->option('force'),
+            pretending: $pretending,
         ))->handle(
             (string) Workbench::stubFile('gitignore'),
             join_paths($workbenchWorkingPath, '.gitignore')
@@ -158,9 +181,12 @@ class InstallCommand extends Command
      *
      * @codeCoverageIgnore
      */
-    protected function replaceDefaultLaravelSkeletonInTestbenchConfigurationFile(Filesystem $filesystem, string $workingPath): void
-    {
-        if ($this->hasTestbenchDusk === false) {
+    protected function replaceDefaultLaravelSkeletonInTestbenchConfigurationFile(
+        Filesystem $filesystem,
+        string $workingPath,
+        bool $pretending,
+    ): void {
+        if ($this->hasTestbenchDusk === false || $pretending === true) {
             return;
         }
 
@@ -183,6 +209,7 @@ class InstallCommand extends Command
                 filesystem: $filesystem,
                 components: $this->components,
                 force: (bool) $this->option('force'),
+                pretending: (bool) $this->option('pretend'),
             ))->handle(
                 $this->laravel->basePath('.env.example'),
                 join_paths($workbenchWorkingPath, str_replace('.env', '.env.dusk', $targetEnvironmentFile))
@@ -215,6 +242,7 @@ class InstallCommand extends Command
             ['force', 'f', InputOption::VALUE_NONE, 'Overwrite any existing files'],
             ['devtool', null, InputOption::VALUE_NEGATABLE, 'Run DevTool installation'],
             ['basic', null, InputOption::VALUE_NONE, 'Skipped routes and discovers installation'],
+            ['pretend', null, InputOption::VALUE_NONE, 'Outputs the operations but will not execute anything'],
 
             /** @deprecated */
             ['skip-devtool', null, InputOption::VALUE_NONE, 'Skipped DevTool installation (deprecated)'],
