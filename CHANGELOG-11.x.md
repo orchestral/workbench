@@ -2,6 +2,20 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 11.3.0
+
+Released: 2026-09-24
+
+### Added
+
+* Allow `--pretend` option on relevant commands.
+
+### Changes
+
+* Update NPM Dependencies.
+* Update skeleton.
+* Update `schedule:work` override command to match upstream.
+
 ## 11.2.0
 
 Released: 2026-07-22
