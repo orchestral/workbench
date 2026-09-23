@@ -2,6 +2,18 @@
 
 This changelog references the relevant changes (bug and security fixes) done to `orchestra/workbench`.
 
+## 10.3.0
+
+Released: 2026-09-24
+
+### Added
+
+* Allow `--pretend` option on relevant commands.
+
+### Changes
+
+* Update NPM Dependencies.
+
 ## 10.2.0
 
 Released: 2026-07-22
