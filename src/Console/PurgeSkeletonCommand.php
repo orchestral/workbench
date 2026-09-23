@@ -16,7 +16,8 @@ class PurgeSkeletonCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'workbench:purge-skeleton';
+    protected $signature = 'workbench:purge-skeleton
+                                {--pretend : Outputs the operations but will not execute anything}';
 
     /**
      * Execute the console command.
@@ -25,6 +26,8 @@ class PurgeSkeletonCommand extends Command
      */
     public function handle()
     {
-        return $this->call('package:purge-skeleton');
+        return $this->call('package:purge-skeleton', [
+            '--pretend' => $this->option('pretend'),
+        ]);
     }
 }

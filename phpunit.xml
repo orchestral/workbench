@@ -25,6 +25,7 @@
         </include>
         <exclude>
             <directory>src/Console/stubs/</directory>
+            <file>src/Console/ScheduleWorkCommand.php</file>
         </exclude>
     </source>
 </phpunit>
