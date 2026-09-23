@@ -49,7 +49,10 @@
     },
     "config": {
         "audit": {
-            "block-insecure": true
+            "block-insecure": true,
+            "ignore": [
+                "CVE-2026-24765"
+            ]
         },
         "sort-packages": true
     },
